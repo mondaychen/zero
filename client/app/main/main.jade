@@ -3,89 +3,94 @@ div(ng-include='"components/navbar/navbar.html"')
 .container
   .row
     .col-lg-8.col-md-12
-      .doctor-info.row
+      .doctor-info
         h2.name
           | John Smith, MD
         .description
           | [description]
       .contact-info.lined.row
-        section.info-phone.scheme-red.col-md-6.col-xs-12
-          h4.title
-            | Fax
-            button.more +
-          .item.recommended
-            .actions
-              .votes
-                button.up-vote
-                  span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
-                button.down-vote
-                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
-              .count.highlight
-                | +12
-            span.flag
-              | New!
-            span.detail 917-914-4444
-          .item
-            .actions
-              .votes
-                button.up-vote
-                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                button.down-vote
-                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
-              .count
-                | -1
-            span.detail 917-914-4444
-        section.info-pager.scheme-blue.col-md-6.col-xs-12
-          h4.title
-            | Pager
-            button.more +
-          .item
-            .actions
-              .votes
-                button.up-vote
-                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                button.down-vote
-                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
-              .count.highlight
-                | +1
-            span.detail 917-914-4444
+        .col-md-6.col-xs-12
+          section.info-phone.scheme-red
+            h4.title
+              | Fax
+              button.more +
+            .item.recommended
+              .actions
+                .votes
+                  button.up-vote
+                    span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
+                  button.down-vote
+                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
+                .count.highlight
+                  | +12
+              span.flag
+                | New!
+              span.detail 917-914-4444
+            .item
+              .actions
+                .votes
+                  button.up-vote
+                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                  button.down-vote
+                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
+                .count
+                  | -1
+              span.detail 917-914-4444
+        .col-md-6.col-xs-12
+          section.info-pager.scheme-blue
+            h4.title
+              | Pager
+              button.more +
+            .item
+              .actions
+                .votes
+                  button.up-vote
+                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                  button.down-vote
+                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
+                .count.highlight
+                  | +1
+              span.detail 917-914-4444
       .contact-info.lined.row
-        section.info-email.scheme-green.col-md-6.col-xs-12
-          h4.title
-            | Email
-            button.more +
-          .item
-            .actions
-              .votes
-                button.up-vote
-                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                button.down-vote
-                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
-              .count
-                | 0
-            span.detail js1231@nyp.org
-        section.info-fax.scheme-yellow.col-md-6.col-xs-12
-          h4.title
-            | Fax
-            button.more +
-          .item
-            .actions
-              .votes
-                button.up-vote
-                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                button.down-vote
-                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
-              .count
-                | 0
-            span.detail 917-914-4444
+        .col-md-6.col-xs-12
+          section.info-email.scheme-green
+            h4.title
+              | Email
+              button.more +
+            .item
+              .actions
+                .votes
+                  button.up-vote
+                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                  button.down-vote
+                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
+                .count
+                  | 0
+              span.detail js1231@nyp.org
+        .col-md-6.col-xs-12
+          section.info-fax.scheme-yellow
+            h4.title
+              | Fax
+              button.more +
+            .item
+              .actions
+                .votes
+                  button.up-vote
+                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                  button.down-vote
+                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
+                .count
+                  | 0
+              span.detail 917-914-4444
       .contact-info.row
-        section.info-address.scheme-gray.col-md-6.col-xs-12
-          h4.title
-            | Address
-          .item
-            span.detail 447 68th Street, NY 11302
-          button.btn.btn-default Show all
-          // pre(ng-bind-html="content['hybridized_provider_output'] | json")
+        .col-md-12
+          section.info-address.scheme-gray
+            h4.title
+              | Address
+            .item
+              span.detail 447 68th Street, NY 11302
+            button.btn.btn-default Show all
+            // pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .list-group
         a.list-group-item.active(href="#")
