@@ -5,7 +5,9 @@
   padding-bottom: 16px
   margin-top: @padding-bottom
   margin-bottom: @margin-top
-  button
+  button.up-vote
+  button.down-vote
+  button.more
     border: 0
     background: none
   &.lined
@@ -99,6 +101,19 @@ for key, value in $color_scheme
       button:hover .glyphicon
         color: value
         transition: color 0.3s
+
+.scheme-gray
+  border-left: #999 3px solid
+  color: #656565
+  .item
+    color: #999
+    min-height: 0
+    height: auto
+    line-height: 30px
+    padding-left: 0
+    .detail
+      font-size: 16px
+    
 
 .footer
     border-top 1px solid #E5E5E5
