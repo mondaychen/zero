@@ -1,20 +1,103 @@
+.doctor-info .description
+  font-size: 20px
 
-#banner
-    border-bottom none
-    margin-top -20px
+.contact-info
+  padding-bottom: 16px
+  margin-top: @padding-bottom
+  margin-bottom: @margin-top
+  button
+    border: 0
+  &.lined
+    border-bottom: 1px #eee solid
+  section
+    box-sizing: border-box
+    padding-left: 7px
+    padding-right: 33px
+    margin: 10px 0
+    .title
+      font-weight: normal
+      margin-top: 0
+      .more
+        float: right
+        font-size: 20px
+  .item
+    color: #434A52
+    padding-left: 9px
+    height: 65px
+    line-height: @height
+    margin-top: 3px
+    .flag
+      float: right
+      margin: 0 8px
+    .detail
+      font-size: 20px
+    &.recommended .detail
+      font-size: 26px
+      color: #000
+  .actions
+    float: right
+    line-height: 1em
+    text-align: center
+    .up-vote
+    .down-vote
+      display: inline-block
+      padding: 2px 0 0
+      width: 46px
+      height: 41px
+      line-height: @height
+      font-size: 22px
+    .count
+      line-height: 24px
+    .glyphicon
+      color: white
+      
 
-#banner h1
-    font-size 60px
-    letter-spacing -1px
-    line-height 1
 
-.hero-unit
-    background #4393B9
-    color #F5F5F5
-    padding 30px 15px
-    position relative
-    text-align center
-    text-shadow 0 1px 0 rgba(0, 0, 0, 0.1)
+// $red = #d9534f
+$red = #D94753
+// $blue = #337ab7
+$blue = #3BAFD9
+// $green = #5cb85c
+$green = #8BC051
+// $yellow = #f0ad4e
+$yellow = #F5BB41
+
+$color_scheme = {
+  red: $red,
+  blue: $blue,
+  green: $green,
+  yellow: $yellow
+}
+
+$light1 = 97.6%
+$light2 = 95.5%
+$light3 = 90.5%
+$light4 = 85.4%
+
+for key, value in $color_scheme
+  .scheme-{key}
+    border-left: value 3px solid
+    .title
+      color: value
+    .item
+      background-color: lightness(value, $light1)
+      .count.highlight
+      .flag
+        color: value
+    .actions
+      .count
+        background-color: lightness(value, $light2)
+      .up-vote
+        background-color: lightness(value, $light3)
+      .down-vote
+        background-color: lightness(value, $light4)
+      .glyphicon
+        // TODO: fix display for IE8
+        text-shadow: 0 0 2px value
+      button .active
+      button:hover .glyphicon
+        color: value
+        transition: color 0.3s
 
 .footer
     border-top 1px solid #E5E5E5

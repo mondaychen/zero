@@ -1,22 +1,100 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-header#banner.hero-unit
-  .container
-    h1 'Allo, 'Allo!!!!!!
-    p.lead Kick-start your next web app with Angular Fullstack
-    img(src='assets/images/yeoman.png', alt='I\'m Yeoman')
-
 .container
   .row
-    .col-lg-12
-      .panel.panel-default
-        pre(ng-bind-html="content['hybridized_provider_output'] | json")
+    .col-lg-8.col-md-12
+      .doctor-info.row
+        h2.name
+          | John Smith, MD
+        .description
+          | [description]
+      .contact-info.lined.row
+        section.info-phone.scheme-red.col-md-6.col-xs-12
+          h4.title
+            | Fax
+            span.more +
+          .item.recommended
+            .actions
+              .votes
+                button.up-vote
+                  span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
+                button.down-vote
+                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
+              .count.highlight
+                | +12
+            span.flag
+              | New!
+            span.detail 917-914-4444
+          .item
+            .actions
+              .votes
+                button.up-vote
+                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                button.down-vote
+                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
+              .count
+                | -1
+            span.detail 917-914-4444
+        section.info-pager.scheme-blue.col-md-6.col-xs-12
+          h4.title
+            | Pager
+            span.more +
+          .item
+            .actions
+              .votes
+                button.up-vote
+                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                button.down-vote
+                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
+              .count.highlight
+                | +1
+            span.detail 917-914-4444
+      .contact-info.lined.row
+        section.info-email.scheme-green.col-md-6.col-xs-12
+          h4.title
+            | Email
+            span.more +
+          .item
+            .actions
+              .votes
+                button.up-vote
+                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                button.down-vote
+                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
+              .count
+                | 0
+            span.detail 917-914-4444
+        section.info-fax.scheme-yellow.col-md-6.col-xs-12
+          h4.title
+            | Fax
+            span.more +
+          .item
+            .actions
+              .votes
+                button.up-vote
+                  span.glyphicon.glyphicon-ok(aria-label="Upvote")
+                button.down-vote
+                  span.glyphicon.glyphicon-remove(aria-label="Downvote")
+              .count
+                | 0
+            span.detail 917-914-4444
+          // pre(ng-bind-html="content['hybridized_provider_output'] | json")
+    .col-lg-3.col-lg-offset-1.col-md-12
+      .list-group
+        a.list-group-item.active(href="#")
+          .name John Smith, MD
+          .ordered
+            b Ordered this study
+          .role doctor's role
+        a.list-group-item(href="#")
+          .name John Smith, MD
+          .ordered
+            b Ordered this study
+          .role doctor's role
 
 footer.footer
   .container
     p
-      | Angular Fullstack v2.0.13
+      | ZERO v0.0.1
       = ' | '
-      a(href='https://twitter.com/tyhenkel') @tyhenkel
-      = ' | '
-      a(href='https://github.com/DaftMonk/generator-angular-fullstack/issues?state=open') Issues
+      Weill Cornell Radiology
