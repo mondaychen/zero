@@ -1,6 +1,7 @@
 div(ng-include='"components/navbar/navbar.html"')
 
 mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
+  - count = count || 0
   .item(class= (isRecommended ? "recommended" : ""))
     .actions
       .votes
@@ -8,7 +9,7 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
           span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
         button.down-vote
           span.glyphicon.glyphicon-remove(aria-label="Downvote")
-      .count(class= (isHighlight ? "highlight" : ""))= (isNaN(count) ? 0 : count)
+      .count(class= (isHighlight ? "highlight" : ""))= count
     if isNew
       span.flag
         | New!
