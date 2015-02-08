@@ -11,9 +11,10 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
           span.glyphicon.glyphicon-remove(aria-label="Downvote")
       .count(class= (isHighlight ? "highlight" : ""))= count
     if isNew
-      span.flag
+      .flag
         | New!
-    span.detail= detail
+    .detail= detail
+
 
 .container
   .row
@@ -29,8 +30,8 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
             h4.title
               | Phone
               button.more +
-            +infoItem("917-914-4567", 12, true, true, true)
-            +infoItem("917-914-4444", -1)
+            +infoItem("917-914-4567", "+12", true, true, true)
+            +infoItem("917-914-4444", "-1")
         .col-md-6.col-xs-12
           section.info-pager.scheme-blue
             h4.title
@@ -78,3 +79,4 @@ footer.footer
       | ZERO v0.0.1
       = ' | '
       | Weill Cornell Radiology
+

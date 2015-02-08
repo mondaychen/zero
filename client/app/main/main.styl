@@ -26,13 +26,17 @@
     color: #434A52
     padding-left: 9px
     height: 65px
-    line-height: @height
     margin-top: 3px
     .flag
       float: right
+      line-height: @height
       margin: 0 8px
     .detail
+      line-height: @height
       font-size: 20px
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
     &.recommended .detail
       font-size: 26px
       color: #000
