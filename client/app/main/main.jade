@@ -1,5 +1,19 @@
 div(ng-include='"components/navbar/navbar.html"')
 
+mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
+  .item(class= (isRecommended ? "recommended" : ""))
+    .actions
+      .votes
+        button.up-vote
+          span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
+        button.down-vote
+          span.glyphicon.glyphicon-remove(aria-label="Downvote")
+      .count(class= (isHighlight ? "highlight" : ""))= (isNaN(count) ? 0 : count)
+    if isNew
+      span.flag
+        | New!
+    span.detail= detail
+
 .container
   .row
     .col-lg-8.col-md-12
@@ -12,76 +26,29 @@ div(ng-include='"components/navbar/navbar.html"')
         .col-md-6.col-xs-12
           section.info-phone.scheme-red
             h4.title
-              | Fax
+              | Phone
               button.more +
-            .item.recommended
-              .actions
-                .votes
-                  button.up-vote
-                    span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
-                  button.down-vote
-                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
-                .count.highlight
-                  | +12
-              span.flag
-                | New!
-              span.detail 917-914-4444
-            .item
-              .actions
-                .votes
-                  button.up-vote
-                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                  button.down-vote
-                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
-                .count
-                  | -1
-              span.detail 917-914-4444
+            +infoItem("917-914-4567", 12, true, true, true)
+            +infoItem("917-914-4444", -1)
         .col-md-6.col-xs-12
           section.info-pager.scheme-blue
             h4.title
               | Pager
               button.more +
-            .item
-              .actions
-                .votes
-                  button.up-vote
-                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                  button.down-vote
-                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
-                .count.highlight
-                  | +1
-              span.detail 917-914-4444
+            +infoItem("646-914-1111")
       .contact-info.lined.row
         .col-md-6.col-xs-12
           section.info-email.scheme-green
             h4.title
               | Email
               button.more +
-            .item
-              .actions
-                .votes
-                  button.up-vote
-                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                  button.down-vote
-                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
-                .count
-                  | 0
-              span.detail js1231@nyp.org
+            +infoItem('js1231@nyp.org')
         .col-md-6.col-xs-12
           section.info-fax.scheme-yellow
             h4.title
               | Fax
               button.more +
-            .item
-              .actions
-                .votes
-                  button.up-vote
-                    span.glyphicon.glyphicon-ok(aria-label="Upvote")
-                  button.down-vote
-                    span.glyphicon.glyphicon-remove(aria-label="Downvote")
-                .count
-                  | 0
-              span.detail 917-914-4444
+            +infoItem('917-777-7777')
       .contact-info.row
         .col-md-12
           section.info-address.scheme-gray
