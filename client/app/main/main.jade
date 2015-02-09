@@ -15,6 +15,12 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
         | New!
     .detail= detail
 
+mixin moreButtons()
+  button.more(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") +
+  ul.dropdown-menu(aria-labelledby="dLabel" role="menu")
+    li
+      a(href="#") Add a note 
+      a(href="#") Add a number
 
 .container
   .row
@@ -29,11 +35,7 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
           section.info-phone.scheme-red
             h4.title
               | Phone
-              button.more(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") +
-              ul.dropdown-menu(aria-labelledby="dLabel" role="menu")
-                li
-                  a(href="#") Add a note 
-                  a(href="#") Add a number
+              +moreButtons
             +infoItem("917-914-4567", "+12", true, true, true)
             +infoItem("917-914-4444", "-1")
             .notes
@@ -42,20 +44,20 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
           section.info-pager.scheme-blue
             h4.title
               | Pager
-              button.more +
+              +moreButtons
             +infoItem("646-914-1111")
       .contact-info.lined.row
         .col-md-6.col-xs-12
           section.info-email.scheme-green
             h4.title
               | Email
-              button.more +
+              +moreButtons
             +infoItem('js12.sdadadasdasdasadasfsdafaf31@nyp.org')
         .col-md-6.col-xs-12
           section.info-fax.scheme-yellow
             h4.title
               | Fax
-              button.more +
+              +moreButtons
             +infoItem('917-777-7777')
       .contact-info.row
         .col-md-12
