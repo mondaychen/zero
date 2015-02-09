@@ -29,9 +29,15 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
           section.info-phone.scheme-red
             h4.title
               | Phone
-              button.more +
+              button.more(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") +
+              ul.dropdown-menu(aria-labelledby="dLabel" role="menu")
+                li
+                  a(href="#") Add a note 
+                  a(href="#") Add a number
             +infoItem("917-914-4567", "+12", true, true, true)
             +infoItem("917-914-4444", "-1")
+            .notes
+              a.toggle(href="#") Show notes(1)
         .col-md-6.col-xs-12
           section.info-pager.scheme-blue
             h4.title
@@ -44,7 +50,7 @@ mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
             h4.title
               | Email
               button.more +
-            +infoItem('js1231@nyp.org')
+            +infoItem('js12.sdadadasdasdasadasfsdafaf31@nyp.org')
         .col-md-6.col-xs-12
           section.info-fax.scheme-yellow
             h4.title
@@ -80,3 +86,9 @@ footer.footer
       = ' | '
       | Weill Cornell Radiology
 
+script.
+  $(document).ready(function() {
+    $('.notes').on('click', '.toggle', function() {
+      alert(1)
+    })
+  })
