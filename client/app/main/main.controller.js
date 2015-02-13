@@ -96,13 +96,13 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
 
     $http.get('/2.0/zero/getProvider' + getQuery())
     .success(function(data) {
-      console.log(data)
       $scope.original_query_data = angular.copy(data);
       // $scope.content['referring_md_provider_output'] = getOrderedOutput(data['referring_md_provider_output']);
       // $scope.content['match_metrix_provider_output'] = getOrderedOutput(data['match_metrix_provider_output']);
       // $scope.content['hybridized_provider_output'] = getOrderedOutput(data['hybridized_provider_output']);
 
-      $scope.content['hybridized_provider_output'] = getOrderedOutput(data);
+      $scope.person = 
+        $scope.content['hybridized_provider_output'] = getOrderedOutput(data);
     })
   });
 

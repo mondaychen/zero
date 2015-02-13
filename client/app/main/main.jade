@@ -1,19 +1,22 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-mixin infoItem(detail, count, isRecommended, isHighlight, isNew)
+mixin infoItem(category, count, isRecommended, isHighlight, isNew)
   - count = count || 0
-  .item(class= (isRecommended ? "recommended" : ""))
+  //- .item(class= (isRecommended ? "recommended" : "") ng-repeat="item in person.#{category}")
+  .item(ng-repeat="item in person.#{category}")
     .actions
       .votes
         button.up-vote
-          span.glyphicon.glyphicon-ok.active(aria-label="Upvote")
+          span.glyphicon.glyphicon-ok(aria-label="Upvote")
         button.down-vote
           span.glyphicon.glyphicon-remove(aria-label="Downvote")
-      .count(class= (isHighlight ? "highlight" : ""))= count
+      //- .count(class= (isHighlight ? "highlight" : ""))= count
+      .count= count
     if isNew
       .flag
         | New!
-    .detail= detail
+    .detail {{item}}
+  .empty-list(ng-show="!person.#{category}.length") No Data
 
 mixin moreButtons()
   button.more(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") +
@@ -27,7 +30,7 @@ mixin moreButtons()
     .col-lg-8.col-md-12
       .doctor-info
         h2.name
-          | John Smith, MD
+          | {{person.fullName}}
         .description
           | [description]
       .contact-info.lined.row
@@ -36,8 +39,7 @@ mixin moreButtons()
             h4.title
               | Phone
               +moreButtons
-            +infoItem("917-914-4567", "+12", true, true, true)
-            +infoItem("917-914-4444", "-1")
+            +infoItem("officePhone", "+12", true, true, true)
             .notes
               a.toggle(href="#") Show notes(1)
         .col-md-6.col-xs-12
@@ -45,20 +47,20 @@ mixin moreButtons()
             h4.title
               | Pager
               +moreButtons
-            +infoItem("646-914-1111")
+            +infoItem("pagerNum")
       .contact-info.lined.row
         .col-md-6.col-xs-12
           section.info-email.scheme-green
             h4.title
               | Email
               +moreButtons
-            +infoItem('js12.sdadadasdasdasadasfsdafaf31@nyp.org')
+            +infoItem('email')
         .col-md-6.col-xs-12
           section.info-fax.scheme-yellow
             h4.title
               | Fax
               +moreButtons
-            +infoItem('917-777-7777')
+            +infoItem('faxNum')
       .contact-info.row
         .col-md-12
           section.info-address.scheme-gray
