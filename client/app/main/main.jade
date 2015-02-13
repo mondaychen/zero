@@ -3,7 +3,8 @@ div(ng-include='"components/navbar/navbar.html"')
 mixin infoItem(category, count, isRecommended, isHighlight, isNew)
   - count = count || 0
   //- .item(class= (isRecommended ? "recommended" : "") ng-repeat="item in person.#{category}")
-  .item(ng-repeat="item in person.#{category}")
+  .item(ng-repeat="item in person.#{category} | orderBy:'score':true"
+    ng-class="item.isRecommended ? 'recommended' : ''")
     .actions
       .votes
         button.up-vote
@@ -11,11 +12,10 @@ mixin infoItem(category, count, isRecommended, isHighlight, isNew)
         button.down-vote
           span.glyphicon.glyphicon-remove(aria-label="Downvote")
       //- .count(class= (isHighlight ? "highlight" : ""))= count
-      .count= count
-    if isNew
-      .flag
-        | New!
-    .detail {{item}}
+      .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
+    .flag(ng-show="item.isNew")
+      | New!
+    .detail {{item.value}}
   .empty-list(ng-show="!person.#{category}.length") No Data
 
 mixin moreButtons()

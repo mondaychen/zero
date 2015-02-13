@@ -60,8 +60,26 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
       addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
         .values().compact().value() )
     })
-
     output.addresses = addresses
+
+    // generate numbers
+    _.forEach(output, function(v, k) {
+      if(_.isArray(v) && k != 'addresses') {
+        output[k] = _.map(v, function(item) {
+          var rtn = {
+            value: item,
+            upvotes: _.random(0, 8),
+            downvotes: _.random(0, 3)
+          }
+          rtn.score = rtn.upvotes - rtn.downvotes
+          rtn.isRecommended = rtn.score > 7
+          rtn.isHighlight = rtn.score > 0
+          rtn.isNew = (_.random(50) < 2)
+
+          return rtn
+        })
+      }
+    })
 
     delete output['NPI'];
     delete output['firstName'];
