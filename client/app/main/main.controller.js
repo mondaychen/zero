@@ -44,7 +44,7 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
         'addresses'   : []
     };
 
-    output = $.extend(output, data)
+    output = _.extend(output, data)
 
     // generate full name
     output.fullName = makeStringByKeys(['firstName',
