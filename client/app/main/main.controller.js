@@ -23,8 +23,13 @@ app.run(function($httpBackend) {
 
 app.controller('MainCtrl', function ($scope, $http, $location) {
 
-  var getOrderedOutputObject = function(data) {
-    var temp_output = {
+  function makeStringByKeys(keys, obj, separator) {
+    separator = separator || ' '
+    return _.chain(obj).pick(keys).values().compact().value().join(separator)
+  }
+
+  function getOrderedOutput(data) {
+    var output = {
         'fullName'    : '',
         'firstName'   : '',
         'lastName'    : '',
@@ -39,24 +44,31 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
         'addresses'   : []
     };
 
-    temp_output = $.extend(temp_output, data)
+    output = $.extend(output, data)
 
-    var names = []
+    // generate full name
+    output.fullName = makeStringByKeys(['firstName',
+      'middleName', 'lastName'], output) || 'NAME NOT AVAILABLE'
 
-    angular.forEach(['firstName', 'middleName', 'lastName'], function(name) {
-      if(temp_output[name]) {
-        names.push(temp_output[name])
-      }
+    // generate addresses
+    var addresses = []
+    angular.forEach(output.addresses, function(address) {
+      address.fullPostCode = makeStringByKeys(['addrState',
+        'addrPostCode'], address)
+      address.addrLine3 = makeStringByKeys(['addrCity',
+        'fullPostCode'], address, ', ')
+      addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
+        .values().compact().value() )
     })
 
-    temp_output.fullName = names.join(' ')
+    output.addresses = addresses
 
-    delete temp_output['NPI'];
-    delete temp_output['firstName'];
-    delete temp_output['lastName'];
-    delete temp_output['middleName'];
+    delete output['NPI'];
+    delete output['firstName'];
+    delete output['lastName'];
+    delete output['middleName'];
 
-    return temp_output;
+    return output;
   }
 
   function getQuery() {
@@ -81,24 +93,16 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
 
 
   $scope.$watch(function(){ return $location.search() }, function(params){
-    var modifyAddressArray = function(data_object) {
-      data_object['addresses'] = data_object['addresses'].splice(0,1);
-      delete data_object['addresses'];
-    }
 
     $http.get('/2.0/zero/getProvider' + getQuery())
     .success(function(data) {
       console.log(data)
       $scope.original_query_data = angular.copy(data);
-      // $scope.content['referring_md_provider_output'] = getOrderedOutputObject(data['referring_md_provider_output']);
-      // modifyAddressArray($scope.content['referring_md_provider_output']);
-      // $scope.content['match_metrix_provider_output'] = getOrderedOutputObject(data['match_metrix_provider_output']);
-      // modifyAddressArray($scope.content['match_metrix_provider_output']);
-      // $scope.content['hybridized_provider_output'] = getOrderedOutputObject(data['hybridized_provider_output']);
-      // modifyAddressArray($scope.content['hybridized_provider_output']);
+      // $scope.content['referring_md_provider_output'] = getOrderedOutput(data['referring_md_provider_output']);
+      // $scope.content['match_metrix_provider_output'] = getOrderedOutput(data['match_metrix_provider_output']);
+      // $scope.content['hybridized_provider_output'] = getOrderedOutput(data['hybridized_provider_output']);
 
-      $scope.content['hybridized_provider_output'] = getOrderedOutputObject(data);
-      modifyAddressArray($scope.content['hybridized_provider_output']);
+      $scope.content['hybridized_provider_output'] = getOrderedOutput(data);
     })
   });
 
