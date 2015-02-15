@@ -23,9 +23,32 @@ app.run(function($httpBackend) {
 
 app.controller('MainCtrl', function ($scope, $http, $location) {
 
+  var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
+
   function makeStringByKeys(keys, obj, separator) {
     separator = separator || ' '
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
+  }
+
+  function updateItem (item) {
+    item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
+      ? item.voteStatus : item.oldVoteStatus
+    if(item.oldVoteStatus == 1) {
+      item.upvotes--
+    }
+    if(item.oldVoteStatus == -1) {
+      item.downvotes--
+    }
+    if(item.voteStatus == 1) {
+      item.upvotes++
+    }
+    if(item.voteStatus == -1) {
+      item.downvotes++
+    }
+    item.score = item.upvotes - item.downvotes
+    item.isRecommended = item.score > 7
+    item.isHighlight = item.score > 0
+    item.oldVoteStatus = item.voteStatus
   }
 
   function getOrderedOutput(data) {
@@ -63,23 +86,22 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     output.addresses = addresses
 
     // generate numbers
-    _.forEach(output, function(v, k) {
-      if(_.isArray(v) && k != 'addresses') {
-        output[k] = _.map(v, function(item) {
-          var rtn = {
-            value: item,
-            upvotes: _.random(0, 8),
-            downvotes: _.random(0, 3)
-          }
-          rtn.score = rtn.upvotes - rtn.downvotes
-          rtn.isRecommended = rtn.score > 7
-          rtn.isHighlight = rtn.score > 0
-          rtn.isNew = (_.random(50) < 2)
+    _.forEach(votableLists, function(listName) {
+      output[listName] = _.map(output[listName], function(item) {
+        var rtn = {
+          value: item,
+          upvotes: _.random(0, 8),
+          downvotes: _.random(0, 3)
+        }
+        rtn.isNew = (_.random(50) < 2)
+        rtn.voteStatus = 0
 
-          return rtn
-        })
-      }
+        updateItem(rtn)
+
+        return rtn
+      })
     })
+
 
     delete output['NPI'];
     delete output['firstName'];
@@ -109,6 +131,15 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     return query;
   }
 
+  $scope.person = {}
+
+  $scope.content = {
+    'match_metrix_provider_output'    : null,
+    'match_metrix_radiologist_output' : null,
+    'referring_md_provider_output'    : null,
+    'referring_md_attending_output'   : null,
+    'hybridized_provider_output'      : null
+  }
 
   $scope.$watch(function(){ return $location.search() }, function(params){
 
@@ -121,44 +152,14 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
 
       $scope.person = 
         $scope.content['hybridized_provider_output'] = getOrderedOutput(data);
+
     })
   });
 
-  $scope.isSelectedObject = {
-    'referring_md_provider_output':false,
-    'match_metrix_provider_output':false,
-    'hybridized_provider_output'  :false
+  $scope.vote = function(item, value) {
+    item.voteStatus = value
+    updateItem(item)
   }
 
-  $scope.alternateAddressesBoolean = {
-    'referring_md_provider_output':false,
-    'match_metrix_provider_output':false,
-    'hybridized_provider_output'  :false
-  }
 
-  $scope.showAlternateAddresses = function(choice) {
-    $scope.alternateAddressesBoolean[choice] = !$scope.alternateAddressesBoolean[choice];
-  }
-
-  $scope.getAlternateAddresses = function(associated_category) {
-    return $scope.original_query_data[associated_category]['addresses'].splice(1);
-  }
-
-  $scope.userSelect = function(choice) {
-    $scope.isSelectedObject[choice] = !$scope.isSelectedObject[choice];
-
-    angular.forEach($scope.isSelectedObject, function(value,key) {
-      if (key != choice) {
-        $scope.isSelectedObject[key] = false;
-      }
-    });
-  }
-
-  $scope.content = {
-    'match_metrix_provider_output'    : null,
-    'match_metrix_radiologist_output' : null,
-    'referring_md_provider_output'    : null,
-    'referring_md_attending_output'   : null,
-    'hybridized_provider_output'      : null
-  }
 });

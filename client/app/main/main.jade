@@ -7,10 +7,12 @@ mixin infoItem(category, count, isRecommended, isHighlight, isNew)
     ng-class="item.isRecommended ? 'recommended' : ''")
     .actions
       .votes
-        button.up-vote
-          span.glyphicon.glyphicon-ok(aria-label="Upvote")
-        button.down-vote
-          span.glyphicon.glyphicon-remove(aria-label="Downvote")
+        button.up-vote(ng-click='vote(item, 1)')
+          span.glyphicon.glyphicon-ok(aria-label="Upvote"
+            ng-class='item.voteStatus==1 ? "active" : ""')
+        button.down-vote(ng-click='vote(item, -1)')
+          span.glyphicon.glyphicon-remove(aria-label="Downvote"
+            ng-class='item.voteStatus==-1 ? "active" : ""')
       //- .count(class= (isHighlight ? "highlight" : ""))= count
       .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
     .flag(ng-show="item.isNew")
