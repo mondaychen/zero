@@ -2,7 +2,7 @@ div(ng-include='"components/navbar/navbar.html"')
 
 mixin infoItem(category)
   //- .item(class= (isRecommended ? "recommended" : "") ng-repeat="item in person.#{category}")
-  .item(ng-repeat="item in person.#{category} | orderBy:'score':true"
+  .item(ng-repeat="item in person.#{category}"
     ng-class="item.isRecommended ? 'recommended' : ''")
     .actions
       .votes

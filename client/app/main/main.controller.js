@@ -102,6 +102,10 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
 
         return rtn
       })
+      // rank
+      output[listName] = _.sortBy(output[listName], function(item) {
+        return -item.score
+      })
     })
 
 
