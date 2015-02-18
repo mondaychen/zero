@@ -1,7 +1,6 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-mixin infoItem(category, count, isRecommended, isHighlight, isNew)
-  - count = count || 0
+mixin infoItem(category)
   //- .item(class= (isRecommended ? "recommended" : "") ng-repeat="item in person.#{category}")
   .item(ng-repeat="item in person.#{category} | orderBy:'score':true"
     ng-class="item.isRecommended ? 'recommended' : ''")
@@ -39,39 +38,45 @@ mixin moreButtons()
         .col-md-6.col-xs-12
           section.info-phone.scheme-red
             h4.title
-              | Phone
+              | Office Phone
               +moreButtons
-            +infoItem("officePhone", "+12", true, true, true)
+            +infoItem("officePhone")
             .notes
               a.toggle(href="#") Show notes(1)
         .col-md-6.col-xs-12
           section.info-pager.scheme-blue
             h4.title
-              | Pager
+              | Mobile Phone
               +moreButtons
-            +infoItem("pagerNum")
+            +infoItem("mobilePhone")
       .contact-info.lined.row
         .col-md-6.col-xs-12
           section.info-email.scheme-green
             h4.title
+              | Pager
+              +moreButtons
+            +infoItem('pagerNum')
+        .col-md-6.col-xs-12
+          section.info-fax.scheme-yellow
+            h4.title
               | Email
               +moreButtons
             +infoItem('email')
+      .contact-info.row
         .col-md-6.col-xs-12
-          section.info-fax.scheme-yellow
+          section.info-fax.scheme-mint
             h4.title
               | Fax
               +moreButtons
             +infoItem('faxNum')
-      .contact-info.row
-        .col-md-12
+        .col-md-6.col-xs-12
           section.info-address.scheme-gray
             h4.title
               | Address
             .item
-              span.detail 447 68th Street, NY 11302
+              span.detail(ng-bind-html="person.addresses[0]")
             button.btn.btn-default Show all
-            pre(ng-bind-html="content['hybridized_provider_output'] | json")
+      pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .list-group
         a.list-group-item.active(href="#")

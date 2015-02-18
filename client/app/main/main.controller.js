@@ -83,7 +83,9 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
       addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
         .values().compact().value() )
     })
-    output.addresses = addresses
+    output.addresses = _.map(addresses, function(add) {
+      return add.join('<br>')
+    })
 
     // generate numbers
     _.forEach(votableLists, function(listName) {
