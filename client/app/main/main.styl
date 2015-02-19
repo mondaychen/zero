@@ -40,18 +40,18 @@
   .item
     color: #434A52
     padding-left: 9px
-    height: 65px
+    min-height: 65px
     margin-top: 3px
     .flag
       float: right
-      line-height: @height
+      line-height: @min-height
       margin: 0 8px
     .detail
-      line-height: @height
+      height: @min-height
+      display: table-cell
+      vertical-align: middle
       font-size: 20px
-      white-space: nowrap
-      overflow: hidden
-      text-overflow: ellipsis
+      word-break: break-all
     &.recommended .detail
       font-size: 26px
       color: #000
