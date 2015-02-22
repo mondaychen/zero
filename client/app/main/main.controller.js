@@ -167,5 +167,23 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     updateItem(item)
   }
 
+  $scope.viewStatus = {
+    viewClass: 'zero-main-view',
+    targetSubView: '',
+    mainInfoView: $('#main-info'),
+    subInfoView: $('#sub-info'),
+    changeToSubView: function(category) {
+      this.viewClass = 'zero-sub-view'
+      this.targetSubView = category
+      _.delay(function(self) {
+        self.mainInfoView.hide()
+        self.subInfoView.show()
+        _.defer(function() {
+          self.subInfoView.addClass('show')
+        })
+      }, 800, this)
+    }
+  }
+
 
 });

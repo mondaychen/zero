@@ -19,12 +19,16 @@ mixin infoItem(category)
     .detail {{item.value}}
   .empty-list(ng-show="!person.#{category}.length") No Data
 
-mixin moreButtons()
-  button.more(data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") +
-  ul.dropdown-menu(aria-labelledby="dLabel" role="menu")
-    li
-      a(href="#") Add a note 
-      a(href="#") Add a number
+mixin infoSection(category, display_name, classes)
+  .col-md-6.col-xs-12(class="zero-section-view-#{category}")
+    section(class=classes
+      ng-class="viewStatus.targetSubView == '#{category}' ? 'focused' : ''")
+      h4.title
+        | #{display_name}
+        button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
+      +infoItem(category)
+      .notes
+        a.toggle(href="#") Show notes(1)
 
 .container
   .row
@@ -34,48 +38,24 @@ mixin moreButtons()
           | {{person.fullName}}
         .description
           | [description]
-      .contact-info.lined.row
-        .col-md-6.col-xs-12
-          section.info-phone.scheme-red
-            h4.title
-              | Office Phone
-              +moreButtons
-            +infoItem("officePhone")
-            .notes
-              a.toggle(href="#") Show notes(1)
-        .col-md-6.col-xs-12
-          section.info-pager.scheme-blue
-            h4.title
-              | Mobile Phone
-              +moreButtons
-            +infoItem("mobilePhone")
-      .contact-info.lined.row
-        .col-md-6.col-xs-12
-          section.info-email.scheme-green
-            h4.title
-              | Pager
-              +moreButtons
-            +infoItem('pagerNum')
-        .col-md-6.col-xs-12
-          section.info-fax.scheme-yellow
-            h4.title
-              | Email
-              +moreButtons
-            +infoItem('email')
-      .contact-info.row
-        .col-md-6.col-xs-12
-          section.info-fax.scheme-mint
-            h4.title
-              | Fax
-              +moreButtons
-            +infoItem('faxNum')
-        .col-md-6.col-xs-12
-          section.info-address.scheme-gray
-            h4.title
-              | Address
-            .item
-              span.detail(ng-bind-html="person.addresses[0]")
-            button.btn.btn-default Show all
+      #main-info(ng-class="viewStatus.viewClass")
+        .contact-info.lined.row
+          +infoSection("officePhone", "Office Phone", ["scheme-red"])
+          +infoSection("mobilePhone", "Mobile Phone", ["scheme-blue"])
+        .contact-info.lined.row
+          +infoSection("pagerNum", "Pager", ["scheme-green"])
+          +infoSection("email", "Email", ["scheme-yellow"])
+        .contact-info.row
+          +infoSection("fax", "Fax", ["scheme-mint"])
+          .col-md-6.col-xs-12
+            section.info-address.scheme-gray
+              h4.title
+                | Address
+              .item
+                span.detail(ng-bind-html="person.addresses[0]")
+              button.btn.btn-default Show all
+      #sub-info
+        button back
       pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .list-group
