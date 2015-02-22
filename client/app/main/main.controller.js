@@ -200,5 +200,16 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     }
   }
 
-
 });
+
+
+app.directive('infoItems', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      items: '=',
+      voteAction: '&'
+    },
+    templateUrl: 'app/main/components/info_items.html'
+  }
+})

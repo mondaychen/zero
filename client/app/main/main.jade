@@ -1,24 +1,5 @@
 div(ng-include='"components/navbar/navbar.html"')
 
-mixin infoItem(category)
-  //- .item(class= (isRecommended ? "recommended" : "") ng-repeat="item in person.#{category}")
-  .item(ng-repeat="item in person.#{category}"
-    ng-class="item.isRecommended ? 'recommended' : ''")
-    .actions
-      .votes
-        button.up-vote(ng-click='vote(item, 1)')
-          span.glyphicon.glyphicon-ok(aria-label="Upvote"
-            ng-class='item.voteStatus==1 ? "active" : ""')
-        button.down-vote(ng-click='vote(item, -1)')
-          span.glyphicon.glyphicon-remove(aria-label="Downvote"
-            ng-class='item.voteStatus==-1 ? "active" : ""')
-      //- .count(class= (isHighlight ? "highlight" : ""))= count
-      .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
-    .flag(ng-show="item.isNew")
-      | New!
-    .detail {{item.value}}
-  .empty-list(ng-show="!person.#{category}.length") No Data
-
 mixin infoSection(category)
   .col-md-6.col-xs-12(class="zero-section-view-#{category}")
     section(ng-class="['scheme-' + scheme.#{category}, \
@@ -26,7 +7,7 @@ mixin infoSection(category)
       h4.title
         | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
-      +infoItem(category)
+      info-items(items="person.#{category}" vote-action="vote(item, value)")
       .notes
         a.toggle(href="#") Show notes(1)
 
