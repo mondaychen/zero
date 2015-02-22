@@ -46,6 +46,8 @@ mixin infoSection(category)
             section(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
               h4.title
                 | {{dispalyNames[viewStatus.targetSubView]}}
+              info-items(items="person[viewStatus.targetSubView]"
+                vote-action="vote(item, value)")
       pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .list-group
