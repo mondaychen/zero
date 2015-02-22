@@ -108,7 +108,6 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
       })
     })
 
-
     delete output['NPI'];
     delete output['firstName'];
     delete output['lastName'];
@@ -165,6 +164,14 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
   $scope.vote = function(item, value) {
     item.voteStatus = value
     updateItem(item)
+  }
+
+  $scope.scheme = {
+    'email'       : 'yellow',
+    'faxNum'      : 'mint',
+    'officePhone' : 'red',
+    'mobilePhone' : 'blue',
+    'pagerNum'    : 'green'
   }
 
   $scope.viewStatus = {
