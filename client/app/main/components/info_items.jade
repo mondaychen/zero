@@ -8,7 +8,6 @@
       button.down-vote(ng-click='voteAction({item:item, value: -1})')
         span.glyphicon.glyphicon-remove(aria-label="Downvote"
           ng-class='item.voteStatus==-1 ? "active" : ""')
-    //- .count(class= (isHighlight ? "highlight" : ""))= count
     .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
   .flag(ng-show="item.isNew")
     | New!
