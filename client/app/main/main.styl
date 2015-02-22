@@ -74,7 +74,8 @@
     .glyphicon
       color: white
   button.back
-    color: red
+    font-size: 20px
+    margin-top: 20px
 
 /* Animations */
 #main-info
@@ -145,6 +146,8 @@ for key, value in $color_scheme
       button:hover .glyphicon
         color: value
         transition: color 0.3s
+    button.back&
+      color: value
 
 .scheme-gray
   border-left: #999 3px solid

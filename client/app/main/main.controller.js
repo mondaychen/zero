@@ -174,6 +174,14 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     'pagerNum'    : 'green'
   }
 
+  $scope.dispalyNames = {
+    'email'       : 'Email',
+    'faxNum'      : 'Fax',
+    'officePhone' : 'Office Phone',
+    'mobilePhone' : 'Mobile Phone',
+    'pagerNum'    : 'Pager'
+  }
+
   $scope.viewStatus = {
     viewClass: 'zero-main-view',
     targetSubView: '',

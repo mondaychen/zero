@@ -19,12 +19,12 @@ mixin infoItem(category)
     .detail {{item.value}}
   .empty-list(ng-show="!person.#{category}.length") No Data
 
-mixin infoSection(category, display_name)
+mixin infoSection(category)
   .col-md-6.col-xs-12(class="zero-section-view-#{category}")
     section(ng-class="['scheme-' + scheme.#{category}, \
       viewStatus.targetSubView == '#{category}' ? 'focused' : '']")
       h4.title
-        | #{display_name}
+        | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
       +infoItem(category)
       .notes
@@ -40,13 +40,13 @@ mixin infoSection(category, display_name)
           | [description]
       #main-info(ng-class="viewStatus.viewClass")
         .contact-info.lined.row
-          +infoSection("officePhone", "Office Phone")
-          +infoSection("mobilePhone", "Mobile Phone")
+          +infoSection("officePhone")
+          +infoSection("mobilePhone")
         .contact-info.lined.row
-          +infoSection("pagerNum", "Pager")
-          +infoSection("email", "Email")
+          +infoSection("pagerNum")
+          +infoSection("email")
         .contact-info.row
-          +infoSection("fax", "Fax", ["scheme-mint"])
+          +infoSection("faxNum")
           .col-md-6.col-xs-12
             section.info-address.scheme-gray
               h4.title
@@ -56,9 +56,15 @@ mixin infoSection(category, display_name)
               button.btn.btn-default Show all
       #sub-info
         .contact-info.row
-          .col-md-1
-            button.back
+          .col-md-2
+            button.back(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
               span.glyphicon.glyphicon-chevron-left(aria-label="Back")
+              br
+              | Back
+          .col-md-10
+            section(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
+              h4.title
+                | {{dispalyNames[viewStatus.targetSubView]}}
       pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .list-group
