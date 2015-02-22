@@ -193,10 +193,23 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
       _.delay(function(self) {
         self.mainInfoView.hide()
         self.subInfoView.show()
-        _.defer(function() {
+        _.delay(function() {
           self.subInfoView.addClass('show')
-        })
+        }, 20)
       }, 800, this)
+    },
+    changeToMainView: function() {
+      var self = this
+      self.subInfoView.removeClass('show')
+      _.delay(function() {
+        self.targetSubView = ''
+        self.subInfoView.hide()
+        self.mainInfoView.show()
+        _.delay(function() {
+          self.viewClass = 'zero-main-view'
+          $scope.$apply()
+        }, 20)
+      }, 600)
     }
   }
 

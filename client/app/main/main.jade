@@ -38,7 +38,8 @@ mixin infoSection(category)
       #sub-info
         .contact-info.row
           .col-md-2
-            button.back(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
+            button.back(ng-class="'scheme-' + scheme[viewStatus.targetSubView]"
+              ng-click="viewStatus.changeToMainView()")
               span.glyphicon.glyphicon-chevron-left(aria-label="Back")
               br
               | Back
