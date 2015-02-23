@@ -279,10 +279,17 @@ app.directive('infoItems', function() {
     },
     templateUrl: 'app/main/components/info_items.html',
     link: function(scope, element) {
-      scope.submit = function() {
+      scope.submitNewItem = function() {
         if (scope.newItem) {
           scope.items.add(scope.newItem)
           scope.newItem = ''
+        }
+      }
+      scope.submitNewNote = function() {
+        console.log(scope.newNote)
+        if (scope.newNote) {
+          scope.items.notes.push(scope.newNote)
+          scope.newNote = ''
         }
       }
     }
