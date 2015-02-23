@@ -15,21 +15,19 @@ ul
       .detail {{item.value}}
 .empty-list(ng-show="!items.collection.length") No Data
 
-form.add-new.row(ng-show="isExtended" ng-submit="submitNewItem()")
-  .form-group.col-md-10
+form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")
+  button.btn.btn-default.btn-lg(type="submit") Add
+  .form-group
     input.form-control.input-lg(type="text" id="add-an-item"
       placeholder="Enter a new item" ng-model="newItem")
-  .col-md-2
-    button.btn.btn-default.btn-lg(type="submit") Add
 
 .notes(ng-show="isExtended")
   h5 Notes
   ul
     li(ng-repeat="note in items.notes")
       {{note}}
-  form.row(ng-submit="submitNewNote()")
-    .form-group.col-md-10
+  form(ng-submit="submitNewNote()")
+    button.btn.btn-default(type="submit") Add
+    .form-group
       input.form-control(type="text" id="add-a-note"
         placeholder="Enter a new note" ng-model="newNote")
-    .col-md-2
-      button.btn.btn-default(type="submit") Add
