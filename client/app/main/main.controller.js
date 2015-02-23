@@ -221,8 +221,27 @@ app.directive('infoItems', function() {
     restrict: 'E',
     scope: {
       items: '=',
-      voteAction: '&'
+      voteAction: '&',
+      isExtended: '=extended'
     },
-    templateUrl: 'app/main/components/info_items.html'
+    templateUrl: 'app/main/components/info_items.html',
+    link: function(scope, element) {
+      scope.submit = function() {
+        if (scope.newItem) {
+          scope.items.push({
+            "value": scope.newItem,
+            "upvotes": 0,
+            "downvotes": 0,
+            "isNew": true,
+            "voteStatus": 0,
+            "oldVoteStatus": 0,
+            "score": 0,
+            "isRecommended": false,
+            "isHighlight": false
+          })
+          scope.newItem = ''
+        }
+      }
+    }
   }
 })
