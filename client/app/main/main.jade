@@ -7,7 +7,8 @@ mixin infoSection(category)
       h4.title
         | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
-      info-items(items="person.#{category}" vote-action="vote(item, value)")
+      info-items(items="person.#{category}"
+        vote-action="vote(item, value)")
       .notes
         a.toggle(href="#") Show notes(1)
 

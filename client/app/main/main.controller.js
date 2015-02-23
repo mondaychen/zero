@@ -30,7 +30,62 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
   }
 
-  function updateItem (item) {
+  function InfoCollection (name, initialArr) {
+    this.name = name
+    initialArr = initialArr || []
+    this.initialArr = _.isArray(initialArr) ? initialArr : [initialArr]
+
+    this._init()
+  }
+
+  InfoCollection.prototype._init = function() {
+    var self = this
+    self.collection = []
+    _.each(this.initialArr, function(item) {
+      self.add(item)
+    })
+  }
+
+  InfoCollection.prototype._makeObj = function(data) {
+    if(_.isString(data)) {
+      data = {
+        value: data
+      }
+    }
+    return data
+  }
+
+  InfoCollection.prototype.add = function(data) {
+    var self = this
+    data = this._makeObj(data)
+    var dft = {
+      "value": '',
+      "upvotes": 0,
+      "downvotes": 0,
+      "isNew": true,
+      "voteStatus": 0,
+      update: function(data) {
+        self.update(this, data)
+      }
+    }
+    data = _.extend(dft, data)
+    this._updateItem(data)
+    this.collection.push(data)
+  }
+
+  InfoCollection.prototype.update = function(item, data) {
+    data = this._makeObj(data)
+    item = _.extend(item, data)
+    this._updateItem(item)
+  }
+
+  InfoCollection.prototype.sortBy = function(key, reversed) {
+    this.collection = _.sortBy(this.collection, function(item) {
+      return reversed ? -item[key] : item[key]
+    })
+  }
+
+  InfoCollection.prototype._updateItem = function(item) {
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
     if(item.oldVoteStatus == 1) {
@@ -97,15 +152,12 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
         }
         rtn.isNew = (_.random(50) < 2)
         rtn.voteStatus = 0
-
-        updateItem(rtn)
-
         return rtn
       })
+      // make instance
+      output[listName] = new InfoCollection(listName, output[listName])
       // rank
-      output[listName] = _.sortBy(output[listName], function(item) {
-        return -item.score
-      })
+      output[listName].sortBy('score', true)
     })
 
     delete output['NPI'];
@@ -162,8 +214,7 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
   });
 
   $scope.vote = function(item, value) {
-    item.voteStatus = value
-    updateItem(item)
+    item.update({voteStatus: value})
   }
 
   $scope.scheme = {

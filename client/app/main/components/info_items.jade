@@ -1,5 +1,5 @@
 ul
-  li(ng-repeat="item in items")
+  li(ng-repeat="item in items.collection")
     .item(ng-class="item.isRecommended ? 'recommended' : ''")
       .actions
         .votes
@@ -13,7 +13,7 @@ ul
       .flag(ng-show="item.isNew")
         | New!
       .detail {{item.value}}
-.empty-list(ng-show="!items.length") No Data
+.empty-list(ng-show="!items.collection.length") No Data
 
 form.add-new.row(ng-show="isExtended" ng-submit="submit()")
   .form-group.col-md-10
