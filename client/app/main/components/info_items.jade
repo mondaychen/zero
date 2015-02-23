@@ -1,15 +1,17 @@
-.item(ng-repeat="item in items"
-  ng-class="item.isRecommended ? 'recommended' : ''")
-  .actions
-    .votes
-      button.up-vote(ng-click='voteAction({item:item, value: 1})')
-        span.glyphicon.glyphicon-ok(aria-label="Upvote"
-          ng-class='item.voteStatus==1 ? "active" : ""')
-      button.down-vote(ng-click='voteAction({item:item, value: -1})')
-        span.glyphicon.glyphicon-remove(aria-label="Downvote"
-          ng-class='item.voteStatus==-1 ? "active" : ""')
-    .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
-  .flag(ng-show="item.isNew")
-    | New!
-  .detail {{item.value}}
+ul
+  li(ng-repeat="item in items")
+    .item(ng-class="item.isRecommended ? 'recommended' : ''")
+      .actions
+        .votes
+          button.up-vote(ng-click='voteAction({item:item, value: 1})')
+            span.glyphicon.glyphicon-ok(aria-label="Upvote"
+              ng-class='item.voteStatus==1 ? "active" : ""')
+          button.down-vote(ng-click='voteAction({item:item, value: -1})')
+            span.glyphicon.glyphicon-remove(aria-label="Downvote"
+              ng-class='item.voteStatus==-1 ? "active" : ""')
+        .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
+      .flag(ng-show="item.isNew")
+        | New!
+      .detail {{item.value}}
+    .item-extra
 .empty-list(ng-show="!items.length") No Data
