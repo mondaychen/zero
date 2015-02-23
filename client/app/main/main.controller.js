@@ -279,17 +279,7 @@ app.directive('infoItems', function() {
     link: function(scope, element) {
       scope.submit = function() {
         if (scope.newItem) {
-          scope.items.push({
-            "value": scope.newItem,
-            "upvotes": 0,
-            "downvotes": 0,
-            "isNew": true,
-            "voteStatus": 0,
-            "oldVoteStatus": 0,
-            "score": 0,
-            "isRecommended": false,
-            "isHighlight": false
-          })
+          scope.items.add(scope.newItem)
           scope.newItem = ''
         }
       }
