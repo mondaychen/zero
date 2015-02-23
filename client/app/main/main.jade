@@ -10,7 +10,9 @@ mixin infoSection(category)
       info-items(items="person.#{category}"
         vote-action="vote(item, value)")
       .notes
-        a.toggle(href="#") Show notes(1)
+        a.toggle(href="#"
+          ng-click="viewStatus.changeToSubView('#{category}')")
+          | Show notes({{person.#{category}.notes.length}})
 
 .container
   .row
@@ -70,10 +72,3 @@ footer.footer
       | ZERO v0.0.1
       = ' | '
       | Weill Cornell Radiology
-
-script.
-  $(document).ready(function() {
-    $('.notes').on('click', '.toggle', function() {
-      alert(1)
-    })
-  })

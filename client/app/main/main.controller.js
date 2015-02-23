@@ -44,6 +44,8 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     _.each(this.initialArr, function(item) {
       self.add(item)
     })
+
+    self.notes = []
   }
 
   InfoCollection.prototype._makeObj = function(data) {
