@@ -56,13 +56,9 @@ mixin infoSection(category)
       //- pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .contact-list
-        a.list-item.active(href="#")
-          .name John Smith, MD
-          .ordered
-            b Ordered this study
-          .role doctor's role
-        a.list-item(href="#")
-          .name John Smith, MD
+        a.list-item(href="#" ng-repeat="one in contacts"
+          ng-class="one.active ? 'active' : ''" ng-click="viewContact(one)")
+          .name {{one.fullName}}
           .ordered
             b Ordered this study
           .role doctor's role

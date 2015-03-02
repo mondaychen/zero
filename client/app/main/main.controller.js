@@ -13,7 +13,10 @@ app.run(function($httpBackend) {
 
   $httpBackend.whenGET(regForBackend).respond(function(method,url,data) {
     return [200
-      , {"addresses":[{"addrPostCode":"100218722","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"425 E 61ST ST","addrLine2":"11TH FLOOR","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10009","locTypeCode":"New York","locName":null,"addrLine1":"425 East 13th Street,","addrLine2":null,"addrState":"NY","addrCity":"New York"},{"addrPostCode":"100214870","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"525 E 68TH ST","addrLine2":"J-130","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10021","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"505 EAST 70TH STREET, HT582","addrLine2":"HT 582","addrState":"NY","addrCity":"NEW YORK"}],"NPI":"1235160458","mobilePhone":["9176262564"],"firstName":"LONA","middleName":null,"lastName":"PRASAD","pagerNum":[],"faxNum":["2127468717"],"contactPreference":"email","email":["lop9006@direct.weillcornell.org","lop9006@med.cornell.edu"],"officePhone":["2128210974","2127463000","2127464159","2127462640"]}
+      , [
+        {"addresses":[{"addrPostCode":"100218722","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"425 E 61ST ST","addrLine2":"11TH FLOOR","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10009","locTypeCode":"New York","locName":null,"addrLine1":"425 East 13th Street,","addrLine2":null,"addrState":"NY","addrCity":"New York"},{"addrPostCode":"100214870","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"525 E 68TH ST","addrLine2":"J-130","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10021","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"505 EAST 70TH STREET, HT582","addrLine2":"HT 582","addrState":"NY","addrCity":"NEW YORK"}],"NPI":"1235160458","mobilePhone":["9176262564"],"firstName":"LONA","middleName":null,"lastName":"PRASAD","pagerNum":[],"faxNum":["2127468717"],"contactPreference":"email","email":["lop9006@direct.weillcornell.org","lop9006@med.cornell.edu"],"officePhone":["2128210974","2127463000","2127464159","2127462640"]}
+      , {"addresses":[{"addrPostCode":"100218722","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"425 E 61ST ST","addrLine2":"11TH FLOOR","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10009","locTypeCode":"New York","locName":null,"addrLine1":"425 East 13th Street,","addrLine2":null,"addrState":"NY","addrCity":"New York"},{"addrPostCode":"100214870","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"525 E 68TH ST","addrLine2":"J-130","addrState":"NY","addrCity":"NEW YORK"},{"addrPostCode":"10021","locTypeCode":"NEW YORK","locName":"Practice Address","addrLine1":"505 EAST 70TH STREET, HT582","addrLine2":"HT 582","addrState":"NY","addrCity":"NEW YORK"}],"NPI":"1235160458","mobilePhone":["9176262564"],"firstName":"LONA","middleName":null,"lastName":"HAHA","pagerNum":[],"faxNum":["2127468717"],"contactPreference":"email","email":["lop9006@direct.weillcornell.org","lop9006@med.cornell.edu"],"officePhone":["2128210974","2127464159","2127462640"]}
+      ]
       , {}]
   });
 
@@ -160,7 +163,6 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
         rtn.isNew = (_.random(30) < 2)
         rtn.lastVoted = (_.random(15) < 2)
           ? (new Date()).format("MM/dd/yyyy hh:mm") : null
-        console.log(rtn.lastVoted)
         rtn.voteStatus = 0
         return rtn
       })
@@ -198,28 +200,29 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     return query;
   }
 
+  $scope.contacts = []
   $scope.person = {}
-
-  $scope.content = {
-    'match_metrix_provider_output'    : null,
-    'match_metrix_radiologist_output' : null,
-    'referring_md_provider_output'    : null,
-    'referring_md_attending_output'   : null,
-    'hybridized_provider_output'      : null
-  }
 
   $scope.$watch(function(){ return $location.search() }, function(params){
 
     $http.get('/2.0/zero/getProvider' + getQuery())
     .success(function(data) {
       $scope.original_query_data = angular.copy(data);
-      // $scope.content['referring_md_provider_output'] = getOrderedOutput(data['referring_md_provider_output']);
-      // $scope.content['match_metrix_provider_output'] = getOrderedOutput(data['match_metrix_provider_output']);
-      // $scope.content['hybridized_provider_output'] = getOrderedOutput(data['hybridized_provider_output']);
 
-      $scope.person = 
-        $scope.content['hybridized_provider_output'] = getOrderedOutput(data);
-
+      $scope.contacts = _.map(data, function(person) {
+         return getOrderedOutput(person)
+      })
+      $scope.viewContact = function (contact) {
+        if(contact.active) {
+          return
+        }
+        _.each($scope.contacts, function(one) {
+          one.active = false
+        })
+        contact.active = true
+        $scope.person = contact
+      }
+      $scope.viewContact($scope.contacts[0])
     })
   });
 
@@ -294,7 +297,6 @@ app.directive('infoItems', function() {
         }
       }
       scope.submitNewNote = function() {
-        console.log(scope.newNote)
         if (scope.newNote) {
           scope.items.notes.push(scope.newNote)
           scope.newNote = ''
