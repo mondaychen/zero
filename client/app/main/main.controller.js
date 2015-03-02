@@ -81,9 +81,14 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
     this._updateItem(item)
   }
 
-  InfoCollection.prototype.sortBy = function(key, reversed) {
+  InfoCollection.prototype.sort = function() {
     this.collection = _.sortBy(this.collection, function(item) {
-      return reversed ? -item[key] : item[key]
+      var score = item.score
+      if (score > -1) {
+        score += item.isNew ? 100 : 0
+        score += item.lastVoted ? 1000 : 0
+      }
+      return -score
     })
   }
 
@@ -152,8 +157,8 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
           upvotes: _.random(0, 8),
           downvotes: _.random(0, 3)
         }
-        rtn.isNew = (_.random(50) < 2)
-        rtn.lastVoted = (_.random(10) < 2)
+        rtn.isNew = (_.random(30) < 2)
+        rtn.lastVoted = (_.random(15) < 2)
           ? (new Date()).format("MM/dd/yyyy hh:mm") : null
         console.log(rtn.lastVoted)
         rtn.voteStatus = 0
@@ -162,7 +167,7 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
       // make instance
       output[listName] = new InfoCollection(listName, output[listName])
       // rank
-      output[listName].sortBy('score', true)
+      output[listName].sort()
     })
 
     delete output['NPI'];
