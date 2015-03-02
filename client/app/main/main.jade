@@ -37,7 +37,8 @@ mixin infoSection(category)
                 | Address
               .item
                 span.detail(ng-bind-html="person.addresses[0]")
-              button.btn.btn-default Show all
+              button.btn.btn-default(ng-show="person.addresses.length > 1"
+                data-target="#all-addresses" data-toggle="modal") Show all
       #sub-info
         .contact-info.row
           .col-md-2
@@ -72,3 +73,16 @@ footer.footer
       | ZERO v0.0.1
       = ' | '
       | Weill Cornell Radiology
+
+//- Bootstrap Modal
+#all-addresses.modal.fade(tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button" data-dismiss="modal" aria-label="Close")
+          span(aria-hidden="true") &times;
+        h4.modal-title Addresses
+      .modal-body
+        ul
+          li(ng-repeat="address in person.addresses" ng-bind-html="address")
