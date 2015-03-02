@@ -13,9 +13,10 @@ ul
       .flag(ng-show="item.isNew")
         | New!
       .detail {{item.value}}
-        .voted-up(ng-show="$first")
+        .voted-up(ng-show="item.lastVoted")
           span Voted Up
-          time(datatime="2015-04-04 11:14") on 11:14am Apr 4 2015
+          time(datatime="2015-04-04 11:14")
+            | on {{item.lastVoted}}
 .empty-list(ng-show="!items.collection.length") No Data
 
 form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")
