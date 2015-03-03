@@ -1,7 +1,6 @@
 angular.module('zeroApp').directive('contactDetail', function() {
   return {
     restrict: 'E',
-    transclude: true,
     scope: {
       type: '=',
       detail: '='
