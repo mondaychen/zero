@@ -16,8 +16,8 @@ ul
         contact-detail(type="type" detail="item.value")
         .voted-up(ng-show="item.lastVoted")
           span Voted Up
-          time(datatime="2015-04-04 11:14")
-            | on {{item.lastVoted}}
+          time
+            | on {{item.lastVoted | date:'MM/dd/yyyy h:mma'}}
 .empty-list(ng-show="!items.collection.length") No Data
 
 form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")

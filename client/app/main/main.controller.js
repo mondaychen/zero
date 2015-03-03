@@ -162,8 +162,7 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
           downvotes: _.random(0, 3)
         }
         rtn.isNew = (_.random(30) < 2)
-        rtn.lastVoted = (_.random(15) < 2)
-          ? (new Date()).format("MM/dd/yyyy hh:mm") : null
+        rtn.lastVoted = (_.random(15) < 2) ? _.now(): null
         rtn.voteStatus = 0
         return rtn
       })
