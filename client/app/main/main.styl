@@ -166,8 +166,7 @@ for key, value in $color_scheme
       .flag
         color: value
     .actions
-      .count
-        background-color: lightness(value, $light2)
+      background-color: lightness(value, $light2)
       .up-vote
         background-color: lightness(value, $light3)
       .down-vote
@@ -175,10 +174,16 @@ for key, value in $color_scheme
       .glyphicon
         // TODO: fix display for IE8
         text-shadow: 0 0 2px value
-      button .active
-      button:hover .glyphicon
-        color: value
-        transition: color 0.3s
+      button
+        transition: transform 0.2s
+        & .glyphicon
+          transition: color 0.3s
+        &:hover
+          transform: translateY(-3px)
+        &:active
+          transform: translateY(1px)
+        &.active .glyphicon
+          color: value
     button.back&
       color: value
 

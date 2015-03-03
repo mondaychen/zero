@@ -228,6 +228,10 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
   });
 
   $scope.vote = function(item, value) {
+    if(item.voteStatus == value) {
+      item.update({voteStatus: 0})
+      return
+    }
     item.update({voteStatus: value})
   }
 

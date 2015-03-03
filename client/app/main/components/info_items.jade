@@ -3,12 +3,12 @@ ul
     .item(ng-class="item.isRecommended ? 'recommended' : ''")
       .actions
         .votes
-          button.up-vote(ng-click='voteAction({item:item, value: 1})')
-            span.glyphicon.glyphicon-ok(aria-label="Upvote"
+          button.up-vote(ng-click='voteAction({item:item, value: 1})'
               ng-class='item.voteStatus==1 ? "active" : ""')
-          button.down-vote(ng-click='voteAction({item:item, value: -1})')
-            span.glyphicon.glyphicon-remove(aria-label="Downvote"
+            span.glyphicon.glyphicon-ok(aria-label="Upvote")
+          button.down-vote(ng-click='voteAction({item:item, value: -1})'
               ng-class='item.voteStatus==-1 ? "active" : ""')
+            span.glyphicon.glyphicon-remove(aria-label="Downvote")
         .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
       .flag(ng-show="item.isNew")
         | New!
