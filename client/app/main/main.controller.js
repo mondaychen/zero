@@ -290,6 +290,7 @@ app.directive('infoItems', function() {
     restrict: 'E',
     scope: {
       items: '=',
+      type: '=',
       voteAction: '&',
       isExtended: '=extended'
     },

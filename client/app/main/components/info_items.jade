@@ -12,7 +12,8 @@ ul
         .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
       .flag(ng-show="item.isNew")
         | New!
-      .detail {{item.value}}
+      .detail
+        contact-detail(type="type" detail="item.value")
         .voted-up(ng-show="item.lastVoted")
           span Voted Up
           time(datatime="2015-04-04 11:14")
