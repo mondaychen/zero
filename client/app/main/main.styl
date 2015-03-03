@@ -85,6 +85,16 @@
       line-height: 24px
     .glyphicon
       color: white
+    button
+      transition: all 0.2s
+      & .glyphicon
+        transition: color 0.3s
+      &:hover
+        transform: translate(-1px, -3px)
+        box-shadow: 1px 1.5px 2px #eee
+      &:active
+        transform: translate(0, 0)
+        box-shadow: none
   button.back
     font-size: 20px
     margin-top: 20px
@@ -174,16 +184,8 @@ for key, value in $color_scheme
       .glyphicon
         // TODO: fix display for IE8
         text-shadow: 0 0 2px value
-      button
-        transition: transform 0.2s
-        & .glyphicon
-          transition: color 0.3s
-        &:hover
-          transform: translateY(-3px)
-        &:active
-          transform: translateY(1px)
-        &.active .glyphicon
-          color: value
+      button.active .glyphicon
+        color: value
     button.back&
       color: value
 
