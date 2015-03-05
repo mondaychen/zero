@@ -1,4 +1,5 @@
-angular.module('zeroApp').directive('infoItems', function() {
+angular.module('zeroApp').directive('infoItems', ['ieVersion',
+  function(ieVersion) {
   return {
     restrict: 'A', // for IE 8
     scope: {
@@ -27,7 +28,7 @@ angular.module('zeroApp').directive('infoItems', function() {
         }
         item.update({voteStatus: value})
         // fix rendering for IE 8
-        if(!app.ieVersion || app.ieVersion > 8) {
+        if(!ieVersion || ieVersion > 8) {
           return
         }
         _.defer(function() {
@@ -40,4 +41,4 @@ angular.module('zeroApp').directive('infoItems', function() {
       }
     }
   }
-})
+}])
