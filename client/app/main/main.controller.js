@@ -50,9 +50,6 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
   }
 
-  "/phone/office/23123123/true/0/-1"
-  "/email/acb@a.com/true/0/-1"
-
   var postVote = (function() {
     var defaultParams = {
       category: 'phone', // or 'email'
@@ -63,13 +60,14 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     }
     var urlPattern = '/2.0/zero/phone/:type/:value/:isNew/:upvotes/:downvotes/'
     return function(params) {
-      params = _.extend(defaultParams, params)
+      params = _.defaults(params, defaultParams)
       var url = urlPattern.replace(/\:.+?\//g, function($1) {
         var key = $1.slice(1, $1.length - 1)
-        if(params[key] !== null && !_.isUndefined(params[key])) {
-          return params[key] + '/'
+        if(params[key] === null || _.isUndefined(params[key])
+          || params[key] === '') {
+          return ''
         }
-        return ''
+        return params[key] + '/'
       })
       $http.post(url).success(function() {
         // console.log(arguments)
@@ -118,6 +116,14 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
       }
     }
     data = _.extend(dft, data)
+    switch(self.name) {
+      case 'officePhone': data.category = 'phone'; data.type = 'office'; break;
+      case 'mobilePhone': data.category = 'phone'; data.type = 'mobile'; break;
+      case 'faxNum':      data.category = 'phone'; data.type = 'fax';    break;
+      case 'pagerNum':    data.category = 'phone'; data.type = 'pager';  break;
+      case 'email':       data.category = 'email'; data.type = null;     break;
+      default: break;
+    }
     this._updateItem(data, true)
     this.collection.push(data)
   }
@@ -141,6 +147,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
 
   InfoCollection.prototype._updateItem = function(item, preventRequest) {
     var params = {}
+    // set to 0 for initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
     if(item.oldVoteStatus == 1) {
@@ -150,18 +157,33 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     if(item.oldVoteStatus == -1) {
       item.downvotes--
       params.downvotes = -1
+      if(item.wasNew) {
+        item.wasNew = false
+        item.isNew = true
+      }
     }
+    // upvote
     if(item.voteStatus == 1) {
       item.upvotes++
       params.upvotes = 1
     }
+    // down vote
     if(item.voteStatus == -1) {
       item.downvotes++
       params.downvotes = 1
+      if(item.isNew) {
+        item.wasNew = true
+      }
+      item.isNew = false
     }
+    
     if(!preventRequest) {
+      params.isNew = item.isNew
+      params.category = item.category
+      params.type = item.type
       postVote(params)
     }
+
     item.score = item.upvotes - item.downvotes
     item.isRecommended = item.score > 7
     item.isHighlight = item.score > 0
