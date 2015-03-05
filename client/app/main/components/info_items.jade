@@ -16,7 +16,7 @@ ul
         div(contact-detail type="type" detail="item.value")
         .voted-up(ng-show="item.lastVoted")
           span Voted Up
-          time
+          time.time
             | on {{item.lastVoted | date:'MM/dd/yyyy h:mma'}}
 .empty-list(ng-show="!items.collection.length") No Data
 
