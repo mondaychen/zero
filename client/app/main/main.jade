@@ -7,8 +7,7 @@ mixin infoSection(category)
       h4.title
         | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
-      div(info-items items="person.#{category}" type="'#{category}'"
-        vote-action="vote(item, value)")
+      div(info-items items="person.#{category}" type="'#{category}'")
       .notes
         a.toggle(href="#"
           ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")
@@ -53,8 +52,7 @@ mixin infoSection(category)
               h4.title
                 | {{dispalyNames[viewStatus.targetSubView]}}
               div(info-items items="person[viewStatus.targetSubView]"
-                type="viewStatus.targetSubView"
-                vote-action="vote(item, value)" extended="true")
+                type="viewStatus.targetSubView" extended="true")
       //- pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .contact-list

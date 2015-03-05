@@ -2,10 +2,19 @@
 
 var app = angular.module('zeroApp')
 
+app.ieVersion = (function () {
+  var v = 4
+  var div = document.createElement('div')
+  var i = div.getElementsByTagName('i')
+  do {
+      div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->'
+  } while (i[0])
+  return v > 5 ? v : false
+})()
+
 app.config(function($provide) {
   $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
 });
-
 
 app.run(function($httpBackend) {
 
@@ -233,13 +242,6 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     })
   });
 
-  $scope.vote = function(item, value) {
-    if(item.voteStatus == value) {
-      item.update({voteStatus: 0})
-      return
-    }
-    item.update({voteStatus: value})
-  }
 
   $scope.scheme = {
     'email'       : 'yellow',
@@ -257,17 +259,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     'pagerNum'    : 'Pager'
   }
 
-  var ieVersion = function () {
-    var v = 4
-    var div = document.createElement('div')
-    var i = div.getElementsByTagName('i')
-    do {
-        div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->'
-    } while (i[0])
-    return v > 5 ? v : false
-  }
-
-  var cssSupportTransition = ieVersion() > 9
+  var cssSupportTransition = app.ieVersion > 9
 
   $scope.viewStatus = {
     viewClass: 'zero-main-view',
@@ -311,7 +303,6 @@ app.directive('infoItems', function() {
     scope: {
       items: '=',
       type: '=',
-      voteAction: '&',
       isExtended: '=extended'
     },
     templateUrl: 'app/main/components/info_items.html',
@@ -327,6 +318,24 @@ app.directive('infoItems', function() {
           scope.items.notes.push(scope.newNote)
           scope.newNote = ''
         }
+      }
+      scope.vote = function(e, item, value) {
+        if(item.voteStatus == value) {
+          item.update({voteStatus: 0})
+          return
+        }
+        item.update({voteStatus: value})
+        // fix rendering for IE 8
+        if(!app.ieVersion || app.ieVersion > 8) {
+          return
+        }
+        _.defer(function() {
+          $(e.currentTarget).parent().children().each(function() {
+            this.className = this.className
+            this.focus()
+          })
+          e.currentTarget.focus()
+        })
       }
     }
   }
