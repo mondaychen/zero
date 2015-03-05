@@ -30,6 +30,13 @@ app.run(function($httpBackend) {
       , {}]
   });
 
+  $httpBackend.whenPOST(/^\/2.0\/zero\/phone/i).respond(function(method,url,data) {
+    console.log(url)
+    return [200
+      , {success: 1}
+      , {}]
+  });
+
   $httpBackend.whenGET(/^\S/).passThrough();
 
 })
@@ -42,6 +49,40 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     separator = separator || ' '
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
   }
+
+  "/phone/office/23123123/true/0/-1"
+  "/email/acb@a.com/true/0/-1"
+
+  var postVote = (function() {
+    var defaultParams = {
+      category: 'phone', // or 'email'
+      type: null, // null for 'email', string for 'phone'
+      upvotes: 0,
+      downvotes: 0,
+      isNew: false
+    }
+    var urlPattern = '/2.0/zero/phone/:type/:value/:isNew/:upvotes/:downvotes/'
+    return function(params) {
+      params = _.extend(defaultParams, params)
+      var url = urlPattern.replace(/\:.+?\//g, function($1) {
+        var key = $1.slice(1, $1.length - 1)
+        if(params[key] !== null && !_.isUndefined(params[key])) {
+          return params[key] + '/'
+        }
+        return ''
+      })
+      $http.post(url).success(function() {
+        console.log(arguments)
+      })
+    }
+  })()
+
+  postVote({
+    type: 'office',
+    value: 12312312312,
+    isNew: true,
+    upvotes: 1
+  })
 
   function InfoCollection (name, initialArr) {
     this.name = name
@@ -211,13 +252,6 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
 
   $scope.contacts = []
   $scope.person = {}
-
-  var Contacts = $resource('/2.0/zero/getProvider', {
-    institution: 'cornell'
-  })
-  var contacts = Contacts.query({}, function() {
-    console.log(contacts)
-  })
 
   $scope.$watch(function(){ return $location.search() }, function(params){
 
