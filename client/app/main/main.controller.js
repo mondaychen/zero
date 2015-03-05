@@ -259,7 +259,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     'pagerNum'    : 'Pager'
   }
 
-  var cssSupportTransition = app.ieVersion > 9
+  var cssSupportTransition = !app.ieVersion || app.ieVersion > 9
 
   $scope.viewStatus = {
     viewClass: 'zero-main-view',

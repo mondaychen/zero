@@ -53,7 +53,7 @@ mixin infoSection(category)
                 | {{dispalyNames[viewStatus.targetSubView]}}
               div(info-items items="person[viewStatus.targetSubView]"
                 type="viewStatus.targetSubView" extended="true")
-      //- pre(ng-bind-html="content['hybridized_provider_output'] | json")
+      pre(ng-bind-html="person | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .contact-list
         .list-item(ng-repeat="one in contacts"
