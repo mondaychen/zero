@@ -58,7 +58,7 @@ mixin infoSection(category)
       //- pre(ng-bind-html="content['hybridized_provider_output'] | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .contact-list
-        a.list-item(href="#" ng-repeat="one in contacts"
+        .list-item(ng-repeat="one in contacts"
           ng-class="one.active ? 'active' : ''" ng-click="viewContact(one)")
           .name {{one.fullName}}
           .ordered
