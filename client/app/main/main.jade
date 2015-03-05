@@ -53,7 +53,7 @@ mixin infoSection(category)
                 | {{dispalyNames[viewStatus.targetSubView]}}
               div(info-items items="person[viewStatus.targetSubView]"
                 type="viewStatus.targetSubView" extended="true")
-      pre(ng-bind-html="person | json")
+      //- pre(ng-bind-html="person | json")
     .col-lg-3.col-lg-offset-1.col-md-12
       .contact-list
         .list-item(ng-repeat="one in contacts"
@@ -100,7 +100,7 @@ footer.footer
             label(for="pager-text") Content
             textarea.form-control(rows=3 id="pager-text"
               placeholder="Enter the content" ng-model="pagerText")
-            p.help-block
+            p.help-block.pull-right
               {{ 240 - (pagerText.length || 0) }}
           button.btn.btn-default(type="submit") Submit
 
