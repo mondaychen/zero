@@ -1,5 +1,6 @@
 angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
-    var postVote = (function() {
+
+  var postVote = (function() {
     var defaultParams = {
       category: 'phone', // or 'email'
       type: null, // null for 'email', string for 'phone'
