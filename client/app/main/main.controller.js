@@ -2,15 +2,7 @@
 
 var app = angular.module('zeroApp')
 
-app.ieVersion = (function () {
-  var v = 4
-  var div = document.createElement('div')
-  var i = div.getElementsByTagName('i')
-  do {
-      div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->'
-  } while (i[0])
-  return v > 5 ? v : false
-})()
+
 
 app.config(function($provide) {
   $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
@@ -41,7 +33,9 @@ app.run(function($httpBackend) {
 
 })
 
-app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
+app.controller('MainCtrl', ['ieVersion', '$scope',
+  '$http', '$location', '$resource',
+  function (ieVersion, $scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
 
@@ -316,7 +310,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     'pagerNum'    : 'Pager'
   }
 
-  var cssSupportTransition = !app.ieVersion || app.ieVersion > 9
+  var cssSupportTransition = !ieVersion || ieVersion > 9
 
   $scope.viewStatus = {
     viewClass: 'zero-main-view',
@@ -351,4 +345,4 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     }
   }
 
-})
+}])
