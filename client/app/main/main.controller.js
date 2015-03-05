@@ -72,17 +72,10 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
         return ''
       })
       $http.post(url).success(function() {
-        console.log(arguments)
+        // console.log(arguments)
       })
     }
   })()
-
-  postVote({
-    type: 'office',
-    value: 12312312312,
-    isNew: true,
-    upvotes: 1
-  })
 
   function InfoCollection (name, initialArr) {
     this.name = name
@@ -125,7 +118,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
       }
     }
     data = _.extend(dft, data)
-    this._updateItem(data)
+    this._updateItem(data, true)
     this.collection.push(data)
   }
 
@@ -146,20 +139,28 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     })
   }
 
-  InfoCollection.prototype._updateItem = function(item) {
+  InfoCollection.prototype._updateItem = function(item, preventRequest) {
+    var params = {}
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
     if(item.oldVoteStatus == 1) {
       item.upvotes--
+      params.upvotes = -1
     }
     if(item.oldVoteStatus == -1) {
       item.downvotes--
+      params.downvotes = -1
     }
     if(item.voteStatus == 1) {
       item.upvotes++
+      params.upvotes = 1
     }
     if(item.voteStatus == -1) {
       item.downvotes++
+      params.downvotes = 1
+    }
+    if(!preventRequest) {
+      postVote(params)
     }
     item.score = item.upvotes - item.downvotes
     item.isRecommended = item.score > 7
