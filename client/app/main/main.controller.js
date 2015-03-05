@@ -257,6 +257,18 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     'pagerNum'    : 'Pager'
   }
 
+  var ieVersion = function () {
+    var v = 4
+    var div = document.createElement('div')
+    var i = div.getElementsByTagName('i')
+    do {
+        div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->'
+    } while (i[0])
+    return v > 5 ? v : false
+  }
+
+  var cssSupportTransition = ieVersion() > 9
+
   $scope.viewStatus = {
     viewClass: 'zero-main-view',
     targetSubView: '',
@@ -265,17 +277,19 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
     changeToSubView: function(category) {
       this.viewClass = 'zero-sub-view'
       this.targetSubView = category
+      var delayTime = cssSupportTransition ? 800: 1
       _.delay(function(self) {
         self.mainInfoView.hide()
         self.subInfoView.show()
         _.delay(function() {
           self.subInfoView.addClass('show')
         }, 20)
-      }, 800, this)
+      }, delayTime, this)
     },
     changeToMainView: function() {
       var self = this
       self.subInfoView.removeClass('show')
+      var delayTime = cssSupportTransition ? 600: 1
       _.delay(function() {
         self.targetSubView = ''
         self.subInfoView.hide()
@@ -284,7 +298,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
           self.viewClass = 'zero-main-view'
           $scope.$apply()
         }, 20)
-      }, 600)
+      }, delayTime)
     }
   }
 
