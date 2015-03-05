@@ -11,7 +11,7 @@ mixin infoSection(category)
         vote-action="vote(item, value)")
       .notes
         a.toggle(href="#"
-          ng-click="viewStatus.changeToSubView('#{category}')")
+          ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")
           | Show notes({{person.#{category}.notes.length}})
 
 .container
