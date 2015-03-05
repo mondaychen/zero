@@ -1,7 +1,4 @@
 angular.module('zeroApp').directive('contactDetail', function() {
-  var page = function(num) {
-    console.log(num)
-  }
   return {
     restrict: 'A', // for IE 8
     scope: {
@@ -14,13 +11,9 @@ angular.module('zeroApp').directive('contactDetail', function() {
         content = '<a href="mailto:@">@</a>'.replace(/\@/g, scope.detail)
       }
       if (scope.type == 'pagerNum') {
-        content = ('<a href="#">@</a>')
+        content = ('<a href="#" data-toggle="modal" data-target="#pager-box"'
+          + 'data-number="@">@</a>')
           .replace(/\@/g, scope.detail)
-        content = $(content)
-        content.click(function(e) {
-          e.preventDefault()
-          page(scope.detail)
-        })
       }
       element.html(content)
     }

@@ -82,3 +82,35 @@ footer.footer
       .modal-body
         ul
           li(ng-repeat="address in person.addresses" ng-bind-html="address")
+
+#pager-box.modal.fade(tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button" data-dismiss="modal" aria-label="Close")
+          span(aria-hidden="true") &times;
+        h4.modal-title Pager sending to {{person.fullName}}
+      .modal-body
+        form(ng-submit="submitNewPager()")
+          .form-group
+            label(for="pager-number") Number
+            input.form-control(type="text" name="number" id="pager-number")
+          .form-group
+            label(for="pager-text") Content
+            textarea.form-control(rows=3 id="pager-text"
+              placeholder="Enter the content" ng-model="pagerText")
+            p.help-block
+              {{ 240 - (pagerText.length || 0) }}
+          button.btn.btn-default(type="submit") Submit
+
+script.
+  $(document).ready(function() {
+    $('#pager-box').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var number = button.data('number')
+      var modal = $(this)
+      modal.find('input[name="number"]').val(number)
+    })
+  })
+  
