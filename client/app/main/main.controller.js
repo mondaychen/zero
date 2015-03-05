@@ -25,7 +25,7 @@ app.run(function($httpBackend) {
 
 })
 
-app.controller('MainCtrl', function ($scope, $http, $location) {
+app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
 
@@ -202,6 +202,13 @@ app.controller('MainCtrl', function ($scope, $http, $location) {
 
   $scope.contacts = []
   $scope.person = {}
+
+  var Contacts = $resource('/2.0/zero/getProvider', {
+    institution: 'cornell'
+  })
+  var contacts = Contacts.query({}, function() {
+    console.log(contacts)
+  })
 
   $scope.$watch(function(){ return $location.search() }, function(params){
 
