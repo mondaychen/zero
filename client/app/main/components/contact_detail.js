@@ -1,6 +1,6 @@
 angular.module('zeroApp').directive('contactDetail', function() {
   return {
-    restrict: 'E',
+    restrict: 'A', // for IE 8
     scope: {
       type: '=',
       detail: '='

@@ -13,7 +13,7 @@ ul
       .flag(ng-show="item.isNew")
         | New!
       .detail
-        contact-detail(type="type" detail="item.value")
+        div(contact-detail type="type" detail="item.value")
         .voted-up(ng-show="item.lastVoted")
           span Voted Up
           time

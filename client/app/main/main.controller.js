@@ -293,7 +293,7 @@ app.controller('MainCtrl', function ($scope, $http, $location, $resource) {
 
 app.directive('infoItems', function() {
   return {
-    restrict: 'E',
+    restrict: 'A', // for IE 8
     scope: {
       items: '=',
       type: '=',

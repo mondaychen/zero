@@ -7,7 +7,7 @@ mixin infoSection(category)
       h4.title
         | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
-      info-items(items="person.#{category}" type="'#{category}'"
+      div(info-items items="person.#{category}" type="'#{category}'"
         vote-action="vote(item, value)")
       .notes
         a.toggle(href="#"
@@ -52,7 +52,7 @@ mixin infoSection(category)
             section(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
               h4.title
                 | {{dispalyNames[viewStatus.targetSubView]}}
-              info-items(items="person[viewStatus.targetSubView]"
+              div(info-items items="person[viewStatus.targetSubView]"
                 type="viewStatus.targetSubView"
                 vote-action="vote(item, value)" extended="true")
       //- pre(ng-bind-html="content['hybridized_provider_output'] | json")
