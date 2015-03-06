@@ -25,8 +25,9 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
     }
   })()
 
-  function InfoCollection (name, initialArr) {
+  function InfoCollection (name, initialArr, displayName) {
     this.name = name
+    this.displayName = displayName
     initialArr = initialArr || []
     this.initialArr = _.isArray(initialArr) ? initialArr : [initialArr]
 

@@ -38,6 +38,13 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
   function (ieVersion, InfoCollection, $scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
+  var dispalyNames = {
+    'email'       : 'Email',
+    'faxNum'      : 'Fax',
+    'officePhone' : 'Office Phone',
+    'mobilePhone' : 'Mobile Phone',
+    'pagerNum'    : 'Pager'
+  }
 
   function makeStringByKeys(keys, obj, separator) {
     separator = separator || ' '
@@ -94,7 +101,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
         return rtn
       })
       // make instance
-      output[listName] = new InfoCollection(listName, output[listName])
+      output[listName] = new InfoCollection(listName,
+        output[listName], dispalyNames[listName])
       // rank
       output[listName].sort()
     })
@@ -162,13 +170,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
     'pagerNum'    : 'green'
   }
 
-  $scope.dispalyNames = {
-    'email'       : 'Email',
-    'faxNum'      : 'Fax',
-    'officePhone' : 'Office Phone',
-    'mobilePhone' : 'Mobile Phone',
-    'pagerNum'    : 'Pager'
-  }
+  $scope.dispalyNames = dispalyNames
 
   var cssSupportTransition = !ieVersion || ieVersion > 9
 
