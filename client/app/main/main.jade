@@ -96,12 +96,12 @@ footer.footer
           .form-group
             label(for="pager-number") Number
             input.form-control(type="text" name="number" id="pager-number")
-          .form-group
-            label(for="pager-text") Content
-            textarea.form-control(rows=3 id="pager-text"
-              placeholder="Enter the content" ng-model="pagerText")
+          .form-group(ng-class="pagerMessage.length > 240 ? 'has-error' : ''")
+            label(for="pager-message") Message
+            textarea.form-control(rows=3 id="pager-message"
+              placeholder="Enter the message" ng-model="pagerMessage")
             p.help-block.pull-right
-              {{ 240 - (pagerText.length || 0) }}
+              {{ 240 - (pagerMessage.length || 0) }}
           button.btn.btn-default(type="submit") Send
 
 script.
