@@ -8,6 +8,9 @@ mixin infoSection(category)
         | {{dispalyNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
       div(info-items items="person.#{category}" type="'#{category}'")
+      a.empty-list(href="#" ng-show="!person.#{category}.collection.length"
+        ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")
+        | No Data (click to add)
       .notes
         a.toggle(href="#"
           ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")

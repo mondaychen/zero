@@ -18,7 +18,7 @@ ul
           span Voted Up
           time.time
             | on {{item.lastVoted | date:'MM/dd/yyyy h:mma'}}
-.empty-list(ng-show="!items.collection.length") No Data
+.empty-list(ng-show="!items.collection.length && isExtended") No Data
 
 form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")
   button.btn.btn-default.btn-lg(type="submit") Add
