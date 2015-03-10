@@ -37,7 +37,7 @@ mixin infoSection(category)
             section.info-address.scheme-gray
               h4.title
                 | Address
-              .item
+              .item(ng-show="person.addresses.length")
                 span.detail(ng-bind-html="person.addresses[0]")
               .empty-list(ng-show="!person.addresses.length") No Data
               button.btn.btn-default(ng-show="person.addresses.length > 1"
