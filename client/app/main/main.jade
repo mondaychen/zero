@@ -93,8 +93,10 @@ footer.footer
       .modal-header
         button.close(type="button" data-dismiss="modal" aria-label="Close")
           span(aria-hidden="true") &times;
-        h4.modal-title Pager sending to {{person.fullName}}
+        h4.modal-title Send Page to {{person.fullName}}
       .modal-body
+        .alert.alert-success(ng-show="pager.success") Message successfully sent
+        .alert.alert-danger(ng-show="pager.failed") Unable to send page
         form(ng-submit="submitNewPager()")
           .form-group
             label(for="pager-number") Number
@@ -106,6 +108,7 @@ footer.footer
             p.help-block.pull-right
               {{ 240 - (pagerMessage.length || 0) }}
           button.btn.btn-default(type="submit") Send
+
 
 script.
   $(document).ready(function() {
