@@ -1,8 +1,6 @@
 angular.module('zeroApp').factory('InfoCollection',
   ['notification' ,'$http', function(notification, $http) {
 
-  var isPending = false
-
   var postVote = (function() {
     var defaultParams = {
       category: 'phone', // or 'email'
@@ -25,12 +23,11 @@ angular.module('zeroApp').factory('InfoCollection',
         return params[key] + '/'
       })
       notification.show('Voting for' + params.value + '...')
-      isPending = true
       $http.post('http://kurtteichman.com:9000' + url).success(function() {
-        isPending = false
+        notification.show('Successfully voted for' + params.value, 500)
         whenSuccess(arguments)
       }).error(function() {
-        isPending = false
+        notification.show('Failed to make the vote for' + params.value, 4000)
         whenError(arguments)
       })
     }
