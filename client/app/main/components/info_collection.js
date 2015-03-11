@@ -24,10 +24,10 @@ angular.module('zeroApp').factory('InfoCollection',
       })
       notification.show('Voting for' + params.value + '...')
       $http.post('http://kurtteichman.com:9000' + url).success(function() {
-        notification.show('Successfully voted for' + params.value, 500)
+        notification.show('Successfully voted for ' + params.value, 2500)
         whenSuccess(arguments)
       }).error(function() {
-        notification.show('Failed to make the vote for' + params.value, 4000)
+        notification.show('Failed to make the vote for ' + params.value, 4000)
         whenError(arguments)
       })
     }
