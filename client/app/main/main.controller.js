@@ -34,9 +34,10 @@ app.run(function($httpBackend) {
 
 })
 
-app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
-  '$http', '$location', '$resource',
-  function (ieVersion, InfoCollection, $scope, $http, $location, $resource) {
+app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
+  '$scope', '$http', '$location', '$resource',
+  function (ieVersion, InfoCollection, notification,
+    $scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
   var dispalyNames = {
@@ -53,9 +54,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
   }
 
   function getOrderedOutput(data) {
-
-    console.log(data)
-
     var output = {}
     _.each(data, function(value, key) {
       output[key] = _.isObject(value) ? value.fieldValue : value
@@ -128,10 +126,12 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
   $scope.person = {}
 
   $scope.$watch(function(){ return $location.search() }, function(params){
+    notification.show('Loading...')
 
     // $http.get('/2.0/zero/getProvider' + getQuery())
     $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
     .success(function(data) {
+      notification.hide()
       $scope.original_query_data = angular.copy(data);
 
       $scope.contacts = _.sortBy(_.map(data, function(person) {
@@ -148,6 +148,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
         $scope.person = contact
       }
       $scope.viewContact($scope.contacts[0])
+    }).error(function() {
+      notification.show('Failed to load data. Please try again later.')
     })
   });
 

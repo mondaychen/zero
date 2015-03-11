@@ -1,4 +1,7 @@
-angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
+angular.module('zeroApp').factory('InfoCollection',
+  ['notification' ,'$http', function(notification, $http) {
+
+  var isPending = false
 
   var postVote = (function() {
     var defaultParams = {
@@ -9,8 +12,10 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       hasNew: false
     }
     var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/'
-    return function(params) {
+    return function(params, whenSuccess, whenError) {
       params = _.defaults(params, defaultParams)
+      whenSuccess = _.isFunction(whenSuccess) ? whenSuccess : $.noop
+      whenError = _.isFunction(whenError) ? whenError : $.noop
       var url = urlPattern.replace(/\:.+?\//g, function($1) {
         var key = $1.slice(1, $1.length - 1)
         if(params[key] === null || _.isUndefined(params[key])
@@ -19,8 +24,14 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
         }
         return params[key] + '/'
       })
+      notification.show('Voting for' + params.value + '...')
+      isPending = true
       $http.post('http://kurtteichman.com:9000' + url).success(function() {
-        console.log(arguments)
+        isPending = false
+        whenSuccess(arguments)
+      }).error(function() {
+        isPending = false
+        whenError(arguments)
       })
     }
   })()
@@ -92,7 +103,7 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
 
   InfoCollection.prototype._updateItem = function(item, preventRequest) {
     var params = {}
-    // set to 0 for initially
+    // set to 0 initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
     if(item.oldVoteStatus == 1) {
@@ -121,19 +132,23 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       }
       item.hasNew = false
     }
+
+    var updateLocalStatus = function() {
+      item.score = item.upVotes - item.downVotes
+      item.isRecommended = item.score > 7
+      item.isHighlight = item.score > 0
+      item.oldVoteStatus = item.voteStatus
+    }
     
     if(!preventRequest) {
       params.hasNew = item.hasNew
       params.category = item.category
       params.type = item.type
       params.value = item.value
-      postVote(params)
+      postVote(params, updateLocalStatus)
+    } else {
+      updateLocalStatus()
     }
-
-    item.score = item.upVotes - item.downVotes
-    item.isRecommended = item.score > 7
-    item.isHighlight = item.score > 0
-    item.oldVoteStatus = item.voteStatus
   }
 
   return InfoCollection

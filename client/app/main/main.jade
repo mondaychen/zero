@@ -110,6 +110,10 @@ footer.footer
               {{ 240 - (pagerMessage.length || 0) }}
           button.btn.btn-default(type="submit") Send
 
+#notification-bar
+  .message.alert.alert-info
+    span.content
+    button.btn.btn-link.close-msg &times;
 
 script.
   $(document).ready(function() {
