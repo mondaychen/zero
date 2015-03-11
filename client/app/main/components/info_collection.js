@@ -1,5 +1,6 @@
 angular.module('zeroApp').factory('InfoCollection',
-  ['notification' ,'$http', function(notification, $http) {
+  ['notification', 'urlMaker' ,'$http',
+  function(notification, urlMaker, $http) {
 
   var postVote = (function() {
     var defaultParams = {
@@ -10,20 +11,13 @@ angular.module('zeroApp').factory('InfoCollection',
       hasNew: false
     }
     var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/'
+    var origin = 'http://kurtteichman.com:9000'
+    var url = urlMaker(urlPattern, origin, defaultParams)
     return function(params, whenSuccess, whenError) {
-      params = _.defaults(params, defaultParams)
       whenSuccess = _.isFunction(whenSuccess) ? whenSuccess : $.noop
       whenError = _.isFunction(whenError) ? whenError : $.noop
-      var url = urlPattern.replace(/\:.+?\//g, function($1) {
-        var key = $1.slice(1, $1.length - 1)
-        if(params[key] === null || _.isUndefined(params[key])
-          || params[key] === '') {
-          return ''
-        }
-        return params[key] + '/'
-      })
       notification.show('Voting for' + params.value + '...')
-      $http.post('http://kurtteichman.com:9000' + url).success(function() {
+      $http.post(url(params)).success(function() {
         notification.show('Successfully voted for ' + params.value, 2500)
         whenSuccess(arguments)
       }).error(function() {
