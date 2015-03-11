@@ -4,11 +4,11 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
     var defaultParams = {
       category: 'phone', // or 'email'
       type: null, // null for 'email', string for 'phone'
-      upvotes: 0,
-      downvotes: 0,
-      isNew: false
+      upVotes: 0,
+      downVotes: 0,
+      hasNew: false
     }
-    var urlPattern = '/2.0/zero/phone/:type/:value/:isNew/:upvotes/:downvotes/'
+    var urlPattern = '/2.0/zero/phone/:type/:value/:hasNew/:upVotes/:downVotes/'
     return function(params) {
       params = _.defaults(params, defaultParams)
       var url = urlPattern.replace(/\:.+?\//g, function($1) {
@@ -58,9 +58,9 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
     data = this._makeObj(data)
     var dft = {
       "value": '',
-      "upvotes": 0,
-      "downvotes": 0,
-      "isNew": true,
+      "upVotes": 0,
+      "downVotes": 0,
+      "hasNew": true,
       "voteStatus": 0,
       update: function(data) {
         self.update(this, data)
@@ -89,7 +89,7 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
     this.collection = _.sortBy(this.collection, function(item) {
       var score = item.score
       if (score > -1) {
-        score += item.isNew ? 100 : 0
+        score += item.hasNew ? 100 : 0
         score += item.lastVoted ? 1000 : 0
       }
       return -score
@@ -102,40 +102,40 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
     if(item.oldVoteStatus == 1) {
-      item.upvotes--
-      params.upvotes = -1
+      item.upVotes--
+      params.upVotes = -1
     }
     if(item.oldVoteStatus == -1) {
-      item.downvotes--
-      params.downvotes = -1
+      item.downVotes--
+      params.downVotes = -1
       if(item.wasNew) {
         item.wasNew = false
-        item.isNew = true
+        item.hasNew = true
       }
     }
     // upvote
     if(item.voteStatus == 1) {
-      item.upvotes++
-      params.upvotes = 1
+      item.upVotes++
+      params.upVotes = 1
     }
     // down vote
     if(item.voteStatus == -1) {
-      item.downvotes++
-      params.downvotes = 1
-      if(item.isNew) {
+      item.downVotes++
+      params.downVotes = 1
+      if(item.hasNew) {
         item.wasNew = true
       }
-      item.isNew = false
+      item.hasNew = false
     }
     
     if(!preventRequest) {
-      params.isNew = item.isNew
+      params.hasNew = item.hasNew
       params.category = item.category
       params.type = item.type
       postVote(params)
     }
 
-    item.score = item.upvotes - item.downvotes
+    item.score = item.upVotes - item.downVotes
     item.isRecommended = item.score > 7
     item.isHighlight = item.score > 0
     item.oldVoteStatus = item.voteStatus

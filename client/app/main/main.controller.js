@@ -52,22 +52,13 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
   }
 
   function getOrderedOutput(data) {
-    var output = {
-        'fullName'    : '',
-        'firstName'   : '',
-        'lastName'    : '',
-        'middleName'  : '',
-        'NPI'         : '',
-        'contactPreference' : '',
-        'email'       : [],
-        'faxNum'      : [],
-        'officePhone' : [],
-        'mobilePhone' : [],
-        'pagerNum'    : [],
-        'addresses'   : []
-    };
 
-    output = _.extend(output, data)
+    console.log(data)
+
+    var output = {}
+    _.each(data, function(value, key) {
+      output[key] = _.isObject(value) ? value.fieldValue : value
+    })
 
     // generate full name
     output.fullName = makeStringByKeys(['firstName',
@@ -83,22 +74,23 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
       addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
         .values().compact().value() )
     })
-    output.addresses = _.map(addresses, function(add) {
+    // a duplicate-free version is needed for ngRepeat
+    output.addresses = _.uniq(_.map(addresses, function(add) {
       return add.join('<br>')
-    })
+    }))
 
     // generate numbers
     _.forEach(votableLists, function(listName) {
       output[listName] = _.map(output[listName], function(item) {
         var rtn = {
-          value: item,
-          upvotes: _.random(0, 8),
-          downvotes: _.random(0, 3)
+          value: item.number || item.email,
+          upVotes: item.upVotes,
+          downVotes: _.random(0, 3)
         }
-        rtn.isNew = (_.random(30) < 2)
-        rtn.lastVoted = (_.random(15) < 2) ? _.now(): null
-        rtn.voteStatus = 0
-        return rtn
+        item.value = item.number || item.email
+        // rtn.lastVoted = (_.random(15) < 2) ? _.now(): null
+        item.voteStatus = 0
+        return item
       })
       // make instance
       output[listName] = new InfoCollection(listName,
@@ -107,12 +99,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
       output[listName].sort()
     })
 
-    delete output['NPI'];
-    delete output['firstName'];
-    delete output['lastName'];
-    delete output['middleName'];
-
-    return output;
+    return output
   }
 
   function getQuery() {
@@ -140,7 +127,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
 
   $scope.$watch(function(){ return $location.search() }, function(params){
 
-    $http.get('/2.0/zero/getProvider' + getQuery())
+    // $http.get('/2.0/zero/getProvider' + getQuery())
+    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
     .success(function(data) {
       $scope.original_query_data = angular.copy(data);
 
