@@ -8,7 +8,7 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       downVotes: 0,
       hasNew: false
     }
-    var urlPattern = '/api/phone/:type/:value/:hasNew/:upVotes/:downVotes/'
+    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/'
     return function(params) {
       params = _.defaults(params, defaultParams)
       var url = urlPattern.replace(/\:.+?\//g, function($1) {
@@ -67,14 +67,8 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       }
     }
     data = _.extend(dft, data)
-    switch(self.name) {
-      case 'officePhone': data.category = 'phone'; data.type = 'office'; break;
-      case 'mobilePhone': data.category = 'phone'; data.type = 'mobile'; break;
-      case 'faxNum':      data.category = 'phone'; data.type = 'fax';    break;
-      case 'pagerNum':    data.category = 'phone'; data.type = 'pager';  break;
-      case 'email':       data.category = 'email'; data.type = null;     break;
-      default: break;
-    }
+    data.type = self.name === 'email' ? null : self.name
+    data.category = self.name === 'email' ? 'email' : 'phone'
     this._updateItem(data, true)
     this.collection.push(data)
   }
