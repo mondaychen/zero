@@ -30,6 +30,7 @@ app.run(function($httpBackend) {
   });
 
   $httpBackend.whenGET(/^\S/).passThrough();
+  $httpBackend.whenPOST(/^\S/).passThrough();
 
 })
 
@@ -86,7 +87,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
         var rtn = {
           value: item.number || item.email,
           upVotes: item.upVotes,
-          downVotes: _.random(0, 3)
+          downVotes: item.downVotes
         }
         item.value = item.number || item.email
         // rtn.lastVoted = (_.random(15) < 2) ? _.now(): null

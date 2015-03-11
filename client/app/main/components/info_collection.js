@@ -8,7 +8,7 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       downVotes: 0,
       hasNew: false
     }
-    var urlPattern = '/2.0/zero/phone/:type/:value/:hasNew/:upVotes/:downVotes/'
+    var urlPattern = '/api/phone/:type/:value/:hasNew/:upVotes/:downVotes/'
     return function(params) {
       params = _.defaults(params, defaultParams)
       var url = urlPattern.replace(/\:.+?\//g, function($1) {
@@ -19,8 +19,8 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
         }
         return params[key] + '/'
       })
-      $http.post(url).success(function() {
-        // console.log(arguments)
+      $http.post('http://kurtteichman.com:9000' + url).success(function() {
+        console.log(arguments)
       })
     }
   })()
@@ -132,6 +132,7 @@ angular.module('zeroApp').factory('InfoCollection', ['$http', function($http) {
       params.hasNew = item.hasNew
       params.category = item.category
       params.type = item.type
+      params.value = item.value
       postVote(params)
     }
 
