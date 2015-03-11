@@ -22,8 +22,8 @@ mixin infoSection(category)
       .doctor-info
         h2.name
           | {{person.fullName}}
-        .description
-          | [description]
+        //- .description
+        //-   | [description]
       #main-info(ng-class="viewStatus.viewClass")
         .contact-info.lined.row
           +infoSection("officePhone")

@@ -63,6 +63,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
     // generate full name
     output.fullName = makeStringByKeys(['firstName',
       'middleName', 'lastName'], output) || 'NAME NOT AVAILABLE'
+    output.fullName = makeStringByKeys(['fullName', 'honor'], output, ', ')
 
     // generate addresses
     var addresses = []
