@@ -61,10 +61,11 @@ mixin infoSection(category)
       .contact-list
         .list-item(ng-repeat="one in contacts"
           ng-class="one.active ? 'active' : ''" ng-click="viewContact(one)")
-          .name {{one.fullName}}
-          .ordered
-            b Ordered this study
-          .role doctor's role
+          .name
+            b {{one.fullName}}
+          //- .ordered
+          //-   b Ordered this study
+          .role {{one.role}}
 
 footer.footer
   .container

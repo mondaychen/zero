@@ -132,9 +132,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', '$scope',
     .success(function(data) {
       $scope.original_query_data = angular.copy(data);
 
-      $scope.contacts = _.map(data, function(person) {
+      $scope.contacts = _.sortBy(_.map(data, function(person) {
          return getOrderedOutput(person)
-      })
+      }), 'role')
       $scope.viewContact = function (contact) {
         if(contact.active) {
           return
