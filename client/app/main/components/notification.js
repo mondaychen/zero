@@ -16,6 +16,9 @@ angular.module('zeroApp').factory('notification', function() {
       }
     },
     hide: function() {
+      if(timeoutID) {
+        clearTimeout(timeoutID)
+      }
       container.removeClass('show')
     }
   }
