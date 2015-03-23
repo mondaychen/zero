@@ -6,7 +6,8 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href='/') ZERO
+      a.navbar-brand(href='/')
+        img(alt="ZERO" src="./assets/images/logo.png" height=50)
 
     div#navbar-main.navbar-collapse.collapse(collapse='isCollapsed')
       //- ul.nav.navbar-nav
@@ -35,20 +36,38 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
       .container
         .row
           .col-md-4.col-sm-6.pull-right
-            form.navbar-form.navbar-right(role="search")
+            form#new-search.navbar-form.navbar-right(role="search")
               .form-group
                 .input-group
-                  .input-group-btn
-                    button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" aria-expanded="false")
-                      | MRN for Cornell 
-                      span.caret
-                    ul.dropdown-menu(role="menu")
-                      li
-                        a(href="####") MRN for Cornell
-                        a(href="####") Accession # for Cornell
-                        a(href="####") MRN for Columbia
-                        a(href="####") Accession # for Columbia
+                  span.input-group-btn
+                    button.btn.btn-default(type="submit"
+                      ng-click="search.showOptions = !search.showOptions")
+                      span.glyphicon.glyphicon-cog
                   input.form-control(id="MRN" name="MRN" type="text"
-                    placeholder="MRN for Cornell")
+                    placeholder="{{ 'Search by ' \
+                    + searchOptions.type[search.type] + ' for '\
+                    + searchOptions.institute[search.institute] }}"
+                    ng-focus="search.showOptions = true")
                   span.input-group-btn
                     button.btn.btn-default(type="submit") Go
+              .addtional-options(ng-show="search.showOptions")
+                button.close(ng-click="search.showOptions = false") &times;
+                h6.text-muted Institute
+                label.radio-inline
+                  input(type="radio" ng-model="search.institute"
+                    name="institute" value="0")
+                  span Cornell
+                label.radio-inline
+                  input(type="radio" ng-model="search.institute"
+                    name="institute" value="1")
+                  span Columbia
+                h6.text-muted MRN / Accession #
+                label.radio-inline
+                  input(type="radio" ng-model="search.type"
+                    name="type" value="0")
+                  span MRN
+                label.radio-inline
+                  input(type="radio" ng-model="search.type"
+                    name="type" value="1")
+                  span Accession #
+
