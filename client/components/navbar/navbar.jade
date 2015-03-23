@@ -40,10 +40,33 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
               .form-group
                 .input-group
                   span.input-group-btn
-                    button.btn.btn-default(type="submit")
+                    button.btn.btn-default(type="submit"
+                      ng-click="search.showOptions = !search.showOptions")
                       span.glyphicon.glyphicon-cog
                   input.form-control(id="MRN" name="MRN" type="text"
-                    placeholder="Search by MRN for Cornell")
+                    placeholder="{{ 'Search by ' \
+                    + searchOptions.type[search.type] + ' for '\
+                    + searchOptions.institute[search.institute] }}"
+                    ng-focus="search.showOptions = true")
                   span.input-group-btn
                     button.btn.btn-default(type="submit") Go
+              .addtional-options(ng-show="search.showOptions")
+                h6.text-muted Institute
+                label.radio-inline
+                  input(type="radio" ng-model="search.institute"
+                    name="institute" value="0")
+                  span Cornell
+                label.radio-inline
+                  input(type="radio" ng-model="search.institute"
+                    name="institute" value="1")
+                  span Columbia
+                h6.text-muted MRN / Accession #
+                label.radio-inline
+                  input(type="radio" ng-model="search.type"
+                    name="type" value="0")
+                  span MRN
+                label.radio-inline
+                  input(type="radio" ng-model="search.type"
+                    name="type" value="1")
+                  span Accession #
 
