@@ -51,6 +51,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
                   span.input-group-btn
                     button.btn.btn-default(type="submit") Go
               .addtional-options(ng-show="search.showOptions")
+                button.close(ng-click="search.showOptions = false") &times;
                 h6.text-muted Institute
                 label.radio-inline
                   input(type="radio" ng-model="search.institute"
