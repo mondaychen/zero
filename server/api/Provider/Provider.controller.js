@@ -38,38 +38,89 @@ var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
 var service_url    = 'http://127.0.0.1:5000'
+var ObjectId       = require('mongoose').Types.ObjectId; 
 
 
+// test: provider_id: 5500268be47498e8dc023d54
+//router.post('/email/:value/:hasNew/:u/:d/:provider_id', controller.email);
 exports.email = function(req, res) {
   var value     = req.params.value; 
   var hasNew    = req.params.hasNew;
   var upVotes   = req.params.u;
   var downVotes = req.params.d;
+  var _id       = req.params.provider_id
 
-  var options = { "new" : true };
+  var options = { "new" : true, "upsert" : true };
   var query   = { email: value };
   var update  = { hasNew: hasNew, $inc: {upVotes:upVotes, downVotes:downVotes} };
 
   Email.findOneAndUpdate(query,update,options,function(err,email) {
     if (err) { console.log(err); return res.json(500,{ error: 'Something blew up!' }); }  
-    return res.json(200,email);
+    console.log('im in here');
+    console.log(email);
+    Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+      if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+      console.log('in provider');
+      console.log(provider);
+      console.log(provider.email.fieldValue.length);
+
+      var temp = null;
+      for (var i = 0; i < provider.email.fieldValue.length; i++) {
+        temp = provider.email.fieldValue[i];
+        if (temp.equals(email._id)) {
+          return res.json(500,{ error : "email already exists"});
+        }
+      }
+
+      // email was not found to be associated with the provider
+      // use set operator here?
+      provider.email.fieldValue.push(email);
+
+      provider.save(function(err3,provider) {
+        if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+        return res.json(200,provider);
+      })
+    });
   });
 }
 
+//router.post('/phone/:kind/:value/:hasNew/:u/:d/:provider_id', controller.phone);
 exports.phone = function(req, res) {
   var value     = req.params.value; 
   var kind      = req.params.kind;
   var hasNew    = req.params.hasNew;
   var upVotes   = req.params.u;
   var downVotes = req.params.d;
+  var _id       = req.params.provider_id
 
-  var options = { "new" : true };
+  var options = { "new" : true, "upsert" : true };
   var query   = { number: value, kind:kind };
   var update  = { hasNew: hasNew, $inc: { upVotes:upVotes, downVotes:downVotes } };
 
   Phone.findOneAndUpdate(query,update,options,function(err,phone) {
     if (err) { console.log(err); return res.json(500,{ error: 'Something blew up!' }); }  
-    return res.json(200,phone);
+    Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+      if (err2 || phone == null) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+      console.log('in provider');
+      console.log(kind);
+      console.log(provider[kind]);
+
+      var temp = null;
+      for (var i = 0; i < provider[kind].fieldValue.length; i++) {
+        temp = provider[kind].fieldValue[i];
+        console.log(temp);
+        if (temp.equals(phone._id)) {
+          return res.json(500,{ error : "phone already exists"});
+        }
+      }
+
+      provider[kind].fieldValue.push(phone);
+
+      provider.save(function(err3,provider) {
+        if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+        return res.json(200,provider);
+      });
+    });
   });
 }
 
@@ -81,7 +132,7 @@ function getQuery(req) {
 exports.careTeam = function(req, res) {
   var query = getQuery(req);
   var options = {
-    url : service_url + '/2.0/zero/getCareTeam',
+    url : service_url + '/2.0/zero/getCareTeam2',
     qs  : query
   };
 
