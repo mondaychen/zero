@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('zeroApp')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+  .controller('NavbarCtrl', function ($scope, $location, $cookies, Auth) {
     // $scope.menu = [{
     //   'title': 'Home',
     //   'link': '/'
@@ -27,8 +27,12 @@ angular.module('zeroApp')
     }
 
     $scope.search = {
-      institute: 0,
-      type: 0,
+      institute: $cookies['search.institute'] || 0,
+      type: $cookies['search.type'] ||  0,
       showOptions: false
     }
+    $scope.$watch('search', function() {
+      $cookies['search.institute'] = $scope.search.institute
+      $cookies['search.type'] = $scope.search.type
+    }, true)
   });
