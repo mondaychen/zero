@@ -68,7 +68,7 @@ exports.email = function(req, res) {
       for (var i = 0; i < provider.email.fieldValue.length; i++) {
         temp = provider.email.fieldValue[i];
         if (temp.equals(email._id)) {
-          return res.json(500,{ error : "email already exists"});
+          return res.json(200,email);
         }
       }
 
@@ -110,7 +110,7 @@ exports.phone = function(req, res) {
         temp = provider[kind].fieldValue[i];
         console.log(temp);
         if (temp.equals(phone._id)) {
-          return res.json(500,{ error : "phone already exists"});
+          return res.json(200,phone);
         }
       }
 
