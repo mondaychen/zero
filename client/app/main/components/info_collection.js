@@ -93,7 +93,7 @@ angular.module('zeroApp').factory('InfoCollection',
     })
   }
 
-  InfoCollection.prototype._updateItem = function(item, preventRequest) {
+  InfoCollection.prototype._updateItem = function(item, local) {
     var self = this
     // set to 0 initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
@@ -134,7 +134,7 @@ angular.module('zeroApp').factory('InfoCollection',
       item.oldVoteStatus = item.voteStatus
     }
     
-    if(!preventRequest) {
+    if(!local) {
       params.hasNew = item.hasNew
       params.category = item.category
       params.type = item.type
