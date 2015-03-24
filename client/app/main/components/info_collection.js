@@ -41,7 +41,7 @@ angular.module('zeroApp').factory('InfoCollection',
     var self = this
     self.collection = []
     _.each(this.initialArr, function(item) {
-      self.add(item)
+      self.add(item, true)
     })
 
     self.notes = []
@@ -56,7 +56,7 @@ angular.module('zeroApp').factory('InfoCollection',
     return data
   }
 
-  InfoCollection.prototype.add = function(data) {
+  InfoCollection.prototype.add = function(data, local) {
     var self = this
     data = this._makeObj(data)
     var dft = {
@@ -72,7 +72,7 @@ angular.module('zeroApp').factory('InfoCollection',
     data = _.extend(dft, data)
     data.type = self.name === 'email' ? null : self.name
     data.category = self.name === 'email' ? 'email' : 'phone'
-    this._updateItem(data, true)
+    this._updateItem(data, local)
     this.collection.push(data)
   }
 
@@ -135,10 +135,6 @@ angular.module('zeroApp').factory('InfoCollection',
     }
     
     if(!local) {
-      params.hasNew = item.hasNew
-      params.category = item.category
-      params.type = item.type
-      params.value = item.value
       params.provider_id = self.id
       postVote(params, updateLocalStatus, function() {
         item.voteStatus = item.oldVoteStatus

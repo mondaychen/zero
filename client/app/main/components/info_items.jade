@@ -10,7 +10,7 @@ ul
               ng-class='item.voteStatus==-1 ? "active" : ""')
             span.glyphicon.glyphicon-remove(aria-label="Downvote")
         .count(ng-class='item.isHighlight ? "highlight" : ""') {{item.score}}
-      .flag(ng-show="item.isNew")
+      .flag(ng-show="item.hasNew")
         | New!
       .detail
         div(contact-detail type="type" detail="item.value")
