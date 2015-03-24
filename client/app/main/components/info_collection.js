@@ -13,15 +13,17 @@ angular.module('zeroApp').factory('InfoCollection',
     var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
     var origin = 'http://kurtteichman.com:9000'
     var url = urlMaker(urlPattern, origin, defaultParams)
-    return function(params, whenSuccess, whenError) {
+    return function(params, whenSuccess, whenError, newAdded) {
       whenSuccess = _.isFunction(whenSuccess) ? whenSuccess : $.noop
       whenError = _.isFunction(whenError) ? whenError : $.noop
       notification.show('Voting for' + params.value + '...')
       $http.post(url(params)).success(function() {
-        notification.show('Successfully voted for ' + params.value, 2500)
+        notification.show('Successfully '
+          + (newAdded ? 'added: ' : 'voted for ') + params.value, 2500)
         whenSuccess(arguments)
       }).error(function() {
-        notification.show('Failed to make the vote for ' + params.value, 4000)
+        notification.show('Failed to '
+          + (newAdded ? 'add: ' : 'vote for ') + params.value, 4000)
         whenError(arguments)
       })
     }
@@ -72,7 +74,7 @@ angular.module('zeroApp').factory('InfoCollection',
     data = _.extend(dft, data)
     data.type = self.name === 'email' ? null : self.name
     data.category = self.name === 'email' ? 'email' : 'phone'
-    this._updateItem(data, local)
+    this._updateItem(data, local, !local)
     this.collection.push(data)
   }
 
@@ -93,7 +95,7 @@ angular.module('zeroApp').factory('InfoCollection',
     })
   }
 
-  InfoCollection.prototype._updateItem = function(item, local) {
+  InfoCollection.prototype._updateItem = function(item, local, newAdded) {
     var self = this
     // set to 0 initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
@@ -138,7 +140,7 @@ angular.module('zeroApp').factory('InfoCollection',
       params.provider_id = self.id
       postVote(params, updateLocalStatus, function() {
         item.voteStatus = item.oldVoteStatus
-      })
+      }, newAdded)
     } else {
       updateLocalStatus()
     }
