@@ -10,7 +10,7 @@ angular.module('zeroApp').factory('InfoCollection',
       downVotes: 0,
       hasNew: false
     }
-    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/'
+    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
     var origin = 'http://kurtteichman.com:9000'
     var url = urlMaker(urlPattern, origin, defaultParams)
     return function(params, whenSuccess, whenError) {
@@ -27,8 +27,9 @@ angular.module('zeroApp').factory('InfoCollection',
     }
   })()
 
-  function InfoCollection (name, initialArr, displayName) {
+  function InfoCollection (name, id, initialArr, displayName) {
     this.name = name
+    this.id = id
     this.displayName = displayName
     initialArr = initialArr || []
     this.initialArr = _.isArray(initialArr) ? initialArr : [initialArr]
@@ -93,38 +94,40 @@ angular.module('zeroApp').factory('InfoCollection',
   }
 
   InfoCollection.prototype._updateItem = function(item, preventRequest) {
-    var params = {}
+    var self = this
     // set to 0 initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
-    if(item.oldVoteStatus == 1) {
-      item.upVotes--
+    var params = _.clone(item)
+    params.upVotes = params.downVotes = 0
+    if(params.oldVoteStatus == 1) {
       params.upVotes = -1
     }
-    if(item.oldVoteStatus == -1) {
-      item.downVotes--
+    if(params.oldVoteStatus == -1) {
       params.downVotes = -1
-      if(item.wasNew) {
-        item.wasNew = false
-        item.hasNew = true
+      if(params.wasNew) {
+        params.wasNew = false
+        params.hasNew = true
       }
     }
     // upvote
-    if(item.voteStatus == 1) {
-      item.upVotes++
+    if(params.voteStatus == 1) {
       params.upVotes = 1
     }
     // down vote
-    if(item.voteStatus == -1) {
-      item.downVotes++
+    if(params.voteStatus == -1) {
       params.downVotes = 1
-      if(item.hasNew) {
-        item.wasNew = true
+      if(params.hasNew) {
+        params.wasNew = true
       }
-      item.hasNew = false
+      params.hasNew = false
     }
 
     var updateLocalStatus = function() {
+      item.upVotes += params.upVotes
+      item.downVotes += params.downVotes
+      item.wasNew = params.wasNew
+      item.hasNew = params.hasNew
       item.score = item.upVotes - item.downVotes
       item.isRecommended = item.score > 7
       item.isHighlight = item.score > 0
@@ -136,7 +139,10 @@ angular.module('zeroApp').factory('InfoCollection',
       params.category = item.category
       params.type = item.type
       params.value = item.value
-      postVote(params, updateLocalStatus)
+      params.provider_id = self.id
+      postVote(params, updateLocalStatus, function() {
+        item.voteStatus = item.oldVoteStatus
+      })
     } else {
       updateLocalStatus()
     }

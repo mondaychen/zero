@@ -61,7 +61,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         return item
       })
       // make instance
-      output[listName] = new InfoCollection(listName,
+      output[listName] = new InfoCollection(listName, output._id,
         output[listName], dispalyNames[listName])
       // rank
       output[listName].sort()
