@@ -36,6 +36,9 @@ angular.module('zeroApp').factory('InfoCollection',
     initialArr = initialArr || []
     this.initialArr = _.isArray(initialArr) ? initialArr : [initialArr]
 
+    this.type = this.name === 'email' ? null : this.name
+    this.category = this.name === 'email' ? 'email' : 'phone'
+
     this._init()
   }
 
@@ -72,8 +75,8 @@ angular.module('zeroApp').factory('InfoCollection',
       }
     }
     data = _.extend(dft, data)
-    data.type = self.name === 'email' ? null : self.name
-    data.category = self.name === 'email' ? 'email' : 'phone'
+    data.type = self.type
+    data.category = self.category
     this._updateItem(data, local, !local)
     this.collection.push(data)
   }
