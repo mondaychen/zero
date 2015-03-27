@@ -18,7 +18,8 @@ angular.module('zeroApp').factory('InfoCollection',
         ? options.whenSuccess : $.noop
       var whenError = _.isFunction(options.whenError)
         ? options.whenError : $.noop
-      notification.show('Voting for ' + params.value + '...')
+      notification.show((options.isNewAdded ? 'Adding ' : 'Voting for ')
+        + params.value + '...')
       $http.post(url(params)).success(function() {
         notification.show('Successfully '
           + (options.isNewAdded ? 'added: ' : 'voted for ') + params.value, 2500)
