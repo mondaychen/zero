@@ -11,8 +11,11 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
     link: function(scope, element) {
       scope.submitNewItem = function() {
         if (scope.newItem) {
-          scope.items.add(scope.newItem)
-          scope.newItem = ''
+          scope.items.add(scope.newItem, {
+            whenSuccess: function() {
+              scope.newItem = ''
+            }
+          })
         }
       }
       scope.submitNewNote = function() {

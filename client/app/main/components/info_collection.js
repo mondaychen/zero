@@ -13,17 +13,19 @@ angular.module('zeroApp').factory('InfoCollection',
     var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
     var origin = 'http://kurtteichman.com:9000'
     var url = urlMaker(urlPattern, origin, defaultParams)
-    return function(params, whenSuccess, whenError, newAdded) {
-      whenSuccess = _.isFunction(whenSuccess) ? whenSuccess : $.noop
-      whenError = _.isFunction(whenError) ? whenError : $.noop
+    return function(params, options) {
+      var whenSuccess = _.isFunction(options.whenSuccess)
+        ? options.whenSuccess : $.noop
+      var whenError = _.isFunction(options.whenError)
+        ? options.whenError : $.noop
       notification.show('Voting for' + params.value + '...')
       $http.post(url(params)).success(function() {
         notification.show('Successfully '
-          + (newAdded ? 'added: ' : 'voted for ') + params.value, 2500)
+          + (options.isNewAdded ? 'added: ' : 'voted for ') + params.value, 2500)
         whenSuccess(arguments)
       }).error(function() {
         notification.show('Failed to '
-          + (newAdded ? 'add: ' : 'vote for ') + params.value, 4000)
+          + (options.isNewAdded ? 'add: ' : 'vote for ') + params.value, 4000)
         whenError(arguments)
       })
     }
@@ -46,7 +48,9 @@ angular.module('zeroApp').factory('InfoCollection',
     var self = this
     self.collection = []
     _.each(this.initialArr, function(item) {
-      self.add(item, true)
+      self.add(item, {
+        local: true
+      })
     })
 
     self.notes = []
@@ -61,7 +65,8 @@ angular.module('zeroApp').factory('InfoCollection',
     return data
   }
 
-  InfoCollection.prototype.add = function(data, local) {
+  InfoCollection.prototype.add = function(data, options) {
+    options = options || {}
     var self = this
     data = this._makeObj(data)
     var dft = {
@@ -77,7 +82,8 @@ angular.module('zeroApp').factory('InfoCollection',
     data = _.extend(dft, data)
     data.type = self.type
     data.category = self.category
-    this._updateItem(data, local, !local)
+    options.newAdded = !options.local
+    this._updateItem(data, options)
     this.collection.push(data)
   }
 
@@ -98,8 +104,14 @@ angular.module('zeroApp').factory('InfoCollection',
     })
   }
 
-  InfoCollection.prototype._updateItem = function(item, local, newAdded) {
+  InfoCollection.prototype._updateItem = function(item, options) {
     var self = this
+    _.defaults(options, {
+      whenSuccess: $.noop,
+      whenError: $.noop,
+      local: false,
+      newAdded: false
+    })
     // set to 0 initially
     item.oldVoteStatus = _.isUndefined(item.oldVoteStatus)
       ? item.voteStatus : item.oldVoteStatus
@@ -137,13 +149,22 @@ angular.module('zeroApp').factory('InfoCollection',
       item.isRecommended = item.score > 7
       item.isHighlight = item.score > 0
       item.oldVoteStatus = item.voteStatus
+      options.whenSuccess()
     }
     
-    if(!local) {
+    if(!options.local) {
       params.provider_id = self.id
       postVote(params, updateLocalStatus, function() {
         item.voteStatus = item.oldVoteStatus
-      }, newAdded)
+      }, options.newAdded)
+      postVote(params, {
+        whenSuccess: updateLocalStatus,
+        whenError: function() {
+          item.voteStatus = item.oldVoteStatus
+          options.whenError()
+        },
+        isNewAdded: options.newAdded
+      })
     } else {
       updateLocalStatus()
     }
