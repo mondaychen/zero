@@ -107,7 +107,7 @@ angular.module('zeroApp').factory('InfoCollection',
 
   InfoCollection.prototype._updateItem = function(item, options) {
     var self = this
-    _.defaults(options, {
+    options = _.defaults(options || {}, {
       whenSuccess: $.noop,
       whenError: $.noop,
       local: false,

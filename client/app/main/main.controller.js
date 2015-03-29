@@ -97,7 +97,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     notification.show('Loading...')
 
     // $http.get('/2.0/zero/getProvider' + getQuery())
-    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    $http.get("http://localhost:9000/assets/test_careTeam.json")
     .success(function(data) {
       notification.hide()
       $scope.original_query_data = angular.copy(data);
