@@ -107,7 +107,7 @@ angular.module('zeroApp').factory('InfoCollection',
 
   InfoCollection.prototype._updateItem = function(item, options) {
     var self = this
-    _.defaults(options, {
+    options = _.defaults(options || {}, {
       whenSuccess: $.noop,
       whenError: $.noop,
       local: false,
@@ -155,9 +155,6 @@ angular.module('zeroApp').factory('InfoCollection',
     
     if(!options.local) {
       params.provider_id = self.id
-      postVote(params, updateLocalStatus, function() {
-        item.voteStatus = item.oldVoteStatus
-      }, options.newAdded)
       postVote(params, {
         whenSuccess: updateLocalStatus,
         whenError: function() {
