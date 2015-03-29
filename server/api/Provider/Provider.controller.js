@@ -363,7 +363,7 @@ exports.careTeam = function(req, res) {
       var test_member = {
         'firstName'         : 'test',
         'lastName'          : 'test',
-        'middleName'        : 'test',
+        'middleName'        : 'test1',
         'contactPreference' : null,
         'NPI'               : null,
         'honor'             : 'MD',
@@ -371,7 +371,7 @@ exports.careTeam = function(req, res) {
         'role'              : 'order provider',
         'photo'             : null,
         'email'             : ['test1@med.cornell.edu'],
-        'faxNum'            : ['18082582809','testing','testing1'],
+        'faxNum'            : ['18082582809','testing','testing1','testing2'],
         'pagerNum'          : [],
         'officePhone'       : ['18082582809'], 
         'mobilePhone'       : [],
