@@ -98,16 +98,17 @@ footer.footer
       .modal-body
         .alert.alert-success(ng-show="pager.success") Message successfully sent
         .alert.alert-danger(ng-show="pager.failed") Unable to send page
-        form(ng-submit="submitNewPager()")
+        form(ng-submit="pager.submit()")
           .form-group
             label(for="pager-number") Number
-            input.form-control(type="text" name="number" id="pager-number")
-          .form-group(ng-class="pagerMessage.length > 240 ? 'has-error' : ''")
+            input.form-control(type="text" name="number" id="pager-number"
+              readonly)
+          .form-group(ng-class="pager.message.length > 240 ? 'has-error' : ''")
             label(for="pager-message") Message
             textarea.form-control(rows=3 id="pager-message"
-              placeholder="Enter the message" ng-model="pagerMessage")
+              placeholder="Enter the message" ng-model="pager.message")
             p.help-block.pull-right
-              {{ 240 - (pagerMessage.length || 0) }}
+              {{ 240 - (pager.message.length || 0) }}
           button.btn.btn-default(type="submit") Send
 
 #notification-bar

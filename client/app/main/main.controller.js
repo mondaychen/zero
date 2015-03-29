@@ -167,4 +167,19 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     }
   }
 
+  // pager
+  $scope.pager = {
+    message: '',
+    success: false,
+    failed: false,
+    submit: function() {
+      if(this.message.length > 240) {
+        return
+      }
+      // TODO send the message
+      // change this.success & this.failed after the response
+      this.message = ''
+    }
+  }
+
 }])
