@@ -49,20 +49,18 @@ exports.email = function(req, res) {
   var upVotes   = req.params.u;
   var downVotes = req.params.d;
   var _id       = req.params.provider_id
+  var note      = req.params.note;
 
   var options = { "new" : true, "upsert" : true };
   var query   = { email: value };
-  var update  = { hasNew: hasNew, $inc: {upVotes:upVotes, downVotes:downVotes} };
+  var update  = { hasNew: hasNew, note: note, $inc: {upVotes:upVotes, downVotes:downVotes} };
 
+  // Todo, use promises?
   Email.findOneAndUpdate(query,update,options,function(err,email) {
     if (err) { console.log(err); return res.json(500,{ error: 'Something blew up!' }); }  
-    console.log('im in here');
-    console.log(email);
+
     Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
       if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
-      console.log('in provider');
-      console.log(provider);
-      console.log(provider.email.fieldValue.length);
 
       var temp = null;
       for (var i = 0; i < provider.email.fieldValue.length; i++) {
@@ -75,11 +73,33 @@ exports.email = function(req, res) {
       // email was not found to be associated with the provider
       // use set operator here?
       provider.email.fieldValue.push(email);
-
+      provider.email.dateLastModified = Date.now()
       provider.save(function(err3,provider) {
         if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
         return res.json(200,provider);
-      })
+      });
+    });
+  });
+}
+
+exports.email_note = function(req, res) {
+  var _id       = req.params.provider_id;
+  var notes     = req.params.notes;
+
+  Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+    if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+
+    if (provider.email.notes != notes) {
+      provider.email.notes = notes;
+      provider.email.dateLastModified = Date.now();
+      provider.email.notes_history.push(notes);
+    } else {
+      return res.json(500,{ error: 'No edit detected'} );
+    }
+
+    provider.save(function(err3, provider) {
+      if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+      return res.json(200,provider);
     });
   });
 }
@@ -92,18 +112,17 @@ exports.phone = function(req, res) {
   var upVotes   = req.params.u;
   var downVotes = req.params.d;
   var _id       = req.params.provider_id
+  var note      = req.params.note;
 
   var options = { "new" : true, "upsert" : true };
   var query   = { number: value, kind:kind };
-  var update  = { hasNew: hasNew, $inc: { upVotes:upVotes, downVotes:downVotes } };
+  var update  = { hasNew: hasNew, note: note, $inc: { upVotes:upVotes, downVotes:downVotes } };
 
+  // Todo: use promises?
   Phone.findOneAndUpdate(query,update,options,function(err,phone) {
     if (err) { console.log(err); return res.json(500,{ error: 'Something blew up!' }); }  
     Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
       if (err2 || phone == null) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
-      console.log('in provider');
-      console.log(kind);
-      console.log(provider[kind]);
 
       var temp = null;
       for (var i = 0; i < provider[kind].fieldValue.length; i++) {
@@ -115,11 +134,35 @@ exports.phone = function(req, res) {
       }
 
       provider[kind].fieldValue.push(phone);
+      provider[kind].dateLastModified = Date.now()
 
       provider.save(function(err3,provider) {
         if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
-        return res.json(200,provider);
+        return res.json(200,phone);
       });
+    });
+  });
+}
+
+exports.phone_note = function(req, res) {
+  var _id       = req.params.provider_id;
+  var notes     = req.params.notes;
+  var kind      = req.params.kind;
+
+  Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+    if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+
+    if (provider.email.notes != notes) {
+      provider.email.notes = notes;
+      provider.email.dateLastModified = Date.now();
+      provider.email.notes_history.push(notes);
+    } else {
+      return res.json(500,{ error: 'No edit detected'} );
+    }
+
+    provider.save(function(err3, provider) {
+      if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+      return res.json(200,provider);
     });
   });
 }
@@ -205,7 +248,6 @@ exports.careTeam = function(req, res) {
         return new Promise(function(resolve,reject){
           zero_member.save(function(err,member) {
             if (err) { console.log(err); }
-            console.log('i made it');
             resolve(member);
           });
         });
@@ -281,7 +323,6 @@ exports.careTeam = function(req, res) {
       var zeroMemberMobilePhoneOutput         = getModelAndIdArrays('mobilePhone',member.mobilePhone,phoneEmailAddressCreatePromiseArray);
       var zeroMemberAddressOutput             = getModelAndIdArrays('addresses',member.addresses,phoneEmailAddressCreatePromiseArray);
 
-      console.log(phoneEmailAddressCreatePromiseArray);
       return Promise.all(phoneEmailAddressCreatePromiseArray)
       .then(function() {
         return new Promise(function(resolve,reject) {
@@ -390,6 +431,8 @@ exports.careTeam = function(req, res) {
           .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
           .exec(function(err,providers) {
             if (err) { console.log(err); }
+            console.log('im in here x2');
+            console.log(providers);
             return res.json(200, providers);
           });                                                                                                                                                                                                                                                                              
         });
@@ -421,10 +464,6 @@ exports.provider = function(req, res) {
   });
 };
 
-exports.updatePhoneNumber = function(req, response) {
-  //req.params.id 
-
-}
 /*
 exports.index = function(req, res) {
   Provider.find(function (err, Providers) {

@@ -17,18 +17,18 @@ var ProviderSchema = new Schema({
 	lastName           : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	middleName         : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	cwid               : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
-	email              : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Email'}], notes: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple emails could potentially exist
-	officePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: [String], dateLastModified : { type: Date, default: Date.now } },// multiple office numbers could potentially exist
-	mobilePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple mobile numbers could potentially exist
-	pagerNum           : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: [String], dateLastModified : { type: Date, default: Date.now } },// multiple pager numbers could potentially exist
-	faxNum             : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: [String], dateLastModified : { type: Date, default: Date.now } },// multiple fax numbers could potentially exist
+	email              : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Email'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple emails could potentially exist
+	officePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } },// multiple office numbers could potentially exist
+	mobilePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple mobile numbers could potentially exist
+	pagerNum           : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } },// multiple pager numbers could potentially exist
+	faxNum             : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } },// multiple fax numbers could potentially exist
 	NPI                : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } }, // number that can potentially start with 0,
 	role               : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	honor              : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } }, // MD, NP, etc.
 	photo              : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	contactPreference  : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	//addresses          : { fieldValue: [AddressSchema], dateLastModified : { type: Date, default: Date.now}}
-	addresses          : { fieldValue: [{ type: Schema.Types.ObjectId, ref: "Address"}], notes: [String], dateLastModified : { type: Date, default: Date.now } }
+	addresses          : { fieldValue: [{ type: Schema.Types.ObjectId, ref: "Address"}], notes: String, dateLastModified : { type: Date, default: Date.now } }
 	/*
 	addrCity     : String,
 	addrLine1    : String,
