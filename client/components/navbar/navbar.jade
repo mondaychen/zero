@@ -36,7 +36,8 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
       .container
         .row
           .col-md-4.col-sm-6.pull-right
-            form#new-search.navbar-form.navbar-right(role="search")
+            form#new-search.navbar-form.navbar-right(role="search"
+              ng-submit="search.submit()")
               .form-group
                 .input-group
                   span.input-group-btn
@@ -47,7 +48,8 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
                     placeholder="{{ 'Search by ' \
                     + searchOptions.type[search.type] + ' for '\
                     + searchOptions.institute[search.institute] }}"
-                    ng-focus="search.showOptions = true")
+                    ng-focus="search.showOptions = true"
+                    ng-model="search.value")
                   span.input-group-btn
                     button.btn.btn-default(type="submit") Go
               .addtional-options(ng-show="search.showOptions")
