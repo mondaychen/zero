@@ -153,9 +153,9 @@ exports.phone_note = function(req, res) {
     if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
 
     if (provider.email.notes != notes) {
-      provider.email.notes = notes;
-      provider.email.dateLastModified = Date.now();
-      provider.email.notes_history.push(notes);
+      provider[kind].notes = notes;
+      provider[kind].dateLastModified = Date.now();
+      provider[kind].notes_history.push(notes);
     } else {
       return res.json(500,{ error: 'No edit detected'} );
     }
@@ -201,7 +201,7 @@ exports.careTeam = function(req, res) {
                 updatePromiseArray.push(new Promise(function(resolve,reject) {
                   Phone({ number: number, kind: field, hasNew: true})
                   .save(function(err,phone) {
-                    if (err) { console.log(err); }
+                    if (err) { console.log(err); reject(err); }
                     console.log(phone);
                     if (phone && phone != undefined) {
                       console.log('im here');
@@ -225,7 +225,7 @@ exports.careTeam = function(req, res) {
                   //var update = { "$setOnInsert" : query };
                   Email({ email: email, hasNew: true})
                   .save(function(err,email) {
-                    if (err) { console.log(err); }
+                    if (err) { console.log(err); reject(err); }
                     console.log(email);
                     if (email && email != undefined) {
                       console.log('im here');
@@ -247,6 +247,8 @@ exports.careTeam = function(req, res) {
       return Promise.all(updatePromiseArray).then(function() {
         return new Promise(function(resolve,reject){
           zero_member.save(function(err,member) {
+            console.log(member);
+            console.log('saved');
             if (err) { console.log(err); }
             resolve(member);
           });
@@ -344,7 +346,7 @@ exports.careTeam = function(req, res) {
             //'addresses'          : []//{ 'fieldValue' : member.addresses}
             'addresses'          : { 'fieldValue' : zeroMemberAddressOutput['ids'] }
           }).save(function(err, provider) {
-            if (err) { console.log(err); }
+            if (err) { console.log(err); reject(err); }
             resolve(provider);
           });
         });
@@ -382,7 +384,7 @@ exports.careTeam = function(req, res) {
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
       .exec();
       careTeam_promise.then(function(found_members) {
-        var found_cwids   = _.map(found_members, function(member) { 
+        var found_cwids = _.map(found_members, function(member) { 
           var cwid = member["cwid"]["fieldValue"]; 
           zero_result_table[cwid] = member;
           return cwid;
@@ -390,15 +392,15 @@ exports.careTeam = function(req, res) {
 
         var missing_cwids = _.difference(careTeam_cwids,found_cwids);
         var createProviderPromiseArray = [];
-        console.log(found_cwids);
-        console.log('missing');
-        console.log(missing_cwids);
+        //console.log(found_cwids);
+        //console.log('missing');
+        //console.log(missing_cwids);
 
         var sequence = Promise.resolve();
         //var updateSequence = Promise.resolve();
 
         found_cwids.forEach(function(cwid) {
-          sequence.then(function() {
+          sequence = sequence.then(function() {
             return updateProviderPromise(zero_result_table[cwid],careTeam_result_table[cwid]);
           })
           .catch(function(err) {
@@ -407,7 +409,8 @@ exports.careTeam = function(req, res) {
         });
 
         missing_cwids.forEach(function(cwid) {
-          sequence.then(function() {
+          sequence = sequence.then(function() {
+            console.log('in missing cwids foreach')
             console.log(cwid);
             return createProviderPromise(careTeam_result_table[cwid]);
           })
