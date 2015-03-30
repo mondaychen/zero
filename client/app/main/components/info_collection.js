@@ -107,7 +107,7 @@ angular.module('zeroApp').factory('InfoCollection',
       downVotes: 0,
       hasNew: false
     }
-    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/:note/'
+    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
     var origin = 'http://kurtteichman.com:9000'
     var url = urlMaker(urlPattern, origin, defaultParams)
     return postMaker(url)
