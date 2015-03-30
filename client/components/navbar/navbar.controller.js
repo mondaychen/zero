@@ -26,15 +26,19 @@ angular.module('zeroApp')
       type: ['MRN', 'Accession #']
     }
 
+    var instituteKeyMap = ['cornell', 'columbia']
+    var typeKeyMap = ['gmrn', 'gacc']
+
     $scope.search = {
       institute: $cookies['search.institute'] || 0,
       type: $cookies['search.type'] ||  0,
       showOptions: false,
       value: '',
       submit: function() {
-        // TODO: jump to a new url according to institute, type & value.
-        // A form validation may be needed.
+        // TODO: A form validation may be needed.
         // It is possible to change the url & content without refresh the whole page.
+        $location.search(typeKeyMap[$scope.search.type] + '=' + this.value
+          + '&institution=' + instituteKeyMap[$scope.search.institute])
       }
     }
     $scope.$watch('search', function() {
