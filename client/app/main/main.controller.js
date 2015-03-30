@@ -21,6 +21,16 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
   }
 
+  function formatName(keys, obj) {
+    _.each(keys, function(key) {
+      if(!_.isString(obj[key])) {
+        return
+      }
+      obj[key] = obj[key].slice(0,1).toUpperCase()
+        + obj[key].slice(1).toLowerCase()
+    })
+  }
+
   function getOrderedOutput(data) {
     var output = {}
     _.each(data, function(value, key) {
@@ -28,6 +38,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     })
 
     // generate full name
+    formatName(['firstName', 'middleName', 'lastName'], output)
     output.fullName = makeStringByKeys(['firstName',
       'middleName', 'lastName'], output) || 'NAME NOT AVAILABLE'
     output.fullName = makeStringByKeys(['fullName', 'honor'], output, ', ')
