@@ -29,7 +29,13 @@ angular.module('zeroApp')
     $scope.search = {
       institute: $cookies['search.institute'] || 0,
       type: $cookies['search.type'] ||  0,
-      showOptions: false
+      showOptions: false,
+      value: '',
+      submit: function() {
+        // TODO: jump to a new url according to institute, type & value.
+        // A form validation may be needed.
+        // It is possible to change the url & content without refresh the whole page.
+      }
     }
     $scope.$watch('search', function() {
       $cookies['search.institute'] = $scope.search.institute

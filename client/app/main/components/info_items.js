@@ -18,10 +18,25 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
           })
         }
       }
+      var _isEditting = void 0
+      scope.isEditting = function() {
+        if(_isEditting === void 0 && scope.items) {
+          _isEditting = !scope.items.note.length
+        }
+        return _isEditting
+      }
+      scope.setEditting = function(set) {
+        if(set !== void 0) {
+          _isEditting = set
+        }
+      }
       scope.submitNewNote = function() {
-        if (scope.newNote) {
-          scope.items.notes.push(scope.newNote)
-          scope.newNote = ''
+        if (scope.items.note) {
+          scope.items.updateNote({
+            whenSuccess: function() {
+              scope.setEditting(false)
+            }
+          })
         }
       }
       scope.vote = function(e, item, value) {

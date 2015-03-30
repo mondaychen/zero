@@ -29,11 +29,14 @@ form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")
 
 .notes(ng-show="isExtended")
   h5 Notes
-  ul
-    li(ng-repeat="note in items.notes")
-      {{note}}
-  form(ng-submit="submitNewNote()")
-    button.btn.btn-default(type="submit") Add
+  pre.note(ng-show="items.note.length")
+    {{items.note}}
+  //- TODO: set textarea focused when Edit button clicked
+  button.btn.btn-default(ng-click="setEditting(true)"
+    ng-show="!isEditting()") Edit
+  form(ng-submit="submitNewNote()" ng-show="isEditting()")
     .form-group
-      input.form-control(type="text" id="add-a-note"
-        placeholder="Enter a new note" ng-model="newNote")
+      textarea.form-control(type="text" id="add-a-note" rows="4"
+        placeholder="Enter a new note" ng-model="items.note")
+    .form-group
+      button.btn.btn-default(type="submit") Submit

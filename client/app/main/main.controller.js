@@ -62,7 +62,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       })
       // make instance
       output[listName] = new InfoCollection(listName, output._id,
-        output[listName], dispalyNames[listName])
+        output[listName], dispalyNames[listName], data[listName].notes_history)
       // rank
       output[listName].sort()
     })
@@ -118,7 +118,10 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
       $scope.viewContact($scope.contacts[0])
     }).error(function() {
-      notification.show('Failed to load data. Please try again later.')
+      notification.show({
+        msg: 'Failed to load data. Please try again later.',
+        type: 'danger'
+      })
     })
   });
 
@@ -164,6 +167,21 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
           $scope.$apply()
         }, 20)
       }, delayTime)
+    }
+  }
+
+  // pager
+  $scope.pager = {
+    message: '',
+    success: false,
+    failed: false,
+    submit: function() {
+      if(this.message.length > 240) {
+        return
+      }
+      // TODO send the message
+      // change this.success & this.failed after the response
+      this.message = ''
     }
   }
 

@@ -2,37 +2,30 @@ angular.module('zeroApp').factory('InfoCollection',
   ['notification', 'urlMaker' ,'$http',
   function(notification, urlMaker, $http) {
 
-  var postVote = (function() {
-    var defaultParams = {
-      category: 'phone', // or 'email'
-      type: null, // null for 'email', string for 'phone'
-      upVotes: 0,
-      downVotes: 0,
-      hasNew: false
-    }
-    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
-    var origin = 'http://kurtteichman.com:9000'
-    var url = urlMaker(urlPattern, origin, defaultParams)
+  function postMaker(url) {
     return function(params, options) {
       var whenSuccess = _.isFunction(options.whenSuccess)
         ? options.whenSuccess : $.noop
       var whenError = _.isFunction(options.whenError)
         ? options.whenError : $.noop
-      notification.show((options.isNewAdded ? 'Adding ' : 'Voting for ')
-        + params.value + '...')
+      notification.show(options.txtLoading)
       $http.post(url(params)).success(function() {
-        notification.show('Successfully '
-          + (options.isNewAdded ? 'added: ' : 'voted for ') + params.value, 2500)
+        notification.show({
+          msg: options.txtSuccess,
+          type: 'success'
+        }, options.timeSuccess || 2500)
         whenSuccess(arguments)
       }).error(function() {
-        notification.show('Failed to '
-          + (options.isNewAdded ? 'add: ' : 'vote for ') + params.value, 4000)
+        notification.show({
+          msg: options.txtFailed,
+          type: 'danger'
+        }, options.timeFailed || 4000)
         whenError(arguments)
       })
     }
-  })()
+  }
 
-  function InfoCollection (name, id, initialArr, displayName) {
+  function InfoCollection (name, id, initialArr, displayName, notes) {
     this.name = name
     this.id = id
     this.displayName = displayName
@@ -41,6 +34,8 @@ angular.module('zeroApp').factory('InfoCollection',
 
     this.type = this.name === 'email' ? null : this.name
     this.category = this.name === 'email' ? 'email' : 'phone'
+
+    this.note = notes.length ? notes[0] : ''
 
     this._init()
   }
@@ -53,8 +48,6 @@ angular.module('zeroApp').factory('InfoCollection',
         local: true
       })
     })
-
-    self.notes = []
   }
 
   InfoCollection.prototype._makeObj = function(data) {
@@ -104,6 +97,21 @@ angular.module('zeroApp').factory('InfoCollection',
       return -score
     })
   }
+
+
+  var postVote = (function() {
+    var defaultParams = {
+      category: 'phone', // or 'email'
+      type: null, // null for 'email', string for 'phone'
+      upVotes: 0,
+      downVotes: 0,
+      hasNew: false
+    }
+    var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/:note/'
+    var origin = 'http://kurtteichman.com:9000'
+    var url = urlMaker(urlPattern, origin, defaultParams)
+    return postMaker(url)
+  })()
 
   InfoCollection.prototype._updateItem = function(item, options) {
     var self = this
@@ -161,11 +169,47 @@ angular.module('zeroApp').factory('InfoCollection',
           item.voteStatus = item.oldVoteStatus
           options.whenError()
         },
-        isNewAdded: options.newAdded
+        txtLoading: (options.newAdded ? 'Adding ' : 'Voting for ')
+          + params.value + '...',
+        txtSuccess: 'Successfully '
+          + (options.newAdded ? 'added: ' : 'voted for ') + params.value,
+        txtFailed: 'Failed to '
+          + (options.newAdded ? 'add: ' : 'vote for ') + params.value
       })
     } else {
       updateLocalStatus()
     }
+  }
+
+  var postNote = (function() {
+    var defaultParams = {
+      category: 'phone', // or 'email'
+      type: null, // null for 'email', string for 'phone'
+      upVotes: 0,
+      downVotes: 0,
+      hasNew: false
+    }
+    // TODO: edit the url
+    var urlPattern = '/api/Providers/:category/:type/:provider_id/:notes/'
+    var origin = 'http://kurtteichman.com:9000'
+    var url = urlMaker(urlPattern, origin, defaultParams)
+    return postMaker(url)
+  })()
+
+  InfoCollection.prototype.updateNote = function(options) {
+    var params = {
+      category: this.category,
+      type: this.type,
+      provider_id: this.id,
+      notes: this.note
+    }
+    postNote(params, {
+      whenSuccess: options.whenSuccess,
+      whenError: options.whenError,
+      txtLoading: 'Submitting new note...',
+      txtSuccess: 'Note updated successfully',
+      txtFailed: 'Failed to submit the new note'
+    })
   }
 
   return InfoCollection
