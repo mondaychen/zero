@@ -183,20 +183,23 @@ angular.module('zeroApp').factory('InfoCollection',
       downVotes: 0,
       hasNew: false
     }
-    var urlPattern = '/api/Providers/:category/:type/:provider_id/:notes'
+    // TODO: edit the url
+    var urlPattern = '/api/Providers/:category/:type/:provider_id/:notes/'
     var origin = 'http://kurtteichman.com:9000'
     var url = urlMaker(urlPattern, origin, defaultParams)
     return postMaker(url)
   })()
 
-  InfoCollection.prototype.updateNote = function() {
+  InfoCollection.prototype.updateNote = function(options) {
     var params = {
       category: this.category,
       type: this.type,
-      id: this.id,
+      provider_id: this.id,
       notes: this.note
     }
     postNote(params, {
+      whenSuccess: options.whenSuccess,
+      whenError: options.whenError,
       txtLoading: 'Submitting new note...',
       txtSuccess: 'Note updated successfully',
       txtFailed: 'Failed to submit the new note'

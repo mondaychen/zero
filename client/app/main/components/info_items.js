@@ -32,7 +32,11 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
       }
       scope.submitNewNote = function() {
         if (scope.items.note) {
-          scope.setEditting(false)
+          scope.items.updateNote({
+            whenSuccess: function() {
+              scope.setEditting(false)
+            }
+          })
         }
       }
       scope.vote = function(e, item, value) {
