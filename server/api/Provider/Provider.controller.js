@@ -103,6 +103,27 @@ exports.email_notes = function(req, res) {
   });
 }
 
+exports.email_note = function(req, res) {
+  var _id  = req.params.email_id;
+  var note = req.params.note;
+
+  Email.findOne({_id: new ObjectId(_id)}, function(err2, email) {
+    if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+
+    if (email.note != note) {
+      email.note = note;
+      email.dateLastModified = Date.now();
+    } else {
+      return res.json(500,{ error: 'No edit detected'} );
+    }
+
+    email.save(function(err3, email) {
+      if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+      return res.json(200,email);
+    });
+  });
+}
+
 //router.post('/phone/:kind/:value/:hasNew/:u/:d/:provider_id', controller.phone);
 exports.phone = function(req, res) {
   var value     = req.params.value; 
@@ -167,24 +188,22 @@ exports.phone_notes = function(req, res) {
 }
 
 exports.phote_note = function(req, res) {
-  var _id       = req.params.provider_id;
-  var note      = req.params.note;
-  var kind      = req.params.kind;
+  var _id  = req.params.phone_id;
+  var note = req.params.note;
 
-  Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+  Phone.findOne({_id: new ObjectId(_id)}, function(err2, phone) {
     if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
 
-    if (provider.email.notes != notes) {
-      provider[kind].notes = notes;
-      provider[kind].dateLastModified = Date.now();
-      provider[kind].notes_history.push(notes);
+    if (phone.note != note) {
+      phone.note = note;
+      phone.dateLastModified = Date.now();
     } else {
       return res.json(500,{ error: 'No edit detected'} );
     }
 
-    provider.save(function(err3, provider) {
+    phone.save(function(err3, phone) {
       if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
-      return res.json(200,provider);
+      return res.json(200,phone);
     });
   });
 }
