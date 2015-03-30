@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('zeroApp')
-  .config(function ($stateProvider) {
+  .config(function ($stateProvider, $sceProvider) {
+    $sceProvider.enabled(false)
     $stateProvider
       .state('main', {
         url: '/',

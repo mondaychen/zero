@@ -71,23 +71,21 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   }
 
   function getQuery() {
-    var query  = "?institution=cornell&";
-    var count  = 0;
+    var query  = "?"
     var keyMap = {
-      "gacc":"accession",
-      "gmrn":"mrn"
-    };
-
-    angular.forEach($location.search(), function(value,key) {
-      query += String(keyMap[key]) + "=" + String(value) + "&";
-      count++;
-    });
-
-    if (count > 1) {
-      query = query.slice(0,query.length -1)
+      "gacc": "accession",
+      "gmrn": "mrn"
     }
+    var search = _.clone($location.search())
+    search.institution = search.institution || 'cornell'
+    query += _.map(search, function(value, key) {
+      if(keyMap[key]) {
+        return keyMap[key] + "=" + value
+      }
+      return key + "=" + value
+    }).join("&")
 
-    return query;
+    return query
   }
 
   $scope.contacts = []
@@ -97,7 +95,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     notification.show('Loading...')
 
     // $http.get('/2.0/zero/getProvider' + getQuery())
-    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery())
     // $http.get("http://localhost:9000/assets/test_careTeam.json")
     .success(function(data) {
       notification.hide()
