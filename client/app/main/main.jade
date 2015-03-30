@@ -16,7 +16,18 @@ mixin infoSection(category)
           ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")
           | {{person.#{category}.note.length ? "Show" : "Add"}} notes
 
-.container
+.home.container(ng-show="viewStatus.currentView == 'home'")
+  h1 Welcome to ZERO!
+
+.loading.container(ng-show="viewStatus.currentView == 'loading'")
+  p Working hard to load data :P
+  p.text-muted
+    | If failed, you may want to check the url,&nbsp;
+    a(href="") reload the page
+    | , or use the search box to look up something else.
+
+
+.container.main(ng-show="viewStatus.currentView == 'detail'")
   .row
     .col-lg-8.col-md-12
       .doctor-info

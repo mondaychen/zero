@@ -92,9 +92,15 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.person = {}
 
   $scope.$watch(function(){ return $location.search() }, function(params){
+    if(_.size(params) === 0) {
+      $scope.viewStatus.currentView = 'home'
+      return
+    }
     notification.show('Loading...')
+    $scope.viewStatus.currentView = 'loading'
 
     var whenSuccess = function(data) {
+      $scope.viewStatus.currentView = 'detail'
       notification.hide()
       // $scope.original_query_data = angular.copy(data);
 
@@ -172,6 +178,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   var cssSupportTransition = !ieVersion || ieVersion > 9
 
   $scope.viewStatus = {
+    currentView: 'home',
     viewClass: 'zero-main-view',
     targetSubView: '',
     mainInfoView: $('#main-info'),
