@@ -10,10 +10,16 @@ angular.module('zeroApp').factory('InfoCollection',
         ? options.whenError : $.noop
       notification.show(options.txtLoading)
       $http.post(url(params)).success(function() {
-        notification.show(options.txtSuccess, options.timeSuccess || 2500)
+        notification.show({
+          msg: options.txtSuccess,
+          type: 'success'
+        }, options.timeSuccess || 2500)
         whenSuccess(arguments)
       }).error(function() {
-        notification.show(options.txtFailed, options.timeFailed || 4000)
+        notification.show({
+          msg: options.txtFailed,
+          type: 'danger'
+        }, options.timeFailed || 4000)
         whenError(arguments)
       })
     }
