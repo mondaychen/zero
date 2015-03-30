@@ -1,0 +1,112 @@
+angular.module('zeroApp').factory('NotesCollection',
+  ['notification', 'urlMaker' ,'$http',
+  function(notification, urlMaker, $http) {
+
+  var postAdd = (function() {
+    // TODO: add default parameters
+    var defaultParams = {
+    }
+    // TODO: edit the url, the origin is optional
+    var urlPattern = '/api/Providers/note/:category/:type/:note/:provider_id/'
+    var origin = 'http://kurtteichman.com:9000'
+    var url = urlMaker(urlPattern, origin, defaultParams)
+    return function(params, options) {
+      var whenSuccess = _.isFunction(options.whenSuccess)
+        ? options.whenSuccess : $.noop
+      var whenError = _.isFunction(options.whenError)
+        ? options.whenError : $.noop
+      notification.show('Adding note...')
+      $http.post(url(params)).success(function() {
+        notification.show('A note successfully added.', 2500)
+        whenSuccess(arguments)
+      }).error(function() {
+        notification.show('Failed to add the note. Please try again later.', 4000)
+        whenError(arguments)
+      })
+    }
+  })()
+
+  function NotesCollection (category, type, id, initialArr) {
+    this.category = category
+    this.type = type
+    this.id = id
+    initialArr = initialArr || []
+    this.initialArr = _.isArray(initialArr) ? initialArr : [initialArr]
+
+    this._init()
+  }
+
+  NotesCollection.prototype._init = function() {
+    var self = this
+    self.collection = []
+    _.each(this.initialArr, function(item) {
+      self.add(item, {local: true})
+    })
+  }
+
+  NotesCollection.prototype._makeObj = function(data) {
+    if(_.isString(data)) {
+      data = {
+        note: data
+      }
+    }
+    return data
+  }
+
+  NotesCollection.prototype.add = function(data, local) {
+    var self = this
+    data = this._makeObj(data)
+    // TODO: edit & add fields
+    var dft = {
+      "note": '',
+      "author": null,
+      "timestamp": +(new Date()),
+      update: function(data) {
+        self.update(this, data)
+      }
+    }
+    data = _.extend(dft, data)
+    data.type = self.type
+    data.category = self.category
+    options.newAdded = !options.local
+    this._updateItem(data, options)
+    this.collection.push(data)
+  }
+
+  NotesCollection.prototype.update = function(item, data) {
+    data = this._makeObj(data)
+    item = _.extend(item, data)
+    this._updateItem(item)
+  }
+
+  NotesCollection.prototype.sort = function() {
+    this.collection = _.sortBy(this.collection, 'timestamp')
+  }
+
+  NotesCollection.prototype._updateItem = function(item, options) {
+    var self = this
+    var params = _.clone(item)
+    _.defaults(options, {
+      whenSuccess: $.noop,
+      whenError: $.noop
+    })
+    var updateLocalStatus = function() {
+      options.whenSuccess()
+    }
+    
+    if(!options.local) {
+      params.provider_id = self.id
+      postVote(params, {
+        whenSuccess: updateLocalStatus,
+        whenError: function() {
+          options.whenError()
+        },
+        isNewAdded: options.newAdded
+      })
+    } else {
+      updateLocalStatus()
+    }
+  }
+
+  return NotesCollection
+}])
