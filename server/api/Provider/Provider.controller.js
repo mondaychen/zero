@@ -49,7 +49,6 @@ exports.email = function(req, res) {
   var upVotes   = req.params.u;
   var downVotes = req.params.d;
   var _id       = req.params.provider_id
-  var note      = req.params.note;
 
   var options = { "new" : true, "upsert" : true };
   var query   = { email: value };
@@ -82,7 +81,7 @@ exports.email = function(req, res) {
   });
 }
 
-exports.email_note = function(req, res) {
+exports.email_notes = function(req, res) {
   var _id       = req.params.provider_id;
   var notes     = req.params.notes;
 
@@ -144,9 +143,32 @@ exports.phone = function(req, res) {
   });
 }
 
-exports.phone_note = function(req, res) {
+exports.phone_notes = function(req, res) {
   var _id       = req.params.provider_id;
   var notes     = req.params.notes;
+  var kind      = req.params.kind;
+
+  Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
+    if (err2) { console.log(err2); return res.json(500,{ error: 'Something else blew up!' }); }
+
+    if (provider.email.notes != notes) {
+      provider[kind].notes = notes;
+      provider[kind].dateLastModified = Date.now();
+      provider[kind].notes_history.push(notes);
+    } else {
+      return res.json(500,{ error: 'No edit detected'} );
+    }
+
+    provider.save(function(err3, provider) {
+      if (err3) { console.log(err3); return res.json(500,{ error: 'Something again blew up!' }); }
+      return res.json(200,provider);
+    });
+  });
+}
+
+exports.phote_note = function(req, res) {
+  var _id       = req.params.provider_id;
+  var note      = req.params.note;
   var kind      = req.params.kind;
 
   Provider.findOne({_id: new ObjectId(_id)}, function(err2, provider) {
