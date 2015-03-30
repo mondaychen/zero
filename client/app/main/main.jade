@@ -14,7 +14,7 @@ mixin infoSection(category)
       .notes
         a.toggle(href="#"
           ng-click="$event.preventDefault();viewStatus.changeToSubView('#{category}')")
-          | Show notes({{person.#{category}.notes.length}})
+          | {{person.#{category}.note.length ? "Show" : "Add"}} notes
 
 .container
   .row

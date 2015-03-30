@@ -32,7 +32,7 @@ angular.module('zeroApp').factory('InfoCollection',
     }
   })()
 
-  function InfoCollection (name, id, initialArr, displayName) {
+  function InfoCollection (name, id, initialArr, displayName, notes) {
     this.name = name
     this.id = id
     this.displayName = displayName
@@ -41,6 +41,8 @@ angular.module('zeroApp').factory('InfoCollection',
 
     this.type = this.name === 'email' ? null : this.name
     this.category = this.name === 'email' ? 'email' : 'phone'
+
+    this.note = notes.length ? notes[0] : ''
 
     this._init()
   }
@@ -53,8 +55,6 @@ angular.module('zeroApp').factory('InfoCollection',
         local: true
       })
     })
-
-    self.notes = []
   }
 
   InfoCollection.prototype._makeObj = function(data) {

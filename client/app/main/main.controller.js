@@ -62,7 +62,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       })
       // make instance
       output[listName] = new InfoCollection(listName, output._id,
-        output[listName], dispalyNames[listName])
+        output[listName], dispalyNames[listName], data[listName].notes_history)
       // rank
       output[listName].sort()
     })
@@ -100,6 +100,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     $http.get("http://127.0.0.1:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
     //$http.get("http://localhost:9000/assets/test_careTeam.json")
     .success(function(data) {
+      console.log(data)
       notification.hide()
       $scope.original_query_data = angular.copy(data);
 
