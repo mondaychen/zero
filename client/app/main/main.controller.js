@@ -94,13 +94,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.$watch(function(){ return $location.search() }, function(params){
     notification.show('Loading...')
 
-    // $http.get('/2.0/zero/getProvider' + getQuery())
-    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
-    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery())
-    // $http.get("http://localhost:9000/assets/test_careTeam.json")
-    .success(function(data) {
+    var whenSuccess = function(data) {
       notification.hide()
-      $scope.original_query_data = angular.copy(data);
+      // $scope.original_query_data = angular.copy(data);
 
       $scope.contacts = _.sortBy(_.map(data, function(person) {
          return getOrderedOutput(person)
@@ -116,12 +112,51 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         $scope.person = contact
       }
       $scope.viewContact($scope.contacts[0])
-    }).error(function() {
+    }
+
+    var whenError = function() {
       notification.show({
         msg: 'Failed to load data. Please try again later.',
         type: 'danger'
       })
+    }
+
+    var urls = [
+      {
+        value: "http://kurtteichman.com:9000/api/Providers/provider" + getQuery(),
+        pretreat: function(data) {
+          _.each(data, function(item) {
+            item.role.fieldValue = 'order provider'
+          })
+        }
+      },
+      {
+        value: "http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery()
+      }
+    ]
+
+    var mixture = []
+    var resolve = _.after(urls.length, function() {
+      if(mixture.length) {
+        whenSuccess(mixture)
+      } else {
+        whenError()
+      }
     })
+    _.each(urls, function(url) {
+      url.pretreat = url.pretreat || $.noop
+      $http.get(url.value).success(function(data) {
+        mixture = mixture.concat(data)
+        url.pretreat(data)
+        resolve()
+      }).error(function() {
+        resolve()
+      })
+    })
+
+    // $http.get('/2.0/zero/getProvider' + getQuery())
+    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    // $http.get("http://localhost:9000/assets/test_careTeam.json")
   });
 
   $scope.scheme = {
