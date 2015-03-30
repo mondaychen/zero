@@ -19,11 +19,11 @@ mixin infoSection(category)
 .home.container(ng-show="viewStatus.currentView == 'home'")
   h1 Welcome to ZERO!
 
-.loading.container(ng-show="viewStatus.currentView == 'loading'")
-  p Working hard to load data :P
+.loading.container(ng-show="viewStatus.currentView === 'loading'")
+  h4 Working hard to load data :P
   p.text-muted
     | If failed, you may want to check the url,&nbsp;
-    a(href="") reload the page
+    a(href="javascript:location.reload();") reload the page
     | , or use the search box to look up something else.
 
 
