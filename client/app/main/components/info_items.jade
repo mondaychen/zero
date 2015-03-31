@@ -37,6 +37,6 @@ form.add-new(ng-show="isExtended" ng-submit="submitNewItem()")
   form(ng-submit="submitNewNote()" ng-show="isEditting()")
     .form-group
       textarea.form-control(type="text" id="add-a-note" rows="4"
-        placeholder="Enter a new note" ng-model="items.note")
+        placeholder="Enter a new note" ng-model="newNote")
     .form-group
       button.btn.btn-default(type="submit") Submit

@@ -21,6 +21,16 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
   }
 
+  function formatName(keys, obj) {
+    _.each(keys, function(key) {
+      if(!_.isString(obj[key])) {
+        return
+      }
+      obj[key] = obj[key].slice(0,1).toUpperCase()
+        + obj[key].slice(1).toLowerCase()
+    })
+  }
+
   function getOrderedOutput(data) {
     var output = {}
     _.each(data, function(value, key) {
@@ -28,6 +38,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     })
 
     // generate full name
+    formatName(['firstName', 'middleName', 'lastName'], output)
     output.fullName = makeStringByKeys(['firstName',
       'middleName', 'lastName'], output) || 'NAME NOT AVAILABLE'
     output.fullName = makeStringByKeys(['fullName', 'honor'], output, ', ')
@@ -92,15 +103,17 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.person = {}
 
   $scope.$watch(function(){ return $location.search() }, function(params){
+    if(_.size(params) === 0) {
+      $scope.viewStatus.currentView = 'home'
+      return
+    }
     notification.show('Loading...')
+    $scope.viewStatus.currentView = 'loading'
 
-    // $http.get('/2.0/zero/getProvider' + getQuery())
-    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
-    $http.get("http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery())
-    // $http.get("http://localhost:9000/assets/test_careTeam.json")
-    .success(function(data) {
+    var whenSuccess = function(data) {
+      $scope.viewStatus.currentView = 'detail'
       notification.hide()
-      $scope.original_query_data = angular.copy(data);
+      // $scope.original_query_data = angular.copy(data);
 
       $scope.contacts = _.sortBy(_.map(data, function(person) {
          return getOrderedOutput(person)
@@ -116,12 +129,54 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         $scope.person = contact
       }
       $scope.viewContact($scope.contacts[0])
-    }).error(function() {
+    }
+
+    var whenError = function() {
       notification.show({
         msg: 'Failed to load data. Please try again later.',
         type: 'danger'
       })
+    }
+
+    var urls = [
+      {
+        value: "http://kurtteichman.com:9000/api/Providers/provider" + getQuery(),
+        pretreat: function(data) {
+          _.each(data, function(item) {
+            item.role.fieldValue = 'order provider'
+          })
+        }
+      },
+      {
+        value: "http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery()
+      }
+    ]
+
+    // urls = [{value: 'http://10.0.2.2:9000/assets/test_careTeam.json'}]
+    // urls = [{value: 'http://localhost:9000/assets/test_careTeam.json'}]
+
+    var mixture = []
+    var resolve = _.after(urls.length, function() {
+      if(mixture.length) {
+        whenSuccess(mixture)
+      } else {
+        whenError()
+      }
     })
+    _.each(urls, function(url) {
+      url.pretreat = url.pretreat || $.noop
+      $http.get(url.value).success(function(data) {
+        mixture = mixture.concat(data)
+        url.pretreat(data)
+        resolve()
+      }).error(function() {
+        resolve()
+      })
+    })
+
+    // $http.get('/2.0/zero/getProvider' + getQuery())
+    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
+    // $http.get("http://localhost:9000/assets/test_careTeam.json")
   });
 
   $scope.scheme = {
@@ -137,12 +192,17 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   var cssSupportTransition = !ieVersion || ieVersion > 9
 
   $scope.viewStatus = {
+    currentView: 'home',
     viewClass: 'zero-main-view',
     targetSubView: '',
     mainInfoView: $('#main-info'),
     subInfoView: $('#sub-info'),
     changeToSubView: function(category) {
-      this.viewClass = 'zero-sub-view'
+      var viewClass = 'zero-sub-view'
+      if(this.viewClass === viewClass) {
+        return
+      }
+      this.viewClass = viewClass
       this.targetSubView = category
       var delayTime = cssSupportTransition ? 800: 1
       _.delay(function(self) {
@@ -155,6 +215,10 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     },
     changeToMainView: function() {
       var self = this
+      var viewClass = 'zero-main-view'
+      if(self.viewClass === viewClass) {
+        return
+      }
       self.subInfoView.removeClass('show')
       var delayTime = cssSupportTransition ? 600: 1
       _.delay(function() {
@@ -162,12 +226,16 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         self.subInfoView.hide()
         self.mainInfoView.show()
         _.delay(function() {
-          self.viewClass = 'zero-main-view'
+          self.viewClass = viewClass
           $scope.$apply()
         }, 20)
       }, delayTime)
     }
   }
+
+  $scope.$watch('person', function() {
+    $scope.viewStatus.changeToMainView()
+  })
 
   // pager
   $scope.pager = {

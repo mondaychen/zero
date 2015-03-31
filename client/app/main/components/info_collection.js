@@ -160,21 +160,41 @@ angular.module('zeroApp').factory('InfoCollection',
       item.oldVoteStatus = item.voteStatus
       options.whenSuccess()
     }
+
+    var txtLoading, txtSuccess, txtFailed
+    if(options.newAdded) {
+      txtLoading = 'Adding'
+      txtSuccess = 'added:'
+      txtFailed = 'add:'
+    } else if(item.voteStatus === 0) {
+      txtLoading = 'Revoking the vote for'
+      txtSuccess = 'revoked the vote for'
+      txtFailed = 'revoke the vote for'
+    } else {
+      txtLoading = 'Voting for'
+      txtSuccess = 'voted for'
+      txtFailed = 'vote for'
+    }
+    txtLoading += ' ' + params.value + '...'
+    txtSuccess = 'Successfully ' + txtSuccess + ' ' + params.value
+    txtFailed = 'Failed to ' + txtFailed + ' ' + params.value
     
     if(!options.local) {
       params.provider_id = self.id
+      item.pending = true
       postVote(params, {
-        whenSuccess: updateLocalStatus,
+        whenSuccess: function() {
+          updateLocalStatus()
+          item.pending = false
+        },
         whenError: function() {
           item.voteStatus = item.oldVoteStatus
           options.whenError()
+          item.pending = false
         },
-        txtLoading: (options.newAdded ? 'Adding ' : 'Voting for ')
-          + params.value + '...',
-        txtSuccess: 'Successfully '
-          + (options.newAdded ? 'added: ' : 'voted for ') + params.value,
-        txtFailed: 'Failed to '
-          + (options.newAdded ? 'add: ' : 'vote for ') + params.value
+        txtLoading: txtLoading,
+        txtSuccess: txtSuccess,
+        txtFailed: txtFailed
       })
     } else {
       updateLocalStatus()
@@ -197,14 +217,18 @@ angular.module('zeroApp').factory('InfoCollection',
   })()
 
   InfoCollection.prototype.updateNote = function(options) {
+    var self = this
     var params = {
       category: this.category,
       type: this.type,
       provider_id: this.id,
-      notes: this.note
+      notes: options.note
     }
     postNote(params, {
-      whenSuccess: options.whenSuccess,
+      whenSuccess: function() {
+        self.note = options.note
+        options.whenSuccess()
+      },
       whenError: options.whenError,
       txtLoading: 'Submitting new note...',
       txtSuccess: 'Note updated successfully',

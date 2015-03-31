@@ -25,14 +25,16 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
         }
         return _isEditting
       }
+      scope.newNote = ''
       scope.setEditting = function(set) {
         if(set !== void 0) {
           _isEditting = set
         }
       }
       scope.submitNewNote = function() {
-        if (scope.items.note) {
+        if (scope.newNote) {
           scope.items.updateNote({
+            note: scope.newNote,
             whenSuccess: function() {
               scope.setEditting(false)
             }
@@ -40,6 +42,9 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
         }
       }
       scope.vote = function(e, item, value) {
+        if(item.pending) {
+          return
+        }
         if(item.voteStatus == value) {
           item.update({voteStatus: 0})
           return
@@ -57,6 +62,11 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
           e.currentTarget.focus()
         })
       }
+
+      scope.$watch('type', function() {
+        scope.newItem = ''
+        scope.newNote = scope.items && scope.items.note || ''
+      })
     }
   }
 }])
