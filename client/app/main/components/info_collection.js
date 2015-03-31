@@ -181,11 +181,16 @@ angular.module('zeroApp').factory('InfoCollection',
     
     if(!options.local) {
       params.provider_id = self.id
+      item.pending = true
       postVote(params, {
-        whenSuccess: updateLocalStatus,
+        whenSuccess: function() {
+          updateLocalStatus()
+          item.pending = false
+        },
         whenError: function() {
           item.voteStatus = item.oldVoteStatus
           options.whenError()
+          item.pending = false
         },
         txtLoading: txtLoading,
         txtSuccess: txtSuccess,

@@ -42,6 +42,9 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
         }
       }
       scope.vote = function(e, item, value) {
+        if(item.pending) {
+          return
+        }
         if(item.voteStatus == value) {
           item.update({voteStatus: 0})
           return
