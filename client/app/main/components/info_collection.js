@@ -108,7 +108,8 @@ angular.module('zeroApp').factory('InfoCollection',
       hasNew: false
     }
     var urlPattern = '/api/Providers/:category/:type/:value/:hasNew/:upVotes/:downVotes/:provider_id/'
-    var origin = 'http://kurtteichman.com:9000'
+    //var origin = 'http://kurtteichman.com:9000'
+    var origin = ''
     var url = urlMaker(urlPattern, origin, defaultParams)
     return postMaker(url)
   })()
@@ -211,7 +212,8 @@ angular.module('zeroApp').factory('InfoCollection',
     }
     // TODO: edit the url
     var urlPattern = '/api/Providers/:category/:type/:provider_id/:notes/'
-    var origin = 'http://kurtteichman.com:9000'
+    //var origin = 'http://kurtteichman.com:9000'
+    var origin = ''
     var url = urlMaker(urlPattern, origin, defaultParams)
     return postMaker(url)
   })()
