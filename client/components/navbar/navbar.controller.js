@@ -39,6 +39,7 @@ angular.module('zeroApp')
         // It is possible to change the url & content without refresh the whole page.
         $location.search(typeKeyMap[$scope.search.type] + '=' + this.value
           + '&institution=' + instituteKeyMap[$scope.search.institute])
+        this.showOptions = false
       }
     }
     $scope.$watch('search', function() {
