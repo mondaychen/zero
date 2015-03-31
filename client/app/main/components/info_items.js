@@ -26,9 +26,6 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
         return _isEditting
       }
       scope.newNote = ''
-      scope.$watch('type', function() {
-        scope.newNote = scope.items && scope.items.note || ''
-      })
       scope.setEditting = function(set) {
         if(set !== void 0) {
           _isEditting = set
@@ -62,6 +59,11 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
           e.currentTarget.focus()
         })
       }
+
+      scope.$watch('type', function() {
+        scope.newItem = ''
+        scope.newNote = scope.items && scope.items.note || ''
+      })
     }
   }
 }])
