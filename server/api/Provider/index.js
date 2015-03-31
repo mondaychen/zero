@@ -16,6 +16,8 @@ router.post('/email/:provider_id/:notes', controller.email_notes);
 //router.post('/email/:email_id/:note', controller.email_note);
 router.post('/email/:value/:hasNew/:u/:d/:provider_id', controller.email);
 
+//router.post('/pager/:number/:message', controller.pager_service);
+
 /*
 router.get('/', controller.index);
 router.get('/:id', controller.show);
