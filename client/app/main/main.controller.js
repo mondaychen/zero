@@ -152,6 +152,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
     ]
 
+    // urls = [{value: 'http://10.0.2.2:9000/assets/test_careTeam.json'}]
+    // urls = [{value: 'http://localhost:9000/assets/test_careTeam.json'}]
+
     var mixture = []
     var resolve = _.after(urls.length, function() {
       if(mixture.length) {
@@ -195,7 +198,11 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     mainInfoView: $('#main-info'),
     subInfoView: $('#sub-info'),
     changeToSubView: function(category) {
-      this.viewClass = 'zero-sub-view'
+      var viewClass = 'zero-sub-view'
+      if(this.viewClass === viewClass) {
+        return
+      }
+      this.viewClass = viewClass
       this.targetSubView = category
       var delayTime = cssSupportTransition ? 800: 1
       _.delay(function(self) {
@@ -208,6 +215,10 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     },
     changeToMainView: function() {
       var self = this
+      var viewClass = 'zero-main-view'
+      if(self.viewClass === viewClass) {
+        return
+      }
       self.subInfoView.removeClass('show')
       var delayTime = cssSupportTransition ? 600: 1
       _.delay(function() {
@@ -215,12 +226,16 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         self.subInfoView.hide()
         self.mainInfoView.show()
         _.delay(function() {
-          self.viewClass = 'zero-main-view'
+          self.viewClass = viewClass
           $scope.$apply()
         }, 20)
       }, delayTime)
     }
   }
+
+  $scope.$watch('person', function() {
+    $scope.viewStatus.changeToMainView()
+  })
 
   // pager
   $scope.pager = {
