@@ -140,7 +140,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     var urls = [
       {
-        value: "http://kurtteichman.com:9000/api/Providers/provider" + getQuery(),
+        //value: "http://kurtteichman.com:9000/api/Providers/provider" + getQuery(),
+        value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
           _.each(data, function(item) {
             item.role.fieldValue = 'order provider'
@@ -148,7 +149,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         }
       },
       {
-        value: "http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery()
+        //value: "http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery()
+        value: "/api/Providers/careTeam" + getQuery()
       }
     ]
 

@@ -6,6 +6,7 @@ var app     = express();
 
 app.get('/2.0/zero/getCareTeam2', function(req,res) {
 	fs.readFile(path.resolve(__dirname, 'test_careTeam.json'), 'utf8', function(err, data){
+		console.log(data);
 		res.status(200).json(JSON.parse(data));
 	});
 });

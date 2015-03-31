@@ -499,7 +499,7 @@ exports.careTeam = function(req, res) {
 exports.provider = function(req, res) {
   var query = getQuery(req);
   var options = {
-    url : service_url + '/2.0/zero/getProvider',
+    url : service_url + '/2.0/zero/getProvider2',
     qs  : query
   };  
   request(options, function (error, response, body) {
@@ -677,7 +677,8 @@ exports.provider = function(req, res) {
     }
 
     if (!error && response.statusCode == 200) {
-      var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
+      //var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
+      var careTeam_result       = [JSON.parse(body)];
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
