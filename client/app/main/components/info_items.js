@@ -25,14 +25,19 @@ angular.module('zeroApp').directive('infoItems', ['ieVersion',
         }
         return _isEditting
       }
+      scope.newNote = ''
       scope.setEditting = function(set) {
         if(set !== void 0) {
           _isEditting = set
         }
+        if(set) {
+          scope.newNote = scope.items.note
+        }
       }
       scope.submitNewNote = function() {
-        if (scope.items.note) {
+        if (scope.newNote) {
           scope.items.updateNote({
+            note: scope.newNote,
             whenSuccess: function() {
               scope.setEditting(false)
             }

@@ -197,14 +197,18 @@ angular.module('zeroApp').factory('InfoCollection',
   })()
 
   InfoCollection.prototype.updateNote = function(options) {
+    var self = this
     var params = {
       category: this.category,
       type: this.type,
       provider_id: this.id,
-      notes: this.note
+      notes: options.note
     }
     postNote(params, {
-      whenSuccess: options.whenSuccess,
+      whenSuccess: function() {
+        self.note = options.note
+        options.whenSuccess()
+      },
       whenError: options.whenError,
       txtLoading: 'Submitting new note...',
       txtSuccess: 'Note updated successfully',
