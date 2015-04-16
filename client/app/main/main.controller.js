@@ -140,7 +140,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     var urls = [
       {
-        //value: "http://kurtteichman.com:9000/api/Providers/provider" + getQuery(),
         value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
           _.each(data, function(item) {
@@ -149,13 +148,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         }
       },
       {
-        //value: "http://kurtteichman.com:9000/api/Providers/careTeam" + getQuery()
         value: "/api/Providers/careTeam" + getQuery()
       }
     ]
-
-    // urls = [{value: 'http://10.0.2.2:9000/assets/test_careTeam.json'}]
-    // urls = [{value: 'http://localhost:9000/assets/test_careTeam.json'}]
 
     var mixture = []
     var resolve = _.after(urls.length, function() {
@@ -175,11 +170,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         resolve()
       })
     })
-
-    // $http.get('/2.0/zero/getProvider' + getQuery())
-    // $http.get("http://kurtteichman.com:9000/api/Providers/careTeam?institution=columbia&mrn=1863656")
-    // $http.get("http://localhost:9000/assets/test_careTeam.json")
-  });
+  })
 
   $scope.scheme = {
     'email'       : 'yellow',
