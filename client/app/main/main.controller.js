@@ -143,7 +143,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
           _.each(data, function(item) {
-            item.role.fieldValue = 'order provider'
+            item.role.fieldValue = 'ordering provider'
           })
         }
       },
