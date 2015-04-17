@@ -136,6 +136,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         msg: 'Failed to load data. Please try again later.',
         type: 'danger'
       })
+      $scope.viewStatus.currentView = 'loadingError'
     }
 
     var urls = [
