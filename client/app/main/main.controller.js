@@ -184,6 +184,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.dispalyNames = dispalyNames
 
   var cssSupportTransition = !ieVersion || ieVersion > 9
+  $scope.cssSupportTransition = $scope.cssSupportAnimation = cssSupportTransition
 
   $scope.viewStatus = {
     currentView: 'home',

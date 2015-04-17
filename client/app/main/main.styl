@@ -1,13 +1,45 @@
 .loading
   text-align: center
   padding: 50px 0
-  span
-    color: #333
+  animation: breath 9s infinite ease-in-out
+  i.spinning-icon
     display: inline-block
-    line-height: 50px
-    padding: 0 0 0 10px
-    font-size: 24px
+    background: url('/assets/images/icon-small.png') no-repeat center
+    height: 48px
+    width: @height
     vertical-align: middle
+    animation: spinning 9s infinite ease-in-out
+  .text
+    color: #333
+    padding: 15px 0 0 20px
+    font-size: 18px
+
+@keyframes breath {
+  0% {
+    opacity: 1
+  }
+  60% {
+    opacity: 0.6
+  }
+  80% {
+    opacity: 1
+  }
+  100% {
+    opacity: 1
+  }
+}
+
+@keyframes spinning {
+  0% {
+    transform: rotate(0deg)
+  }
+  80% {
+    transform: rotate(4*360deg)
+  }
+  100% {
+    transform: rotate(4*360deg)
+  }
+}
 
 .doctor-info .description
   font-size: 20px
