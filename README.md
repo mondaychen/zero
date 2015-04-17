@@ -6,7 +6,7 @@ ZERO
 ### Environment
 
 1. Install [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.org/).
-2. You may need to install bower and grunt globally with `npm install -g bower` and `npm install -g grunt`.
+2. You may need to install bower and grunt globally with `npm install -g bower` and `npm install -g grunt-cli`.
 1. To get ZERO running locally, you need a running instance of MongoDB.
 
 _Note: In case that you are new to MongoDB, it is quiet easy to setup your first instance._
@@ -21,7 +21,7 @@ _After MongoDB installed, just make a directory as your DB path, such as `mkdir 
 
 ### Set the local server up!
 
-1. Run `node_test_server/app.js`
+1. Run `node node_test_server/app.js`
 2. Run `grunt serve`
 
 ZERO will be opened in your browser automaticly as `localhost:9000`.
