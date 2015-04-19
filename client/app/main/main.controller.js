@@ -118,6 +118,14 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       $scope.contacts = _.sortBy(_.map(data, function(person) {
          return getOrderedOutput(person)
       }), 'role')
+      var existingCWID = {}
+      $scope.contacts = _.reject($scope.contacts, function(contact) {
+        if(existingCWID[contact.cwid]) {
+          return true
+        }
+        existingCWID[contact.cwid] = true
+        return false
+      })
       $scope.viewContact = function (contact) {
         if(contact.active) {
           return
