@@ -3,8 +3,9 @@
 var app = angular.module('zeroApp')
 
 app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
+  'Messager',
   '$scope', '$http', '$location', '$resource',
-  function (ieVersion, InfoCollection, notification,
+  function (ieVersion, InfoCollection, notification, Messager,
     $scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
@@ -241,19 +242,11 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     $scope.viewStatus.changeToMainView()
   })
 
-  // pager
-  $scope.pager = {
-    message: '',
-    success: false,
-    failed: false,
-    submit: function() {
-      if(this.message.length > 240) {
-        return
-      }
-      // TODO send the message
-      // change this.success & this.failed after the response
-      this.message = ''
-    }
-  }
+  var messager = new Messager($scope)
+  messager.addType('pager', {
+    limit: 240,
+    displayName: 'page'
+  })
+  $scope.messager = messager
 
 }])

@@ -103,28 +103,28 @@ footer.footer
         ul
           li(ng-repeat="address in person.addresses" ng-bind-html="address")
 
-#pager-box.modal.fade(tabindex="-1"
+#msg-box.modal.fade(tabindex="-1"
   role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
   .modal-dialog
     .modal-content
       .modal-header
         button.close(type="button" data-dismiss="modal" aria-label="Close")
           span(aria-hidden="true") &times;
-        h4.modal-title Send Page to {{person.fullName}}
+        h4.modal-title Send {{messager.displayName}} to {{person.fullName}}
       .modal-body
-        .alert.alert-success(ng-show="pager.success") Message successfully sent
-        .alert.alert-danger(ng-show="pager.failed") Unable to send page
-        form(ng-submit="pager.submit()")
+        .alert.alert-success(ng-show="messager.success") Message successfully sent
+        .alert.alert-danger(ng-show="messager.failed") Unable to send message
+        form(ng-submit="messager.submit()")
           .form-group
-            label(for="pager-number") Number
-            input.form-control(type="text" name="number" id="pager-number"
+            label(for="msg-number") Number
+            input.form-control(type="text" name="number" id="msg-number"
               readonly)
-          .form-group(ng-class="pager.message.length > 240 ? 'has-error' : ''")
-            label(for="pager-message") Message
-            textarea.form-control(rows=3 id="pager-message"
-              placeholder="Enter the message" ng-model="pager.message")
-            p.help-block.pull-right
-              {{ 240 - (pager.message.length || 0) }}
+          .form-group(ng-class="{'has-error': messager.message.length > messager.lengthLimit}")
+            label(for="messager-message") Message
+            textarea.form-control(rows=3 id="msg-message"
+              placeholder="Enter the message" ng-model="messager.message")
+            p.help-block.pull-right(ng-show="messager.lengthLimit")
+              {{ messager.lengthLimit - messager.message.length }}
           button.btn.btn-default(type="submit") Send
 
 #notification-bar
@@ -133,13 +133,4 @@ footer.footer
     button.close(type="button" data-dismiss="modal" aria-label="Close")
       span(aria-hidden="true") &times;
 
-script.
-  $(document).ready(function() {
-    $('#pager-box').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget)
-      var number = button.data('number')
-      var modal = $(this)
-      modal.find('input[name="number"]').val(number)
-    })
-  })
   

@@ -21,8 +21,8 @@ angular.module('zeroApp').directive('contactDetail', function() {
         content = '<a href="mailto:@">@</a>'.replace(/\@/g, scope.detail)
       }
       if (scope.type === 'pagerNum') {
-        content = ('<a href="javascript:;" data-toggle="modal" data-target="#pager-box"'
-          + 'data-number="@">@</a>')
+        content = ('<a href="javascript:;" data-toggle="modal" data-target="#msg-box"'
+          + 'data-type="pager" data-number="@">@</a>')
           .replace(/\@/g, scope.detail)
       }
       element.html(content)
