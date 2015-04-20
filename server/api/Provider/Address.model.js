@@ -13,7 +13,8 @@ var AddressSchema = new Schema({
 	dateLastModified : {type: Date, default: Date.now }
 });
 
-AddressSchema.index({ addrPostCode: 1, addrCity: 1, addrState: 1, addrLine1: 1, locName: 1, locTypeCode: 1 }, {unique: true });
+// Dropping address indexing, not using it anyways
+//AddressSchema.index({ addrPostCode: 1, addrCity: 1, addrState: 1, addrLine1: 1, locName: 1, locTypeCode: 1 }, {unique: true });
 
 module.exports = {
 	"model"  : mongoose.model('Address', AddressSchema),
