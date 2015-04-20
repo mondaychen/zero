@@ -37,7 +37,7 @@ var Provider       = require('./Provider.model')['model'];
 var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
-var service_url    = 'http://140.251.198.81:8003'
+var service_url    = 'http://127.0.0.1:8003'
 var ObjectId       = require('mongoose').Types.ObjectId; 
 
 
@@ -383,7 +383,7 @@ var createProviderPromise = function (member) {
 exports.careTeam = function(req, res) {
   var query = getQuery(req);
   var options = {
-    url : service_url + '/2.0/zero/getCareTeam',
+    url : service_url + '/num_ext/zero/getCareTeam',
     qs  : query
   };
 
@@ -492,7 +492,7 @@ exports.careTeam = function(req, res) {
 exports.provider = function(req, res) {
   var query = getQuery(req);
   var options = {
-    url : service_url + '/2.0/zero/getProvider',
+    url : service_url + '/num_ext/zero/getProvider',
     qs  : query
   };  
   request(options, function (error, response, body) {
