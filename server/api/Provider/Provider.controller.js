@@ -37,7 +37,7 @@ var Provider       = require('./Provider.model')['model'];
 var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
-var service_url    = 'http://192.168.150.8:5000'
+var service_url    = 'http://140.251.198.81:8003'
 var ObjectId       = require('mongoose').Types.ObjectId; 
 
 
