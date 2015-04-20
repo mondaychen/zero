@@ -246,6 +246,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   messager.addType('pager', {
     limit: 240,
     displayName: 'page'
+  }).addType('SMS', {
+    limit: 1600,
+    displayName: 'SMS'
   })
   $scope.messager = messager
 
