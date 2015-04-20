@@ -1,7 +1,7 @@
 angular.module('zeroApp').directive('contactDetail', function() {
-  var msgLinkTmpl = _.template('<a href="javascript:;" data-toggle="modal"'
+  var msgLinkTmpl = _.template('<button class="btn btn-link" data-toggle="modal"'
     + ' data-target="#msg-box" data-type="<%= type %>"'
-    + ' data-number="<%= number %>"><%= text %></a>')
+    + ' data-number="<%= number %>"><%= text %></button>')
   return {
     restrict: 'A', // for IE 8
     scope: {
