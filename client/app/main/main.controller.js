@@ -102,6 +102,17 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.contacts = []
   $scope.person = {}
 
+  $scope.viewContact = function (contact) {
+    if(contact.active) {
+      return
+    }
+    _.each($scope.contacts, function(one) {
+      one.active = false
+    })
+    contact.active = true
+    $scope.person = contact
+  }
+
   $scope.$watch(function(){ return $location.search() }, function(params){
     if(_.size(params) === 0) {
       $scope.viewStatus.currentView = 'home'
@@ -126,16 +137,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         existingCWID[contact.cwid] = true
         return false
       })
-      $scope.viewContact = function (contact) {
-        if(contact.active) {
-          return
-        }
-        _.each($scope.contacts, function(one) {
-          one.active = false
-        })
-        contact.active = true
-        $scope.person = contact
-      }
       $scope.viewContact($scope.contacts[0])
     }
 
