@@ -5,7 +5,7 @@ mixin infoSection(category)
     section(ng-class="['scheme-' + scheme.#{category}, \
       viewStatus.targetSubView == '#{category}' ? 'focused' : '']")
       h4.title
-        | {{dispalyNames.#{category}}}
+        | {{displayNames.#{category}}}
         button.more(ng-click="viewStatus.changeToSubView('#{category}')") +
       div(info-items items="person.#{category}" type="'#{category}'")
       a.empty-list(href="#" ng-show="!person.#{category}.collection.length"
@@ -71,7 +71,7 @@ mixin infoSection(category)
           .col-md-10
             section(ng-class="'scheme-' + scheme[viewStatus.targetSubView]")
               h4.title
-                | {{dispalyNames[viewStatus.targetSubView]}}
+                | {{displayNames[viewStatus.targetSubView]}}
               div(info-items items="person[viewStatus.targetSubView]"
                 type="viewStatus.targetSubView" extended="true")
       //- pre(ng-bind-html="person | json")

@@ -9,7 +9,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     $scope, $http, $location, $resource) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
-  var dispalyNames = {
+  var displayNames = {
     'email'       : 'Email',
     'faxNum'      : 'Fax',
     'officePhone' : 'Office Phone',
@@ -74,7 +74,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       })
       // make instance
       output[listName] = new InfoCollection(listName, output._id,
-        output[listName], dispalyNames[listName], data[listName].notes_history)
+        output[listName], displayNames[listName], data[listName].notes_history)
       // rank
       output[listName].sort()
     })
@@ -191,7 +191,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     'pagerNum'    : 'green'
   }
 
-  $scope.dispalyNames = dispalyNames
+  $scope.displayNames = displayNames
 
   var cssSupportTransition = !ieVersion || ieVersion > 9
   $scope.cssSupportTransition = $scope.cssSupportAnimation = cssSupportTransition
