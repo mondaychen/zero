@@ -41,20 +41,18 @@ angular.module('zeroApp').factory('Messager',
         return this
       },
       open: function(type, number) {
-        if(number) {
-          this.numberInput.val(number).attr('readonly', true)
-        }
         if(type && this.types[type]) {
           this.lengthLimit = this.types[type].limit
           this.displayName = this.types[type].displayName
         }
         this.message = ''
-        this.msgInput.focus()
         this.success = false
         this.failed = false
         if(this.scope) {
           this.scope.$apply()
         }
+        this.numberInput.val(number || '').attr('readonly', !!number)
+        this[number ? 'msgInput' : 'numberInput'].focus()
       }
     })
 
