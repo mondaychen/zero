@@ -40,6 +40,11 @@ mixin infoSection(category)
       .doctor-info
         h2.name
           | {{person.fullName}}
+          button.btn.btn-default.clipboard-button(clipboard-button
+            text="clipboardText()" data-toggle="tooltip"
+            data-placement="bottom"
+            title="Send a short report of the discussion to clipboard")
+            span.glyphicon.glyphicon-copy
         //- .description
         //-   | [description]
       #main-info(ng-class="viewStatus.viewClass")

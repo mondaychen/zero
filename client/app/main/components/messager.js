@@ -14,6 +14,9 @@ angular.module('zeroApp').factory('Messager',
         var type = button.data('type')
 
         self.open(type, number)
+      }).on('shown.bs.modal', function (event) {
+        var number = $(event.relatedTarget).data('number')
+        self[number ? 'msgInput' : 'numberInput'].focus()
       })
       // attributes for angular
       this.message = ''
@@ -52,7 +55,6 @@ angular.module('zeroApp').factory('Messager',
           this.scope.$apply()
         }
         this.numberInput.val(number || '').attr('readonly', !!number)
-        this[number ? 'msgInput' : 'numberInput'].focus()
       }
     })
 

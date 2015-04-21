@@ -1,3 +1,15 @@
+/* Colors */
+
+// $red = #d9534f
+$red = #D94753
+// $blue = #337ab7
+$blue = #3BAFD9
+// $green = #5cb85c
+$green = #8BC051
+// $yellow = #f0ad4e
+$yellow = #F5BB41
+$mint = #37BC9B
+
 .loading
   text-align: center
   padding: 50px 0
@@ -41,8 +53,16 @@
   }
 }
 
-.doctor-info .description
-  font-size: 20px
+.doctor-info
+  .description
+    font-size: 20px
+  .clipboard-button
+    margin-left: 10px
+    background: #f9f9f9
+    &:hover
+    &.zeroclipboard-is-hover
+      background: #eee
+      border-color: #adadad
 
 .contact-info
   padding-bottom: 16px
@@ -195,18 +215,6 @@
 #all-addresses
   li
     margin-bottom: 10px
-
-/* Colors */
-
-// $red = #d9534f
-$red = #D94753
-// $blue = #337ab7
-$blue = #3BAFD9
-// $green = #5cb85c
-$green = #8BC051
-// $yellow = #f0ad4e
-$yellow = #F5BB41
-$mint = #37BC9B
 
 $color_scheme = {
   red: $red,
