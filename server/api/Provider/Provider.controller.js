@@ -39,6 +39,7 @@ var request        = require('request');
 var url            = require('url');
 var service_url    = 'http://127.0.0.1:8003'
 var ObjectId       = require('mongoose').Types.ObjectId; 
+var test           = true;
 
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -395,7 +396,12 @@ exports.careTeam = function(req, res) {
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
-      var careTeam_cwids        = _.map(careTeam_result, function(member) { careTeam_result_table[member["cwid"]] = member; return member["cwid"]; });
+      var careTeam_cwids        = _.map(careTeam_result, function(member) { 
+        if (member != undefined) {
+          careTeam_result_table[member["cwid"]] = member;
+          return member["cwid"];
+        }
+      });
       var careTeam_output       = [];
       /*
       var test_member = {
@@ -422,6 +428,7 @@ exports.careTeam = function(req, res) {
       var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
       .exec();
+
       careTeam_promise.then(function(found_members) {
         var found_cwids = _.map(found_members, function(member) { 
           var cwid = member["cwid"]["fieldValue"]; 
@@ -489,6 +496,7 @@ exports.careTeam = function(req, res) {
   });
 };
 
+
 exports.provider = function(req, res) {
   var query = getQuery(req);
   var options = {
@@ -499,13 +507,24 @@ exports.provider = function(req, res) {
     /* Update or keep provider the same */
     if (!error && response.statusCode == 200) {
       //var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
-      var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
+      var careTeam_result = null;
+      if (test) {
+        careTeam_result = [JSON.parse(body)];
+      } else {
+        careTeam_result = [JSON.parse(body)['hybridized_provider_output']];
+      }
+
       console.log('in get provider');
       console.log(careTeam_result);
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
-      var careTeam_cwids        = _.map(careTeam_result, function(member) { careTeam_result_table[member["cwid"]] = member; return member["cwid"]; });
+      var careTeam_cwids        = _.map(careTeam_result, function(member) { 
+        if (member != undefined) {
+          careTeam_result_table[member["cwid"]] = member;
+          return member["cwid"];
+        }
+      });
       var careTeam_output       = [];
 
       var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
@@ -561,7 +580,6 @@ exports.provider = function(req, res) {
             return res.json(200, providers);
           });                                                                                                                                                                                                                                                                              
         });
-
         // next stepp, create provider(s) if they don't already exist
         // then, simultaneously? update the current, if there are changes (ie. new phone numbers/email/address)
 
