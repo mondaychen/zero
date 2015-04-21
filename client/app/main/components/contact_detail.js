@@ -16,7 +16,7 @@ angular.module('zeroApp').directive('contactDetail', function() {
         var PHONE_NUM_LENGTH = 10
         var startPosition = text.length - PHONE_NUM_LENGTH
         text = [text.slice(0, startPosition), '(',
-          text.slice(startPosition, startPosition + 3), ')',
+          text.slice(startPosition, startPosition + 3), ') ',
           text.slice(startPosition + 3, startPosition + 6), '-',
           text.slice(startPosition + 6)].join('')
         content = msgLinkTmpl({
