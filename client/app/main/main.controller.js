@@ -4,9 +4,9 @@ var app = angular.module('zeroApp')
 
 app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   'Messager',
-  '$scope', '$http', '$location', '$resource',
+  '$scope', '$http', '$location', '$resource', '$filter',
   function (ieVersion, InfoCollection, notification, Messager,
-    $scope, $http, $location, $resource) {
+    $scope, $http, $location, $resource, $filter) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
   var displayNames = {
@@ -241,6 +241,11 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   $scope.$watch('person', function() {
     $scope.viewStatus.changeToMainView()
   })
+
+  $scope.clipboardText = function() {
+    return "Findings discussed with " + $scope.person.fullName + " at "
+      + $filter('date')(new Date(), 'short')
+  }
 
   var messager = new Messager($scope)
   messager.addType('pager', {
