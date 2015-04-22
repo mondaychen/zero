@@ -12,7 +12,6 @@ app.get('/num_ext/zero/getCareTeam', function(req,res) {
 
 app.get('/num_ext/zero/getProvider', function(req,res) {
 	fs.readFile(path.resolve(__dirname, 'test_provider.json'), 'utf8', function(err, data){
-		console.log(data);
 		res.status(200).json(JSON.parse(data));
 	});
 });

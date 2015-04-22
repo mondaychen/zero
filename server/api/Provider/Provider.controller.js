@@ -185,7 +185,7 @@ exports.phone_notes = function(req, res) {
       return res.json(200,provider);
     });
   });
-}
+};
 
 exports.phote_note = function(req, res) {
   var _id  = req.params.phone_id;
@@ -206,7 +206,7 @@ exports.phote_note = function(req, res) {
       return res.json(200,phone);
     });
   });
-}
+};
 
 function getQuery(req) {
   var url_parts = url.parse(req.url, true);
@@ -403,7 +403,6 @@ exports.careTeam = function(req, res) {
         }
       });
       var careTeam_output       = [];
-      /*
       var test_member = {
         'firstName'         : 'test',
         'lastName'          : 'test',
@@ -423,7 +422,6 @@ exports.careTeam = function(req, res) {
       }
       careTeam_cwids.push("test1");
       careTeam_result_table["test1"] = test_member;
-      */
 
       var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
