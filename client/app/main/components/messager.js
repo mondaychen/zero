@@ -1,62 +1,51 @@
 angular.module('zeroApp').factory('Messager',
-  function() {
-    function Messager (scope) {
+  ['urlMaker','$http' ,function(urlMaker, $http) {
+    function Messager (el, options) {
       var self = this
-      this.scope = scope
-      this.types = {}
-      this.msgBox = $('#msg-box')
-      this.numberInput = this.msgBox.find('input[name="number"]')
+      this.msgBox = el
       this.msgInput = this.msgBox.find('textarea')
+
+      this.url = urlMaker(options.url)
+      this.initialize = options.initialize || $.noop
+
+      function autofocus () {
+        self.msgBox.find('[autofocus]').not('[readonly]').eq(0).focus()
+      }
+
+      // attributes for angular
+      this.message = ''
+      this.success = false
+      this.failed = false
+      this.lengthLimit = options.limit || 0
+
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
-        var number = button.data('number')
-        var type = button.data('type')
-
-        self.open(type, number)
+        self.initialize(self.msgBox, button)
       }).on('shown.bs.modal', function (event) {
-        var number = $(event.relatedTarget).data('number')
-        self[number ? 'msgInput' : 'numberInput'].focus()
+        autofocus()
       })
-      // attributes for angular
-      this.message = ''
-      this.displayName = ''
-      this.success = false
-      this.failed = false
-      this.lengthLimit = 0
-      this.submit = function() {
-        if(!this.message
-          || (this.lengthLimit && this.message.length > this.lengthLimit)) {
+
+      this.submit = function(e) {
+        if(!self.message
+          || (self.lengthLimit && self.message.length > self.lengthLimit)) {
           return
         }
-        // TODO send the message
-        // change this.success & this.failed after the response
-        this.message = ''
+        var params = { message: self.message }
+        self.msgBox.find('[name]').each(function() {
+          var dom = $(this)
+          params[dom.attr('name')] = dom.val()
+        })
+        $http.post(self.url(params)).success(function() {
+          self.success = true
+          self.message = ''
+        }).error(function() {
+          self.failed = true
+        }).then(function() {
+          autofocus()
+        })
       }
     }
 
-    _.extend(Messager.prototype, {
-      addType: function(name, options) {
-        this.types[name] = {
-          limit: options.limit || 0,
-          displayName: (options.displayName + ' ') || ''
-        }
-        return this
-      },
-      open: function(type, number) {
-        if(type && this.types[type]) {
-          this.lengthLimit = this.types[type].limit
-          this.displayName = this.types[type].displayName
-        }
-        this.message = ''
-        this.success = false
-        this.failed = false
-        if(this.scope) {
-          this.scope.$apply()
-        }
-        this.numberInput.val(number || '').attr('readonly', !!number)
-      }
-    })
-
     return Messager
-  })
+  }])

@@ -109,28 +109,42 @@ footer.footer
         ul
           li(ng-repeat="address in person.addresses" ng-bind-html="address")
 
-#msg-box.modal.fade(role="dialog" aria-hidden="true")
+mixin messageBox(id, hub, displayName)
   .modal-dialog
     .modal-content
       .modal-header
         button.close(type="button" data-dismiss="modal" aria-label="Close")
           span(aria-hidden="true") &times;
-        h4.modal-title Send {{messager.displayName}} to {{person.fullName}}
+        h4.modal-title Send #{displayName} to {{person.fullName}}
       .modal-body
-        .alert.alert-success(ng-show="messager.success") Message successfully sent
-        .alert.alert-danger(ng-show="messager.failed") Unable to send message
-        form(ng-submit="messager.submit()")
-          .form-group
-            label(for="msg-number") Number
-            input.form-control(type="text" name="number" id="msg-number"
-              readonly)
-          .form-group(ng-class="{'has-error': messager.message.length > messager.lengthLimit}")
-            label(for="messager-message") Message
-            textarea.form-control(rows=3 id="msg-message"
-              placeholder="Enter the message" ng-model="messager.message")
-            p.help-block.pull-right(ng-show="messager.lengthLimit")
-              {{ messager.lengthLimit - messager.message.length }}
+        .alert.alert-success(ng-show="#{hub}.success") Message successfully sent
+        .alert.alert-danger(ng-show="#{hub}.failed") Unable to send message
+        form(ng-submit="#{hub}.submit($event)")
+          if block
+            block
+          .form-group(ng-class="{'has-error': \
+            #{hub}.message.length > #{hub}.lengthLimit}")
+            label(for="#{hub}-message") Message
+            textarea.form-control(rows=3 id="#{hub}-message" autofocus
+              placeholder="Enter the message" ng-model="#{hub}.message")
+            p.help-block.pull-right(ng-show="#{hub}.lengthLimit")
+              {{ #{hub}.lengthLimit - #{hub}.message.length }}
           button.btn.btn-default(type="submit") Send
+
+#pager-box.modal.fade(role="dialog" aria-hidden="true")
+  +messageBox('pager-box', 'pager', 'page')
+    .form-group
+      label(for="msg-number") Number
+      input.form-control(type="text" name="number" id="msg-number" readonly
+        autofocus)
+#SMS-box.modal.fade(role="dialog" aria-hidden="true")
+  +messageBox('SMS-box', 'SMS', 'SMS')
+    .form-group
+      label(for="msg-to-number") Send to
+      input.form-control(type="text" name="toPhone" id="msg-to-number"
+        readonly autofocus)
+    input.form-control(type="hidden" name="fromPhone" id="msg-from-number"
+      value="9175215911" readonly)
 
 #notification-bar
   .message.alert

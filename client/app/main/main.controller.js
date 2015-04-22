@@ -247,14 +247,23 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       + $filter('date')(new Date(), 'short')
   }
 
-  var messager = new Messager($scope)
-  messager.addType('pager', {
+  $scope.pager = new Messager($('#pager-box'), {
     limit: 240,
-    displayName: 'page'
-  }).addType('SMS', {
-    limit: 1600,
-    displayName: 'SMS'
+    initialize: function(container, button) {
+      var number = button.data('number')
+      container.find('input[name="number"]').val(number || '')
+        .attr('readonly', !!number)
+    },
+    url: '/api/Providers/message/page/:number/:message/'
   })
-  $scope.messager = messager
+  $scope.SMS = new Messager($('#SMS-box'), {
+    limit: 1600,
+    initialize: function(container, button) {
+      var number = button.data('number')
+      container.find('input[name="toPhone"]').val(number || '')
+        .attr('readonly', !!number)
+    },
+    url: '/api/Providers/message/sms/:fromPhone/:toPhone/:message/'
+  })
 
 }])
