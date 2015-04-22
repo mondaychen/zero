@@ -411,7 +411,7 @@ exports.careTeam = function(req, res) {
         'NPI'               : null,
         'honor'             : 'MD',
         'cwid'              : 'test1',
-        'role'              : 'order provider',
+        'role'              : 'ztest provider',
         'photo'             : null,
         'email'             : ['test1@med.cornell.edu'],
         'faxNum'            : ['18082582809','testing','testing1','testing2'],
