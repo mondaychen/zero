@@ -129,7 +129,8 @@ mixin messageBox(id, hub, displayName)
               placeholder="Enter the message" ng-model="#{hub}.message")
             p.help-block.pull-right(ng-show="#{hub}.lengthLimit")
               {{ #{hub}.lengthLimit - #{hub}.message.length }}
-          button.btn.btn-default(type="submit") Send
+          button.btn.btn-default(type="submit" ng-disabled="#{hub}.pending")
+            | {{ #{hub}.pending ? 'Sending' : 'Send' }}
 
 #pager-box.modal.fade(role="dialog" aria-hidden="true")
   +messageBox('pager-box', 'pager', 'page')

@@ -17,6 +17,7 @@ angular.module('zeroApp').factory('Messager',
       this.success = false
       this.failed = false
       this.lengthLimit = options.limit || 0
+      this.pending = false
 
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {
@@ -33,6 +34,7 @@ angular.module('zeroApp').factory('Messager',
           || (self.lengthLimit && self.message.length > self.lengthLimit)) {
           return
         }
+        self.pending = true
         $timeout.cancel(timeoutId)
         self.success = false
         self.failed = false
@@ -51,6 +53,7 @@ angular.module('zeroApp').factory('Messager',
         }).error(function() {
           self.failed = true
         }).then(function() {
+          self.pending = false
           autofocus()
         })
       }
