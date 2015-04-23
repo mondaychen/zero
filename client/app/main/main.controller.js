@@ -263,7 +263,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       container.find('input[name="toPhone"]').val(number || '')
         .attr('readonly', !!number)
     },
-    url: '/api/Providers/message/sms/:fromPhone/:toPhone/:message/'
+    url: '/api/Providers/message/sms/:toPhone/:message/'
   })
 
 }])
