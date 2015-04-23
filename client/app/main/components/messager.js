@@ -1,5 +1,5 @@
 angular.module('zeroApp').factory('Messager',
-  ['urlMaker','$http' ,function(urlMaker, $http) {
+  ['urlMaker', '$http', '$timeout', function(urlMaker, $http, $timeout) {
     function Messager (el, options) {
       var self = this
       this.msgBox = el
@@ -26,6 +26,8 @@ angular.module('zeroApp').factory('Messager',
         autofocus()
       })
 
+      var timeoutId
+
       this.submit = function(e) {
         if(!self.message
           || (self.lengthLimit && self.message.length > self.lengthLimit)) {
@@ -37,8 +39,12 @@ angular.module('zeroApp').factory('Messager',
           params[dom.attr('name')] = dom.val()
         })
         $http.post(self.url(params)).success(function() {
+          $timeout.cancel(timeoutId)
           self.success = true
           self.message = ''
+          timeoutId = $timeout(function() {
+            self.success = false
+          }, 3000)
         }).error(function() {
           self.failed = true
         }).then(function() {
