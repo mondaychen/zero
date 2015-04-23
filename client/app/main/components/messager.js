@@ -33,7 +33,7 @@ angular.module('zeroApp').factory('Messager',
           || (self.lengthLimit && self.message.length > self.lengthLimit)) {
           return
         }
-        var params = { message: self.message }
+        var params = { message: encodeURIComponent(self.message) }
         self.msgBox.find('[name]').each(function() {
           var dom = $(this)
           params[dom.attr('name')] = dom.val()
