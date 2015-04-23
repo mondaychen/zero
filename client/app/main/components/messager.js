@@ -33,6 +33,9 @@ angular.module('zeroApp').factory('Messager',
           || (self.lengthLimit && self.message.length > self.lengthLimit)) {
           return
         }
+        $timeout.cancel(timeoutId)
+        self.success = false
+        self.failed = false
         var params = { message: encodeURIComponent(self.message) }
         self.msgBox.find('[name]').each(function() {
           var dom = $(this)
