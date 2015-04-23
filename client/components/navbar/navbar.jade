@@ -37,7 +37,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
       .container
         .row
           .col-md-4.col-sm-6.pull-right
-            form#new-search.navbar-form.navbar-right(role="search"
+            form#nav-search.navbar-form.navbar-right(role="search"
               ng-submit="search.submit()")
               .form-group
                 .input-group
@@ -45,7 +45,7 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
                     button.btn.btn-default(type="button"
                       ng-click="search.showOptions = !search.showOptions")
                       span.glyphicon.glyphicon-cog
-                  input.form-control(id="MRN" name="MRN" type="text"
+                  input.form-control(id="search-input" name="search" type="text"
                     placeholder="{{ 'Search by ' \
                     + searchOptions.type[search.type] + ' for '\
                     + searchOptions.institute[search.institute] }}"
