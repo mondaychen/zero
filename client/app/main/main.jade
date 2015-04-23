@@ -115,7 +115,7 @@ mixin messageBox(id, hub, displayName)
       .modal-header
         button.close(type="button" data-dismiss="modal" aria-label="Close")
           span(aria-hidden="true") &times;
-        h4.modal-title Send #{displayName} to {{person.fullName}}
+        h4.modal-title Send #{displayName}
       .modal-body
         .alert.alert-success(ng-show="#{hub}.success") Message successfully sent
         .alert.alert-danger(ng-show="#{hub}.failed") Unable to send message
