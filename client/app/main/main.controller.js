@@ -45,19 +45,19 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     output.fullName = makeStringByKeys(['fullName', 'honor'], output, ', ')
 
     // generate addresses
-    var addresses = []
-    angular.forEach(output.addresses, function(address) {
-      address.fullPostCode = makeStringByKeys(['addrState',
-        'addrPostCode'], address)
-      address.addrLine3 = makeStringByKeys(['addrCity',
-        'fullPostCode'], address, ', ')
-      addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
-        .values().compact().value() )
-    })
-    // a duplicate-free version is needed for ngRepeat
-    output.addresses = _.uniq(_.map(addresses, function(add) {
-      return add.join('<br>')
-    }))
+    // var addresses = []
+    // angular.forEach(output.addresses, function(address) {
+    //   address.fullPostCode = makeStringByKeys(['addrState',
+    //     'addrPostCode'], address)
+    //   address.addrLine3 = makeStringByKeys(['addrCity',
+    //     'fullPostCode'], address, ', ')
+    //   addresses.push( _.chain(address).pick(['addrLine1', 'addrLine2', 'addrLine3'])
+    //     .values().compact().value() )
+    // })
+    // // a duplicate-free version is needed for ngRepeat
+    // output.addresses = _.uniq(_.map(addresses, function(add) {
+    //   return add.join('<br>')
+    // }))
 
     // generate numbers
     _.forEach(votableLists, function(listName) {
