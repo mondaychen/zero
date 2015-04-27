@@ -270,6 +270,8 @@ var updateProviderPromise = function(zero_member,ancr_member) {
       } else if (field == 'addresses') {
         // pass
       }
+    } else {
+      zero_member[field] = ancr_member[field];
     }
   });
 
@@ -512,8 +514,6 @@ exports.provider = function(req, res) {
         careTeam_result = [JSON.parse(body)['hybridized_provider_output']];
       }
 
-      console.log('in get provider');
-      console.log(careTeam_result);
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
@@ -523,8 +523,8 @@ exports.provider = function(req, res) {
           return member["cwid"];
         }
       });
-      var careTeam_output       = [];
 
+      var careTeam_output  = [];
       var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
       .exec();

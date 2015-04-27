@@ -7,6 +7,12 @@
 var errors = require('./components/errors');
 
 module.exports = function(app) {
+  /*
+  app.use(function (req, res, next) {
+    res.setHeader("X-UA-Compatible", "IE=edge,chrome=1");
+    next();
+  });
+*/
 
   // Insert routes below
   app.use('/api/Providers', require('./api/Provider'));
