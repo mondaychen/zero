@@ -154,7 +154,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
           _.each(data, function(item) {
-            //item.role.fieldValue = 'ordering provider'
+            if(item.role && !item.role.fieldValue) {
+              item.role.fieldValue = 'ordering provider'
+            }
           })
         }
       },
