@@ -399,7 +399,7 @@ exports.careTeam = function(req, res) {
       var zero_result_table     = {};
       var careTeam_cwids        = _.uniq(_.map(careTeam_result, function(member) { 
         if (member != undefined) {
-          //careTeam_result_table[member["cwid"]] = member;
+          careTeam_result_table[member["cwid"]] = member;
           return member["cwid"];
         }
       }));
