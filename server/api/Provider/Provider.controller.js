@@ -37,9 +37,9 @@ var Provider       = require('./Provider.model')['model'];
 var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
-var service_url    = 'http://127.0.0.1:8003'
+var service_url    = 'http://www.kurtteichman.com:8003'
 var ObjectId       = require('mongoose').Types.ObjectId; 
-var test           = true;
+var test           = false;
 
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -225,7 +225,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
     if (Array.isArray(ancr_current)) {
 
       if (field != 'addresses' && field != 'email') {
-        var zero_current_values = _.map(zero_current['fieldValue'], function(zero_object) { return zero_object['number'];})
+        var zero_current_values = _.uniq(_.map(zero_current['fieldValue'], function(zero_object) { return zero_object['number'];}));
         var new_values = _.difference(ancr_current,zero_current_values);
 
         if (new_values.length > 0) {
@@ -233,7 +233,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
             updatePromiseArray.push(new Promise(function(resolve,reject) {
               Phone({ number: number, kind: field, hasNew: true})
               .save(function(err,phone) {
-                if (err) { console.log(err); reject(err); }
+                if (err) { console.log(err); resolve(err); }
                 if (phone && phone != undefined) {
                   zero_member[field]['fieldValue'].push(phone);
                   // resolve statement probably unnecessary
@@ -244,7 +244,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
           });
         }
       } else if (field == 'email') {
-        var zero_current_values = _.map(zero_current['fieldValue'], function(zero_object) { return zero_object['email'];})
+        var zero_current_values = _.uniq(_.map(zero_current['fieldValue'], function(zero_object) { return zero_object['email'];}));
         var new_values = _.difference(ancr_current,zero_current_values);
 
         if (new_values.length > 0) {
@@ -254,11 +254,9 @@ var updateProviderPromise = function(zero_member,ancr_member) {
               //var update = { "$setOnInsert" : query };
               Email({ email: email, hasNew: true})
               .save(function(err,email) {
-                if (err) { console.log(err); reject(err); }
+                if (err) { console.log(err); resolve(err); }
                 console.log(email);
                 if (email && email != undefined) {
-                  console.log('im here');
-                  console.log(field);
                   zero_member[field]['fieldValue'].push(email);
                   // resolve statement probably unnecessary
                   resolve(email);
@@ -293,7 +291,7 @@ var createProviderPromise = function (member) {
     var query = null;
     var update = null;
     var options = { "new" : true, "upsert": true };
-    member[field].forEach(function(arrayValue) {
+    _.uniq(member[field]).forEach(function(arrayValue) {
       if (field != 'email' && field != 'addresses') {
         query = { number: arrayValue, kind:field };
         update = { "$setOnInsert" : query };
@@ -333,6 +331,7 @@ var createProviderPromise = function (member) {
         tempPromise = new Promise(function(resolve,reject) {
           Address.findOneAndUpdate(query,update,options, function(err,address) {
             if (err) { console.log(err); }
+            console.log(address);
             temp_output["ids"].push(address._id);
             temp_output["models"].push(address);
             // resolve statement probably unnecessary
@@ -398,12 +397,14 @@ exports.careTeam = function(req, res) {
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
-      var careTeam_cwids        = _.map(careTeam_result, function(member) { 
+      var careTeam_cwids        = _.uniq(_.map(careTeam_result, function(member) { 
         if (member != undefined) {
-          careTeam_result_table[member["cwid"]] = member;
+          //careTeam_result_table[member["cwid"]] = member;
           return member["cwid"];
         }
-      });
+      }));
+      //careTeam_cwids            = _.uniq(careTeam_cwids);
+
       var careTeam_output       = [];
       var test_member = {
         'firstName'         : 'test',
