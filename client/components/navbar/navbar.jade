@@ -34,29 +34,9 @@ div.navbar.navbar-default.navbar-fixed-top(ng-controller='NavbarCtrl')
 
         //- li(ng-show='isLoggedIn()', ng-class='{active: isActive("/logout")}')
         //-   a(href='', ng-click='logout()') Logout
-      ul.nav.navbar-nav.navbar-right.row
-        li.dropdown.send-massages.hidden-xs
-          a.dropdown-toggle(data-toggle="dropdown"
-            role="button" aria-expanded="false")
-            | Send Messages
-            span.caret
-          ul.dropdown-menu(role="menu")
-            li
-              a.btn-pager(data-toggle="modal"
-                data-target="#pager-box") Send page
-            li
-              a.btn-sms(data-toggle="modal"
-                data-target="#SMS-box") Send SMS
-        li.visible-xs-block
-          .btn-group.btn-group-justified
-            .btn-group
-              button.btn.btn-default.btn-pager(data-toggle="modal"
-                data-target="#pager-box") Send page
-            .btn-group
-              button.btn.btn-default.btn-sms(data-toggle="modal"
-                data-target="#SMS-box") Send SMS
+      ul.nav.navbar-nav.row
         li
-          form#nav-search.navbar-form.navbar-right(role="search"
+          form#nav-search.navbar-form(role="search"
             ng-submit="search.submit()")
             .form-group
               .input-group
@@ -93,4 +73,29 @@ div.navbar.navbar-default.navbar-fixed-top(ng-controller='NavbarCtrl')
                 input(type="radio" ng-model="search.type"
                   name="type" value="1")
                 span Accession #
-
+      ul.nav.navbar-nav.navbar-right.row
+        li.dropdown.send-massages.hidden-xs
+          a.dropdown-toggle(data-toggle="dropdown"
+            role="button" aria-expanded="false")
+            | Send Messages
+            span.caret
+          ul.dropdown-menu(role="menu")
+            li
+              a.btn-pager(data-toggle="modal"
+                data-target="#pager-box") Send page
+            li
+              a.btn-sms(data-toggle="modal"
+                data-target="#SMS-box") Send SMS
+        li.hidden-xs
+          a(data-toggle="modal" data-target="#help-box") Help
+        li.visible-xs-block
+          .btn-group.btn-group-justified
+            .btn-group
+              button.btn.btn-default.btn-pager(data-toggle="modal"
+                data-target="#pager-box") Send page
+            .btn-group
+              button.btn.btn-default.btn-sms(data-toggle="modal"
+                data-target="#SMS-box") Send SMS
+            .btn-group
+              button.btn.btn-default.btn-sms(data-toggle="modal"
+                data-target="#help-box") Help

@@ -17,9 +17,11 @@ body
 
 #nav-search
   border: none
+  position: relative
+  z-index: 5
   .addtional-options
     position: absolute
-    top: 42px
+    top: 34px
     padding: 10px
     min-width: 299px
     background: white
@@ -39,9 +41,8 @@ body
   #search-input
     min-width: 260px
 
-.send-massages
-  .dropdown-menu a
-    cursor: pointer
+a[data-toggle]
+  cursor: pointer
 
 .navbar-default
   background: #fafafa

@@ -154,6 +154,21 @@ mixin messageBox(id, hub, displayName)
       input.form-control(type="text" name="toPhone" id="msg-to-number"
         readonly autofocus)
 
+#help-box.modal.fade(role="dialog" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button" data-dismiss="modal" aria-label="Close")
+          span(aria-hidden="true") &times;
+        h4.modal-title Welcome to ZERO!
+      .modal-body
+        p
+          | Please help us keep our contact database up-to-date.
+          | Let us know if a number or email is good (by up-voting)
+          | or bad (by down-voting).
+          | You can even add new information (+) and leave notes
+          | (eg, after 5pm, please call mobile number). Thanks!
+
 #notification-bar
   .message.alert
     span.content
