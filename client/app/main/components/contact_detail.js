@@ -5,7 +5,7 @@ angular.module('zeroApp').directive('contactDetail', function() {
   function numberFormatter (number) {
     number = number.replace(/\D/g, '')
     var PHONE_NUM_LENGTH = 10
-    var startPosition = number.length - PHONE_NUM_LENGTH
+    var startPosition = Math.max(number.length - PHONE_NUM_LENGTH, 0)
     number = _.compact([number.slice(0, startPosition),
       number.slice(startPosition, startPosition + 3),
       number.slice(startPosition + 3, startPosition + 6),
