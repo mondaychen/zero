@@ -3,9 +3,9 @@
 var app = angular.module('zeroApp')
 
 app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
-  'Messager',
+  'Messager', 'hotkeys',
   '$scope', '$http', '$location', '$resource', '$filter',
-  function (ieVersion, InfoCollection, notification, Messager,
+  function (ieVersion, InfoCollection, notification, Messager, hotkeys,
     $scope, $http, $location, $resource, $filter) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
@@ -113,6 +113,34 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     contact.active = true
     $scope.person = contact
   }
+  function swicthContact (step) {
+    // only work in main view
+    if($scope.viewStatus.currentView !== 'detail'
+      || $scope.viewStatus.viewClass !== 'zero-main-view') {
+      return
+    }
+    var idx = $scope.contacts.indexOf($scope.person) + step
+    if($scope.contacts[idx]) {
+      $scope.viewContact($scope.contacts[idx])
+    }
+  }
+  hotkeys.bindTo($scope)
+    .add({
+      combo: 'alt+up',
+      description: 'Navigate to previous contact',
+      callback: function(e) {
+        e.preventDefault()
+        swicthContact(-1)
+      }
+    })
+    .add({
+      combo: 'alt+down',
+      description: 'Navigate to next contact',
+      callback: function(e) {
+        e.preventDefault()
+        swicthContact(+1)
+      }
+    })
 
   $scope.$watch(function(){ return $location.search() }, function(params){
     if(_.size(params) === 0) {
