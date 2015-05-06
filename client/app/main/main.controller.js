@@ -126,7 +126,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   }
   hotkeys.bindTo($scope)
     .add({
-      combo: 'alt+up',
+      combo: 'up',
       description: 'Navigate to previous contact',
       callback: function(e) {
         e.preventDefault()
@@ -134,7 +134,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
     })
     .add({
-      combo: 'alt+down',
+      combo: 'down',
       description: 'Navigate to next contact',
       callback: function(e) {
         e.preventDefault()
