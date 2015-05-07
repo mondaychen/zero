@@ -124,12 +124,17 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       $scope.viewContact($scope.contacts[idx])
     }
   }
+
   hotkeys.bindTo($scope)
     .add({
       combo: 'up',
       description: 'Navigate to previous contact',
       callback: function(e) {
-        e.preventDefault()
+        if(e.preventDefault) {
+          e.preventDefault()
+        } else {
+          e.returnValue = false
+        }
         swicthContact(-1)
       }
     })
@@ -137,7 +142,11 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       combo: 'down',
       description: 'Navigate to next contact',
       callback: function(e) {
-        e.preventDefault()
+        if(e.preventDefault) {
+          e.preventDefault()
+        } else {
+          e.returnValue = false
+        }
         swicthContact(+1)
       }
     })
