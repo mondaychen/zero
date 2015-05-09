@@ -98,6 +98,10 @@ angular.module('zeroApp').factory('InfoCollection',
     })
   }
 
+  InfoCollection.prototype.get = function(idx) {
+    return this.collection[idx]
+  }
+
 
   var postVote = (function() {
     var defaultParams = {

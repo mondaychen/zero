@@ -113,7 +113,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     contact.active = true
     $scope.person = contact
   }
-  function swicthContact (step) {
+  $scope.swicthContact = function (step) {
     // only work in main view
     if($scope.viewStatus.currentView !== 'detail'
       || $scope.viewStatus.viewClass !== 'zero-main-view') {
@@ -124,32 +124,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       $scope.viewContact($scope.contacts[idx])
     }
   }
-
-  hotkeys.bindTo($scope)
-    .add({
-      combo: 'up',
-      description: 'Navigate to previous contact',
-      callback: function(e) {
-        if(e.preventDefault) {
-          e.preventDefault()
-        } else {
-          e.returnValue = false
-        }
-        swicthContact(-1)
-      }
-    })
-    .add({
-      combo: 'down',
-      description: 'Navigate to next contact',
-      callback: function(e) {
-        if(e.preventDefault) {
-          e.preventDefault()
-        } else {
-          e.returnValue = false
-        }
-        swicthContact(+1)
-      }
-    })
 
   $scope.$watch(function(){ return $location.search() }, function(params){
     if(_.size(params) === 0) {
@@ -288,8 +262,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
   $scope.pager = new Messager($('#pager-box'), {
     limit: 240,
-    initialize: function(container, button) {
-      var number = button.data('number')
+    initialize: function(container, number) {
       container.find('input[name="number"]').val(number || '')
         .attr('readonly', !!number)
     },
@@ -297,12 +270,56 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   })
   $scope.SMS = new Messager($('#SMS-box'), {
     limit: 1600,
-    initialize: function(container, button) {
-      var number = button.data('number')
+    initialize: function(container, number) {
       container.find('input[name="toPhone"]').val(number || '')
         .attr('readonly', !!number)
     },
     url: '/api/Providers/message/sms/:toPhone/:message/'
   })
+
+  // hotkeys
+  hotkeys.bindTo($scope)
+    .add({
+      combo: 'up',
+      description: 'Navigate to previous contact',
+      callback: function(e) {
+        if(e.preventDefault) {
+          e.preventDefault()
+        } else {
+          e.returnValue = false
+        }
+        $scope.swicthContact(-1)
+      }
+    })
+    .add({
+      combo: 'down',
+      description: 'Navigate to next contact',
+      callback: function(e) {
+        if(e.preventDefault) {
+          e.preventDefault()
+        } else {
+          e.returnValue = false
+        }
+        $scope.swicthContact(+1)
+      }
+    })
+    .add({
+      combo: 'alt+m',
+      description: 'Send message to the top mobile phone number',
+      callback: function(e) {
+        var number = $scope.person.mobilePhone.get(0)
+          && $scope.person.mobilePhone.get(0).number
+        $scope.SMS.show(number || null)
+      }
+    })
+    .add({
+      combo: 'alt+p',
+      description: 'Send page to the top pager number',
+      callback: function(e) {
+        var number = $scope.person.pagerNum.get(0)
+          && $scope.person.pagerNum.get(0).number
+        $scope.pager.show(number || null)
+      }
+    })
 
 }])

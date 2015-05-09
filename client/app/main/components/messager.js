@@ -19,10 +19,14 @@ angular.module('zeroApp').factory('Messager',
       this.lengthLimit = options.limit || 0
       this.pending = false
 
+      this._number = null
+
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
-        self.initialize(self.msgBox, button)
+        self.initialize(self.msgBox,
+          button.data('number') || self._number)
+        self._number = null
       }).on('shown.bs.modal', function (event) {
         autofocus()
       })
@@ -58,6 +62,13 @@ angular.module('zeroApp').factory('Messager',
         })
       }
     }
+
+    _.extend(Messager.prototype, {
+      show: function(number) {
+        this._number = number
+        this.msgBox.modal()
+      }
+    })
 
     return Messager
   }])
