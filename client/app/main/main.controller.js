@@ -304,7 +304,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
     })
     .add({
-      combo: 'alt+m',
+      combo: 's',
       description: 'Send message to the top mobile phone number',
       callback: function(e) {
         var number = $scope.person.mobilePhone.get(0)
@@ -313,7 +313,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
     })
     .add({
-      combo: 'alt+p',
+      combo: 'p',
       description: 'Send page to the top pager number',
       callback: function(e) {
         var number = $scope.person.pagerNum.get(0)
