@@ -37,9 +37,9 @@ var Provider       = require('./Provider.model')['model'];
 var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
-var service_url    = 'http://localhost:8003'
+var service_url    = 'http://ravid.nyp.org'
 var ObjectId       = require('mongoose').Types.ObjectId; 
-var test           = true;
+var test           = false;
 
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -268,7 +268,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
       } else if (field == 'addresses') {
         // pass
       }
-    } else {
+    } else if (field != 'lookup') {
       zero_member[field] = ancr_member[field];
     }
   });
@@ -276,7 +276,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
   return Promise.all(updatePromiseArray).then(function() {
     return new Promise(function(resolve,reject){
       zero_member.save(function(err,member) {
-        if (err) { console.log(err); }
+        if (err) { console.log('in update provise array save'); console.log(err); resolve(err); }
         resolve(member);
       });
     });
@@ -371,9 +371,12 @@ var createProviderPromise = function (member) {
         'officePhone'        : { 'fieldValue' : zeroMemberOfficePhoneOutput['ids'] },
         'mobilePhone'        : { 'fieldValue' : zeroMemberMobilePhoneOutput['ids'] },
         //'addresses'          : []//{ 'fieldValue' : member.addresses}
-        'addresses'          : { 'fieldValue' : zeroMemberAddressOutput['ids'] }
-      }).save(function(err, provider) {
-        if (err) { console.log(err); reject(err); }
+        'addresses'          : { 'fieldValue' : zeroMemberAddressOutput['ids'] },
+        'lookup'             : { 'fieldValue' : String(member.cwid) + String(member.NPI) + String(member.firstName) + String(member.middleName) + String(member.lastName) + String(member.honor) }
+        //'lookup'             : { 'fieldValue' : this['cwid']['fieldValue'] + this['NPI']['fieldValue'] }
+      })
+      .save(function(err, provider) {
+        if (err) { console.log('saving new provider error'); console.log(err); resolve(err); }
         resolve(provider);
       });
     });
@@ -397,15 +400,25 @@ exports.careTeam = function(req, res) {
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
+      /*
       var careTeam_cwids        = _.uniq(_.map(careTeam_result, function(member) { 
         if (member != undefined) {
           careTeam_result_table[member["cwid"]] = member;
           return member["cwid"];
         }
       }));
+      */
+      var careTeam_lookups        = _.uniq(_.map(careTeam_result, function(member) { 
+        if (member != undefined) {
+          var temp_lookup = String(member["cwid"]) + String(member["NPI"]) + String(member["firstName"]) + String(member["middleName"]) + String(member["lastName"]) + String(member['honor']);
+          member['lookup'] = temp_lookup;
+          careTeam_result_table[temp_lookup] = member;
+          return temp_lookup;
+        }
+      }));
       //careTeam_cwids            = _.uniq(careTeam_cwids);
 
-      var careTeam_output       = [];
+      var careTeam_output = [];
       var test_member = {
         'firstName'         : 'test',
         'lastName'          : 'test',
@@ -421,46 +434,54 @@ exports.careTeam = function(req, res) {
         'pagerNum'          : [],
         'officePhone'       : ['18082582809'], 
         'mobilePhone'       : [],
-        'addresses'         : []
+        'addresses'         : [],
+        'lookup'            : null
       }
-      careTeam_cwids.push("test1");
-      careTeam_result_table["test1"] = test_member;
+      //careTeam_cwids.push("test1");
+      test_member["lookup"] = String(test_member["cwid"]) + String(test_member["NPI"]) + String(test_member["firstName"]) + String(test_member["middleName"]) + String(test_member["lastName"]) + String(test_member["honor"]);
+      careTeam_lookups.push(test_member['lookup']);
+      careTeam_result_table[test_member['lookup']] = test_member;
 
-      var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
+      //var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
+      var careTeam_promise = Provider.find({"lookup.fieldValue": {$in : careTeam_lookups}})
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
       .exec();
 
       careTeam_promise.then(function(found_members) {
-        var found_cwids = _.map(found_members, function(member) { 
-          var cwid = member["cwid"]["fieldValue"]; 
-          zero_result_table[cwid] = member;
-          return cwid;
+        var found_lookups = _.map(found_members, function(member) { 
+          var temp_lookup = member["lookup"]["fieldValue"]; 
+          zero_result_table[temp_lookup] = member;
+          return temp_lookup;
         });
 
-        var missing_cwids = _.difference(careTeam_cwids,found_cwids);
+        var missing_lookups = _.difference(careTeam_lookups,found_lookups);
         var createProviderPromiseArray = [];
-        //console.log(found_cwids);
-        //console.log('missing');
-        //console.log(missing_cwids);
+        console.log(found_lookups);
+        console.log('missing');
+        console.log(missing_lookups);
 
         var sequence = Promise.resolve();
         //var updateSequence = Promise.resolve();
 
-        found_cwids.forEach(function(cwid) {
+        found_lookups.forEach(function(lookup) {
           sequence = sequence.then(function() {
-            return updateProviderPromise(zero_result_table[cwid],careTeam_result_table[cwid]);
+            return updateProviderPromise(zero_result_table[lookup],careTeam_result_table[lookup]);
           })
-          .catch(function(err) {
+          .catch(function(err, lookup) {
+            console.log('update error');
             console.log(err);
+            console.log(lookup);
           });
         });
 
-        missing_cwids.forEach(function(cwid) {
+        missing_lookups.forEach(function(lookup) {
           sequence = sequence.then(function() {
-            return createProviderPromise(careTeam_result_table[cwid]);
+            return createProviderPromise(careTeam_result_table[lookup]);
           })
           .catch(function(err) {
+            console.log('creation error');
             console.log(err);
+            console.log(lookup);
           });
         });
 
@@ -472,10 +493,10 @@ exports.careTeam = function(req, res) {
         */
         return sequence.then(function() {
           console.log('im in here');
-          console.log(careTeam_cwids);
+          console.log(careTeam_lookups);
           //return res.json(200,careTeam_cwids);
           //
-          Provider.find({'cwid.fieldValue': { $in : careTeam_cwids }})
+          Provider.find({'lookup.fieldValue': { $in : careTeam_lookups }})
           .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
           .exec(function(err,providers) {
             if (err) { console.log(err); }
@@ -484,8 +505,6 @@ exports.careTeam = function(req, res) {
             return res.json(200, providers);
           });                                                                                                                                                                                                                                                                              
         });
-
-
         // next stepp, create provider(s) if they don't already exist
         // then, simultaneously? update the current, if there are changes (ie. new phone numbers/email/address)
 
@@ -518,25 +537,26 @@ exports.provider = function(req, res) {
       var careTeam_result_table = {};
       // zero_result_table stores the providers who already exist in the database
       var zero_result_table     = {};
-      var careTeam_cwids        = _.map(careTeam_result, function(member) { 
+      var careTeam_lookups        = _.map(careTeam_result, function(member) { 
         if (member != undefined) {
-          careTeam_result_table[member["cwid"]] = member;
-          return member["cwid"];
-        }
+          var temp_lookup = String(member["cwid"]) + String(member["NPI"]) + String(member["firstName"]) + String(member["middleName"]) + String(member["lastName"]) + String(member['honor']);
+          member['lookup'] = temp_lookup;
+          careTeam_result_table[temp_lookup] = member;
+          return temp_lookup;        }
       });
 
       var careTeam_output  = [];
-      var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
+      var careTeam_promise = Provider.find({"lookup.fieldValue": {$in : careTeam_lookups}})
       .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
       .exec();
       careTeam_promise.then(function(found_members) {
-        var found_cwids = _.map(found_members, function(member) { 
-          var cwid = member["cwid"]["fieldValue"]; 
-          zero_result_table[cwid] = member;
-          return cwid;
+        var found_lookups = _.map(found_members, function(member) { 
+          var temp_lookup = member["lookup"]["fieldValue"]; 
+          zero_result_table[temp_lookup] = member;
+          return temp_lookup;
         });
 
-        var missing_cwids = _.difference(careTeam_cwids,found_cwids);
+        var missing_lookups = _.difference(careTeam_lookups,found_lookups);
         var createProviderPromiseArray = [];
         //console.log(found_cwids);
         //console.log('missing');
@@ -545,18 +565,18 @@ exports.provider = function(req, res) {
         var sequence = Promise.resolve();
         //var updateSequence = Promise.resolve();
 
-        found_cwids.forEach(function(cwid) {
+        found_lookups.forEach(function(lookup) {
           sequence = sequence.then(function() {
-            return updateProviderPromise(zero_result_table[cwid],careTeam_result_table[cwid]);
+            return updateProviderPromise(zero_result_table[lookup],careTeam_result_table[lookup]);
           })
           .catch(function(err) {
             console.log(err);
           });
         });
 
-        missing_cwids.forEach(function(cwid) {
+        missing_lookups.forEach(function(lookup) {
           sequence = sequence.then(function() {
-            return createProviderPromise(careTeam_result_table[cwid]);
+            return createProviderPromise(careTeam_result_table[lookup]);
           })
           .catch(function(err) {
             console.log(err);
@@ -570,7 +590,7 @@ exports.provider = function(req, res) {
         });
         */
         return sequence.then(function() {
-          Provider.find({'cwid.fieldValue': { $in : careTeam_cwids }})
+          Provider.find({'lookup.fieldValue': { $in : careTeam_lookups }})
           .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
           .exec(function(err,providers) {
             if (err) { console.log(err); }

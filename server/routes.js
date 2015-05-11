@@ -4,7 +4,9 @@
 
 'use strict';
 
-var errors = require('./components/errors');
+var express = require('express');
+var errors  = require('./components/errors');
+var router  = new express.Router();
 
 module.exports = function(app) {
   /*
@@ -12,7 +14,8 @@ module.exports = function(app) {
     res.setHeader("X-UA-Compatible", "IE=edge,chrome=1");
     next();
   });
-*/
+  */
+
 
   // Insert routes below
   app.use('/api/Providers', require('./api/Provider'));
@@ -22,6 +25,7 @@ module.exports = function(app) {
   app.use('/auth', require('./auth'));
   
   // All undefined asset or api routes should return a 404
+  //router.route('/:url(api|auth|components|app|bower_components|assets)/*')
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
    .get(errors[404]);
 
@@ -29,5 +33,9 @@ module.exports = function(app) {
   app.route('/*')
     .get(function(req, res) {
       res.sendfile(app.get('appPath') + '/index.html');
-    });
+  });
+
+  //app.use('/', router);
+
+  //app.use('/zero', router);
 };

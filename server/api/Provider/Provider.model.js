@@ -17,6 +17,7 @@ var ProviderSchema = new Schema({
 	lastName           : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	middleName         : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	cwid               : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
+	lookup             : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	email              : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Email'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple emails could potentially exist
 	officePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } },// multiple office numbers could potentially exist
 	mobilePhone        : { fieldValue: [{ type: Schema.Types.ObjectId, ref: 'Phone'}], notes: String, notes_history: [String], dateLastModified : { type: Date, default: Date.now } }, // multiple mobile numbers could potentially exist
@@ -40,7 +41,8 @@ var ProviderSchema = new Schema({
 	*/
 });
 
-ProviderSchema.index({ cwid: 1 }, {unique: true });
+//ProviderSchema.index({ cwid: 1 }, {unique: true });
+ProviderSchema.index({ lookup: 1 }, {unique: true });
 //ProviderSchema.index({ NPI: 1 }, {unique: true });
 
 module.exports = {
