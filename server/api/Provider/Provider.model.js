@@ -42,7 +42,7 @@ var ProviderSchema = new Schema({
 });
 
 //ProviderSchema.index({ cwid: 1 }, {unique: true });
-ProviderSchema.index({ lookup: 1 }, {unique: true });
+ProviderSchema.index({ lookup: 1 }, { unique: true });
 //ProviderSchema.index({ NPI: 1 }, {unique: true });
 
 module.exports = {

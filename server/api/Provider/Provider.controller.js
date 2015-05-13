@@ -270,7 +270,7 @@ var updateProviderPromise = function(zero_member,ancr_member) {
         // pass
       }
     } else if (field != 'lookup') {
-      zero_member[field] = ancr_member[field];
+      zero_member[field]['fieldValue'] = ancr_member[field];
     }
   });
 
