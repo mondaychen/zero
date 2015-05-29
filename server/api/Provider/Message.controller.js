@@ -22,7 +22,8 @@ var nodemailer  = require('nodemailer');
 //router.post('/message/email/:fromAddress/:toAddress/:message', n_controller.sendEmail);
 
 var smtpTransport = nodemailer.createTransport("SMTP",{
-    host: "smtp.fakeserver.com"
+    host: "127.0.0.1",
+    port: "25"
 });
 
 exports.sendEmail = function(req, res) {
