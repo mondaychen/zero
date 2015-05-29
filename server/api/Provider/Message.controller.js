@@ -1,6 +1,7 @@
 var credentials = require('../../config/credentials')
 var client      = require('twilio')(credentials.accountSid, credentials.authToken); 
 var request     = require('request');
+var nodemailer  = require('nodemailer');
 
 // exports.sendSMS = function(req,res) {
 // 	var toPhone   = req.params.toPhone;
@@ -18,9 +19,45 @@ var request     = require('request');
 // 		}
 // 	});
 // };
+//router.post('/message/email/:fromAddress/:toAddress/:message', n_controller.sendEmail);
+
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    host: "smtp.fakeserver.com"
+});
+
+exports.sendEmail = function(req, res) {
+	var fromAddress = req.params.fromAddress;
+	var toAddress   = req.params.toAddress;
+	var message     = req.params.message;
+
+	var mailOptions = {
+        from: "testing@nyp.org",
+        to: "testing@gmail.com",
+        subject: "Zero Mailing System",
+        text: "Message: This was a test",
+        // the html link should contain the reset-key
+        // consider formatting the message to utilize HTML styling
+        html: "This was a test"
+    }
+
+
+    smtpTransport.sendMail(mailOptions, function(error, response){
+        if (!error) {
+          console.log("Message sent: " + response.message);
+          res.json(200, {message:'Zero email sent successfully.'});
+        } else {
+        	console.log(error);
+        	console.log(response);
+          res.json(401, {message:error});
+        }
+
+      // if you don't want to use this transport object anymore, uncomment following line
+      //smtpTransport.close(); // shut down the connection pool, no more messages
+    });
+}
 
 exports.sendSMS = function(req, res) {
-	var message    = req.params.message;
+	var message = req.params.message;
 	var toPhone = req.params.toPhone;
 
 	if(toPhone.length === 10) {

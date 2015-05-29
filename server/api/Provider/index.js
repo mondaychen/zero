@@ -19,6 +19,7 @@ router.post('/email/:value/:hasNew/:u/:d/:provider_id', p_controller.email);
 
 router.post('/message/page/:pageNum/:message', n_controller.sendPage);
 router.post('/message/sms/:toPhone/:message', n_controller.sendSMS);
+router.post('/message/email/:fromAddress/:toAddress/:message', n_controller.sendEmail);
 
 //router.post('/pager/:number/:message', controller.pager_service);
 
