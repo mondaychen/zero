@@ -1,0 +1,57 @@
+
+> zero-app@0.0.0 start /home/kurt/zero
+> node server/app.js
+
+Express server listening on 8888, in development mode
+finished populating users
+{"addrPostCode":"10583","locTypeCode":"Scarsdale","locName":null,"addrLine1":"147 Mamaroneck Rd","addrLine2":null,"addrState":"NY","addrCity":"Scarsdale"}
+{"addrPostCode":"02114","locTypeCode":"BOSTON","locName":"Business Mailing Address","addrLine1":"MASSACHUSETTS GENERAL HOSPITAL","addrLine2":"55 FRUIT STREET","addrState":"MA","addrCity":"BOSTON"}
+{"addrPostCode":"10032","locTypeCode":"NEW YORK","locName":"Business Mailing Address","addrLine1":"710 WEST 168ST","addrLine2":"NI 426","addrState":"NY","addrCity":"NEW YORK"}
+{"addrPostCode":"10032","locTypeCode":"New York","locName":"Columbia University","addrLine1":"710 West 168st","addrLine2":"NI 12/1240","addrState":"NY","addrCity":"New York"}
+{"addrPostCode":"10032","locTypeCode":"New York","locName":"Columbia University","addrLine1":"710 West 168st","addrLine2":"NI 426","addrState":"NY","addrCity":"New York"}
+{"addrPostCode":"02114","locTypeCode":"BOSTON","locName":"Practice Address","addrLine1":"MASSACHUSETTS GENERAL HOSPITAL","addrLine2":"55 FRUIT STREET","addrState":"MA","addrCity":"BOSTON"}
+{ [MongoError: exception: E11000 duplicate key error index: zeroapp-dev.addresses.$addrPostCode_1_addrCity_1_addrState_1_addrLine1_1_locName_1_locTypeCode_1  dup key: { : "10032", : "New York", : "NY", : "710 West 168st", : "Columbia University", : "New York" }]
+  name: 'MongoError',
+  errmsg: 'exception: E11000 duplicate key error index: zeroapp-dev.addresses.$addrPostCode_1_addrCity_1_addrState_1_addrLine1_1_locName_1_locTypeCode_1  dup key: { : "10032", : "New York", : "NY", : "710 West 168st", : "Columbia University", : "New York" }',
+  code: 11000,
+  ok: 0 }
+/home/kurt/zero/node_modules/mongoose/lib/utils.js:413
+        throw err;
+              ^
+TypeError: Cannot read property '_id' of undefined
+    at Promise.<anonymous> (/home/kurt/zero/server/api/Provider/Provider.controller.js:336:44)
+    at Promise.<anonymous> (/home/kurt/zero/node_modules/mongoose/node_modules/mpromise/lib/promise.js:172:8)
+    at Promise.emit (events.js:107:17)
+    at Promise.emit (/home/kurt/zero/node_modules/mongoose/node_modules/mpromise/lib/promise.js:84:38)
+    at Promise.reject (/home/kurt/zero/node_modules/mongoose/node_modules/mpromise/lib/promise.js:111:15)
+    at Promise.error (/home/kurt/zero/node_modules/mongoose/lib/promise.js:95:15)
+    at cb (/home/kurt/zero/node_modules/mongoose/lib/query.js:1566:29)
+    at /home/kurt/zero/node_modules/mongoose/lib/utils.js:408:16
+    at /home/kurt/zero/node_modules/mongoose/node_modules/mongodb/lib/mongodb/collection/core.js:786:22
+    at /home/kurt/zero/node_modules/mongoose/node_modules/mongodb/lib/mongodb/db.js:1194:16
+
+npm ERR! Linux 3.13.0-34-generic
+npm ERR! argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
+npm ERR! node v0.12.2
+npm ERR! npm  v2.7.4
+npm ERR! code ELIFECYCLE
+npm ERR! zero-app@0.0.0 start: `node server/app.js`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the zero-app@0.0.0 start script 'node server/app.js'.
+npm ERR! This is most likely a problem with the zero-app package,
+npm ERR! not with npm itself.
+npm ERR! Tell the author that this fails on your system:
+npm ERR!     node server/app.js
+npm ERR! You can get their info via:
+npm ERR!     npm owner ls zero-app
+npm ERR! There is likely additional logging output above.
+
+npm ERR! Please include the following file with any support request:
+npm ERR!     /home/kurt/zero/npm-debug.log
+
+> zero-app@0.0.0 start /home/kurt/zero
+> node server/app.js
+
+Express server listening on 8888, in development mode
+finished populating users
