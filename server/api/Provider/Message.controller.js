@@ -22,8 +22,7 @@ var nodemailer  = require('nodemailer');
 //router.post('/message/email/:fromAddress/:toAddress/:message', n_controller.sendEmail);
 
 var smtpTransport = nodemailer.createTransport("SMTP",{
-    host: "127.0.0.1",
-    port: "25"
+    host: "localhost"
 });
 
 exports.sendEmail = function(req, res) {
@@ -31,6 +30,7 @@ exports.sendEmail = function(req, res) {
 	var toAddress   = req.params.toAddress;
 	var message     = req.params.message;
 
+	/*
 	var mailOptions = {
         from: "testing@nyp.org",
         to: "testing@gmail.com",
@@ -39,6 +39,15 @@ exports.sendEmail = function(req, res) {
         // the html link should contain the reset-key
         // consider formatting the message to utilize HTML styling
         html: "This was a test"
+    }
+    */
+
+    var mailOptions = {
+    	from: fromAddress,
+    	to: toAddress,
+    	subject: "Zero Mailing System",
+    	text: message,
+    	html: ""
     }
 
 
