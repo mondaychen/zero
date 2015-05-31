@@ -41,7 +41,7 @@ var service_url    = 'http://localhost:8003';
 //var service_url    = 'http://ravid.nyp.org'
 var ObjectId       = require('mongoose').Types.ObjectId; 
 //var test           = true;
-var test           = false;
+var test           = true;
 
 
 // test: provider_id: 5500268be47498e8dc023d54
