@@ -286,7 +286,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
             .replace(/\@/g, data.email)).show()
       }
     },
-    url: '/api/Providers/message/email/:toEmail/:fromEmail/:message/'
+    url: '/api/Providers/message/email/:fromEmail/:toEmail/:message/'
   })
 
   // hotkeys
