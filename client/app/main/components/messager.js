@@ -48,6 +48,10 @@ angular.module('zeroApp').factory('Messager',
           var dom = $(this)
           params[dom.attr('name')] = dom.val()
         })
+        var _always = function() {
+          self.pending = false
+          autofocus()
+        }
         $http.post(self.url(params)).success(function() {
           $timeout.cancel(timeoutId)
           self.success = true
@@ -55,11 +59,11 @@ angular.module('zeroApp').factory('Messager',
           timeoutId = $timeout(function() {
             self.success = false
           }, 3000)
+
+          _always()
         }).error(function() {
           self.failed = true
-        }).then(function() {
-          self.pending = false
-          autofocus()
+          _always()
         })
       }
     }
