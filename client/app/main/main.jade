@@ -132,7 +132,7 @@ mixin messageBox(id, hub, displayName)
           if block
             block
           .form-group(ng-class="{'has-error': \
-            #{hub}.message.length > #{hub}.lengthLimit}")
+            #{hub}.lengthLimit && #{hub}.message.length > #{hub}.lengthLimit}")
             label(for="#{hub}-message") Message
             textarea.form-control(rows=3 id="#{hub}-message" autofocus
               placeholder="Enter the message" ng-model="#{hub}.message")
@@ -152,6 +152,16 @@ mixin messageBox(id, hub, displayName)
     .form-group
       label(for="msg-to-number") Send to
       input.form-control(type="text" name="toPhone" id="msg-to-number"
+        readonly autofocus)
+#email-box.modal.fade(role="dialog" aria-hidden="true")
+  +messageBox('email-box', 'email', 'email')
+    .form-group
+      label(for="msg-from-email") Send from
+      input.form-control(type="email" name="fromEmail" id="msg-from-email"
+        autofocus)
+    .form-group
+      label(for="msg-to-email") Send to
+      input.form-control(type="email" name="toEmail" id="msg-to-email"
         readonly autofocus)
 
 #help-box.modal.fade(role="dialog" aria-hidden="true")

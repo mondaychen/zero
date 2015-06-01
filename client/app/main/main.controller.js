@@ -262,19 +262,26 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
   $scope.pager = new Messager($('#pager-box'), {
     limit: 240,
-    initialize: function(container, number) {
-      container.find('input[name="number"]').val(number || '')
-        .attr('readonly', !!number)
+    initialize: function(container, data) {
+      container.find('input[name="number"]').val(data.number || '')
+        .attr('readonly', !!data.number)
     },
     url: '/api/Providers/message/page/:number/:message/'
   })
   $scope.SMS = new Messager($('#SMS-box'), {
     limit: 1600,
-    initialize: function(container, number) {
-      container.find('input[name="toPhone"]').val(number || '')
-        .attr('readonly', !!number)
+    initialize: function(container, data) {
+      container.find('input[name="toPhone"]').val(data.number || '')
+        .attr('readonly', !!data.number)
     },
     url: '/api/Providers/message/sms/:toPhone/:message/'
+  })
+  $scope.email = new Messager($('#email-box'), {
+    initialize: function(container, data) {
+      container.find('input[name="toEmail"]').val(data.toEmail || '')
+        .attr('readonly', !!data.toEmail)
+    },
+    url: '/api/Providers/message/email/:toEmail/:fromEmail/:message/'
   })
 
   // hotkeys
@@ -309,7 +316,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       callback: function(e) {
         var number = $scope.person.mobilePhone.get(0)
           && $scope.person.mobilePhone.get(0).number
-        $scope.SMS.show(number || null)
+        $scope.SMS.show({number: number || null})
       }
     })
     .add({
@@ -318,7 +325,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       callback: function(e) {
         var number = $scope.person.pagerNum.get(0)
           && $scope.person.pagerNum.get(0).number
-        $scope.pager.show(number || null)
+        $scope.pager.show({number: number || null})
       }
     })
 
