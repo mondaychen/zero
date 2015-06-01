@@ -45,7 +45,7 @@ exports.sendEmail = function(req, res) {
     var mailOptions = {
     	from: fromAddress,
     	to: toAddress,
-    	subject: "Zero Mailing System",
+    	subject: "#encrypt Message from ZERO",
     	text: message,
     	html: ""
     }
