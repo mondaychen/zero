@@ -278,8 +278,13 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   })
   $scope.email = new Messager($('#email-box'), {
     initialize: function(container, data) {
-      container.find('input[name="toEmail"]').val(data.toEmail || '')
-        .attr('readonly', !!data.toEmail)
+      container.find('input[name="toEmail"]').val(data.email || '')
+        .attr('readonly', !!data.email)
+      if(data.email) {
+        container.find('.mailto')
+          .html('<a href="mailto:@">Launch full Email application</a>'
+            .replace(/\@/g, data.email)).show()
+      }
     },
     url: '/api/Providers/message/email/:toEmail/:fromEmail/:message/'
   })

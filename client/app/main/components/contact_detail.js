@@ -1,7 +1,13 @@
 angular.module('zeroApp').directive('contactDetail', function() {
-  var msgLinkTmpl = _.template('<button class="btn btn-link" data-toggle="modal"'
+  var msgNumLinkTmpl = _.template('<button class="btn btn-link"'
+    + 'data-toggle="modal"'
     + ' data-target="#<%= type %>-box"'
     + ' data-number="<%= number %>"><%= text %></button>')
+  var msgEmailLinkTmpl = _.template('<button class="btn btn-link"'
+    + 'data-toggle="modal"'
+    + ' data-target="#email-box"'
+    + ' data-email="<%= email %>"><%= text %></button>')
+
   function numberFormatter (number) {
     number = number.replace(/\D/g, '')
     var PHONE_NUM_LENGTH = 10
@@ -21,7 +27,7 @@ angular.module('zeroApp').directive('contactDetail', function() {
     link: function (scope, element) {
       var content = scope.detail
       if (scope.type === 'officePhone' || scope.type === 'mobilePhone') {
-        content = msgLinkTmpl({
+        content = msgNumLinkTmpl({
           type: 'SMS',
           number: scope.detail,
           text: numberFormatter(scope.detail)
@@ -31,10 +37,13 @@ angular.module('zeroApp').directive('contactDetail', function() {
         content = numberFormatter(scope.detail)
       }
       if (scope.type === 'email') {
-        content = '<a href="mailto:@">@</a>'.replace(/\@/g, scope.detail)
+        content = msgEmailLinkTmpl({
+          email: scope.detail,
+          text: scope.detail
+        })
       }
       if (scope.type === 'pagerNum') {
-        content = msgLinkTmpl({
+        content = msgNumLinkTmpl({
           type: 'pager',
           number: scope.detail,
           text: scope.detail

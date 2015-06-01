@@ -155,6 +155,7 @@ mixin messageBox(id, hub, displayName)
         readonly autofocus)
 #email-box.modal.fade(role="dialog" aria-hidden="true")
   +messageBox('email-box', 'email', 'email')
+    p.mailto(style="display:none")
     .form-group
       label(for="msg-from-email") Send from
       input.form-control(type="email" name="fromEmail" id="msg-from-email"
@@ -163,6 +164,7 @@ mixin messageBox(id, hub, displayName)
       label(for="msg-to-email") Send to
       input.form-control(type="email" name="toEmail" id="msg-to-email"
         readonly autofocus)
+
 
 #help-box.modal.fade(role="dialog" aria-hidden="true")
   .modal-dialog
