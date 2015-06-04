@@ -24,8 +24,8 @@ angular.module('zeroApp').factory('Messager',
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
-        var data = button.data()
-        _.extend(data, this._data)
+        var data = button.data() || {}
+        _.extend(data, self._data)
         self.initialize(self.msgBox, data)
         self._data = null
       }).on('shown.bs.modal', function (event) {

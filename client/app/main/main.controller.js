@@ -336,5 +336,14 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         $scope.pager.show({number: number || null})
       }
     })
+    .add({
+      combo: 'e',
+      description: 'Send Email to the top Email address',
+      callback: function(e) {
+        var email = $scope.person.email.get(0)
+          && $scope.person.email.get(0).email
+        $scope.email.show({email: email || null})
+      }
+    })
 
 }])
