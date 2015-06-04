@@ -280,10 +280,13 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     initialize: function(container, data) {
       container.find('input[name="toEmail"]').val(data.email || '')
         .attr('readonly', !!data.email)
+      var mailtoConatiner = container.find('.mailto')
       if(data.email) {
-        container.find('.mailto')
-          .html('<a href="mailto:@">Launch full Email application</a>'
+        mailtoConatiner
+          .html('<a href="mailto:@">Launch full Email application for @</a>'
             .replace(/\@/g, data.email)).show()
+      } else {
+        mailtoConatiner.hide()
       }
     },
     url: '/api/Providers/message/email/:fromEmail/:toEmail/:message/'
