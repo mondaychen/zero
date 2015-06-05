@@ -5,6 +5,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/zeroapp-test'
+    uri: 'mongodb://localhost/zeroapp-dev'
   }
 };
