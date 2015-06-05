@@ -29,7 +29,6 @@ function getPromisedSave(field,model_array) {
   });
 };
 */
-
 var _              = require('lodash');
 var Address        = require('./Address.model')['model'];
 var Phone          = require('./Phone.model')['model'];
@@ -37,18 +36,12 @@ var Provider       = require('./Provider.model')['model'];
 var Email          = require('./Email.model')['model'];
 var request        = require('request');
 var url            = require('url');
-var service_url    = 'http://localhost:8003';
-//var service_url    = 'http://ravid.nyp.org'
 var ObjectId       = require('mongoose').Types.ObjectId; 
 
-var fs             = require('fs');
-var path           = require('path');
 
-//var test           = true;
+// TEST also seen in server/app.js
+var service_url    = ( process.env.TEST ) ? 'http://localhost:8003' : 'http://ravid.nyp.org';
 var test           = process.env.TEST || false;//true;
-//var heroku         = process.env.HEROKU || false;
-var heroku         = process.env.HEROKU || false;
-
 
 // test: provider_id: 5500268be47498e8dc023d54
 //router.post('/email/:value/:hasNew/:u/:d/:provider_id', controller.email);
@@ -404,11 +397,8 @@ exports.careTeam = function(req, res) {
     /* Update or keep provider the same */
 
     var careTeam_result = null;
-    if (!heroku && !error && response && response.statusCode == 200 && body) {
+    if (!error && response && response.statusCode == 200 && body) {
       careTeam_result   = JSON.parse(body);
-    } else if (heroku) {
-      careTeam_result = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'test_and_heroku_data/test_careTeam.json'), 'utf8'));
-      console.log(careTeam_result);
     } else {
       res.json(500, {error:error,msg:'error in careTeam'});
     }
@@ -541,15 +531,11 @@ exports.provider = function(req, res) {
     /* Update or keep provider the same */
       //var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
     var careTeam_result = null;
-    if (test && !error && !heroku && body && response && response.statusCode == 200) {
-      console.log('in care team');
+    if (test && !error && body && response && response.statusCode == 200) {
       careTeam_result = [JSON.parse(body)];
-    } else if (heroku) {
-      careTeam_result = [JSON.parse(fs.readFileSync(path.resolve(__dirname, 'test_and_heroku_data/test_provider.json'), 'utf8'))];
     } else if (!test && !error && body && response && response.statusCode == 200) {
       careTeam_result = [JSON.parse(body)['hybridized_provider_output']];
     } else {
-      console.log('error');
       res.json(500, {error:error,msg:'error in provider'});
     }
 
