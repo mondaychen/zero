@@ -166,7 +166,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         pretreat: function(data) {
           _.each(data, function(item) {
             if(item.role && !item.role.fieldValue) {
-              item.role.fieldValue = 'ordering provider'
+              console.log(data);
+              item.role.fieldValue = 'ordering provider ' + data[0]['orderPagerNum']['fieldValue'];
             }
           })
         }
@@ -189,6 +190,7 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       $http.get(url.value).success(function(data) {
         mixture = mixture.concat(data)
         url.pretreat(data)
+        console.log(data);
         resolve()
       }).error(function() {
         resolve()

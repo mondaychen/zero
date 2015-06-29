@@ -40,7 +40,7 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 
 
 // TEST also seen in server/app.js
-var service_url    = ( process.env.TEST ) ? 'http://localhost:8003' : 'http://ravid.nyp.org';
+var service_url    = ( process.env.TEST ) ? 'http://localhost:8003' : 'http://ravid.nyp.org';//http://ravid.nyp.org';
 var test           = process.env.TEST || false;//true;
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -438,6 +438,7 @@ exports.careTeam = function(req, res) {
       'email'             : ['test1@med.cornell.edu'],
       'faxNum'            : ['18082582809','testing','testing1','testing2'],
       'pagerNum'          : [],
+      'orderPagerNum'     : null,
       'officePhone'       : ['18082582809'], 
       'mobilePhone'       : [],
       'addresses'         : [],
@@ -527,6 +528,9 @@ exports.provider = function(req, res) {
     url : service_url + '/num_ext/zero/getProvider',
     qs  : query
   };  
+
+  var orderPagerNum = null;
+
   request(options, function (error, response, body) {
     /* Update or keep provider the same */
       //var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
@@ -539,10 +543,14 @@ exports.provider = function(req, res) {
       res.json(500, {error:error,msg:'error in provider'});
     }
 
+    console.log(careTeam_result[0]);
+    orderPagerNum = careTeam_result[0]['orderPagerNum'];
+    delete careTeam_result[0]['orderPagerNum'];
+
     var careTeam_result_table = {};
     // zero_result_table stores the providers who already exist in the database
     var zero_result_table     = {};
-    var careTeam_lookups        = _.map(careTeam_result, function(member) { 
+    var careTeam_lookups      = _.map(careTeam_result, function(member) { 
       if (member != undefined) {
         var temp_lookup = String(member["cwid"]) + String(member["NPI"]) + String(member["firstName"]) + String(member["middleName"]) + String(member["lastName"]) + String(member['honor']);
         member['lookup'] = temp_lookup;
@@ -596,12 +604,17 @@ exports.provider = function(req, res) {
         console.log(objects);
       });
       */
+      // http://mongoosejs.com/docs/api.html#query_Query-lean
       return sequence.then(function() {
         Provider.find({'lookup.fieldValue': { $in : careTeam_lookups }})
         .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
-        .exec(function(err,providers) {
+        .lean().exec(function(err,providers) {
           if (err) { console.log(err); }
           console.log('im in here x2');
+
+          providers[0]['orderPagerNum'] = { fieldValue: orderPagerNum, dateLastModified: null } 
+          console.log(providers[0]['orderPagerNum']);
+          //providers[0]['role'] = 'ordering provider ' + String(orderPagerNum);
           console.log(providers);
           return res.json(200, providers);
         });                                                                                                                                                                                                                                                                              
