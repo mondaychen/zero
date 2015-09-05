@@ -40,7 +40,7 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 
 
 // TEST also seen in server/app.js
-var service_url    = ( process.env.TEST ) ? 'http://localhost:8003' : 'http://ravid.nyp.org';
+var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://ravid.nyp.org';
 var test           = process.env.TEST || false;//true;
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -270,7 +270,14 @@ var updateProviderPromise = function(zero_member,ancr_member) {
         // pass
       }
     } else if (field != 'lookup') {
-      zero_member[field]['fieldValue'] = ancr_member[field];
+      try {
+        zero_member[field]['fieldValue'] = ancr_member[field];
+      } catch (err) {
+        console.log(zero_member[field])
+        console.log(err)
+      }
+    } else {
+      console.log(field);
     }
   });
 
@@ -292,6 +299,7 @@ var createProviderPromise = function (member) {
     var query = null;
     var update = null;
     var options = { "new" : true, "upsert": true };
+
     _.uniq(member[field]).forEach(function(arrayValue) {
       if (field != 'email' && field != 'addresses') {
         query = { number: arrayValue, kind:field };
@@ -299,10 +307,12 @@ var createProviderPromise = function (member) {
         tempPromise = new Promise(function(resolve,reject) {
           Phone.findOneAndUpdate(query,update,options, function(err,phone) {
             if (err) { console.log(err); }
-            temp_output["ids"].push(phone._id);
-            temp_output["models"].push(phone);
-            // resolve statement probably unnecessary
-            resolve(phone);
+            else if (phone.hasOwnProperty('_id')) {
+              temp_output["ids"].push(phone._id);
+              temp_output["models"].push(phone);
+              // resolve statement probably unnecessary
+              resolve(phone);
+            }
           });
         });
       } else if (field == 'email') {
@@ -311,10 +321,12 @@ var createProviderPromise = function (member) {
         tempPromise = new Promise(function(resolve,reject) {
           Email.findOneAndUpdate(query,update,options, function(err,email) {
             if (err) { console.log(err); }
-            temp_output["ids"].push(email._id);
-            temp_output["models"].push(email);
-            // resolve statement probably unnecessary
-            resolve(email);
+            else if (email.hasOwnProperty) {
+              temp_output["ids"].push(email._id);
+              temp_output["models"].push(email);
+              // resolve statement probably unnecessary
+              resolve(email);
+            }
           });
         });
       } else if (field == 'addresses') {
@@ -332,9 +344,11 @@ var createProviderPromise = function (member) {
         tempPromise = new Promise(function(resolve,reject) {
           Address.findOneAndUpdate(query,update,options, function(err,address) {
             if (err) { console.log(err); }
-            console.log(address);
-            temp_output["ids"].push(address._id);
-            temp_output["models"].push(address);
+            else if (address.hasOwnProperty('_id')) {
+              console.log(address);
+              temp_output["ids"].push(address._id);
+              temp_output["models"].push(address);
+            }
             // resolve statement probably unnecessary
             resolve(address);
           });
@@ -433,7 +447,7 @@ exports.careTeam = function(req, res) {
       'NPI'               : null,
       'honor'             : 'MD',
       'cwid'              : 'test1',
-      'role'              : 'ztest provider',
+      'role'              : 'ztest provider3',
       'photo'             : null,
       'email'             : ['test1@med.cornell.edu'],
       'faxNum'            : ['18082582809','testing','testing1','testing2'],
@@ -547,7 +561,8 @@ exports.provider = function(req, res) {
         var temp_lookup = String(member["cwid"]) + String(member["NPI"]) + String(member["firstName"]) + String(member["middleName"]) + String(member["lastName"]) + String(member['honor']);
         member['lookup'] = temp_lookup;
         careTeam_result_table[temp_lookup] = member;
-        return temp_lookup;        }
+        return temp_lookup;
+      }
     });
 
     var careTeam_output  = [];
