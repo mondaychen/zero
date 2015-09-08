@@ -40,7 +40,11 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 
 
 // TEST also seen in server/app.js
+<<<<<<< HEAD
 var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://ravid.nyp.org';
+=======
+var service_url    = ( process.env.TEST ) ? 'http://localhost:8003' : 'http://ravid.nyp.org';//http://ravid.nyp.org';
+>>>>>>> 9dae6d5a31ea32052675845d3399ae94be6e7da3
 var test           = process.env.TEST || false;//true;
 
 // test: provider_id: 5500268be47498e8dc023d54
