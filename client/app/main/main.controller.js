@@ -151,11 +151,11 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         return false
       });
 
+      // added specifically for the james request
       if (_.has(params,'email')) {
         for (var i = 0; i < $scope.contacts.length; i++) {
           for (var x = 0; x < $scope.contacts[i]['email']['collection'].length; x++) {
-            if ($scope.contacts[i]['email']['collection'][x]['email'] == params['email']) {
-              //console.log($scope.contacts[i]['email']['initialArr'][x]);
+            if ($scope.contacts[i]['email']['collection'][x]['email'].toLowerCase() == params['email'].toLowerCase()) {
               $scope.viewContact($scope.contacts[i]);
               break;
             }
