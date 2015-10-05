@@ -86,7 +86,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     var query  = "?"
     var keyMap = {
       "gacc": "accession",
-      "gmrn": "mrn"
+      "gmrn": "mrn",
+      "email": "email"
     }
     var search = _.clone($location.search())
     search.institution = search.institution || 'cornell'
@@ -135,12 +136,12 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     var whenSuccess = function(data) {
       $scope.viewStatus.currentView = 'detail'
-      notification.hide()
+      notification.hide();
       // $scope.original_query_data = angular.copy(data);
 
       $scope.contacts = _.sortBy(_.map(data, function(person) {
-         return getOrderedOutput(person)
-      }), 'role')
+         return getOrderedOutput(person);
+      }), 'role');
       var existingCWID = {}
       $scope.contacts = _.reject($scope.contacts, function(contact) {
         if(existingCWID[contact.cwid]) {
@@ -148,9 +149,23 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         }
         existingCWID[contact.cwid] = true
         return false
-      })
-      $scope.viewContact($scope.contacts[0])
+      });
+
+      if (_.has(params,'email')) {
+        for (var i = 0; i < $scope.contacts.length; i++) {
+          for (var x = 0; x < $scope.contacts[i]['email']['collection'].length; x++) {
+            if ($scope.contacts[i]['email']['collection'][x]['email'] == params['email']) {
+              //console.log($scope.contacts[i]['email']['initialArr'][x]);
+              $scope.viewContact($scope.contacts[i]);
+              break;
+            }
+          }
+        }
+      } else {
+        $scope.viewContact($scope.contacts[0]);
+      }
     }
+
 
     var whenError = function() {
       notification.show({
@@ -162,11 +177,13 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     var urls = [
       {
+        value: "/api/Providers/providerByEmail" + getQuery()
+      },
+      {
         value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
           _.each(data, function(item) {
             if(item.role && !item.role.fieldValue) {
-              console.log(data);
               item.role.fieldValue = 'ordering provider ' + data[0]['orderPagerNum']['fieldValue'];
             }
           })
@@ -175,28 +192,27 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       {
         value: "/api/Providers/careTeam" + getQuery()
       }
-    ]
+    ];
 
-    var mixture = []
+    var mixture = [];
     var resolve = _.after(urls.length, function() {
       if(mixture.length) {
-        whenSuccess(mixture)
+        whenSuccess(mixture);
       } else {
-        whenError()
+        whenError();
       }
-    })
+    });
     _.each(urls, function(url) {
-      url.pretreat = url.pretreat || $.noop
+      url.pretreat = url.pretreat || $.noop;
       $http.get(url.value).success(function(data) {
         mixture = mixture.concat(data)
-        url.pretreat(data)
-        console.log(data);
-        resolve()
+        url.pretreat(data);
+        resolve();
       }).error(function() {
-        resolve()
-      })
-    })
-  })
+        resolve();
+      });
+    });
+  });
 
   $scope.scheme = {
     'email'       : 'yellow',

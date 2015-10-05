@@ -8,6 +8,7 @@ var router = express.Router();
 
 router.get('/careTeam', p_controller.careTeam);
 router.get('/provider', p_controller.provider);
+router.get('/providerByEmail', p_controller.providerByEmail);
 
 router.post('/phone/:kind/:provider_id/:notes', p_controller.phone_notes);
 //router.post('/phone/:phone_id/:note', controller.phone_note);

@@ -301,18 +301,24 @@ var createProviderPromise = function (member) {
     var options = { "new" : true, "upsert": true };
 
     _.uniq(member[field]).forEach(function(arrayValue) {
+      console.log(field);
       if (field != 'email' && field != 'addresses') {
         query = { number: arrayValue, kind:field };
         update = { "$setOnInsert" : query };
         tempPromise = new Promise(function(resolve,reject) {
           Phone.findOneAndUpdate(query,update,options, function(err,phone) {
-            if (err) { console.log(err); }
-            else if (phone.hasOwnProperty('_id')) {
+            console.log(query);
+            if (err) { console.log(err); resolve(err); }
+            else if (phone._id) {
               temp_output["ids"].push(phone._id);
               temp_output["models"].push(phone);
-              // resolve statement probably unnecessary
+              console.log(temp_output);
+              resolve(phone);
+            } else {
+              // this should never occur
               resolve(phone);
             }
+
           });
         });
       } else if (field == 'email') {
@@ -320,17 +326,21 @@ var createProviderPromise = function (member) {
         update = { "$setOnInsert" : query };
         tempPromise = new Promise(function(resolve,reject) {
           Email.findOneAndUpdate(query,update,options, function(err,email) {
-            if (err) { console.log(err); }
-            else if (email.hasOwnProperty) {
+            console.log(query);
+            if (err) { console.log(err); resolve(err); }
+            else if (email._id){
               temp_output["ids"].push(email._id);
               temp_output["models"].push(email);
-              // resolve statement probably unnecessary
+              console.log(temp_output);
+              resolve(email);
+            } else {
+              // this should never occur
               resolve(email);
             }
+
           });
         });
       } else if (field == 'addresses') {
-        console.log(JSON.stringify(arrayValue));
         query = {
           addrLine1    : arrayValue["addrLine1"],
           addrLine2    : arrayValue["addrLine2"],
@@ -343,14 +353,19 @@ var createProviderPromise = function (member) {
         update = { "$setOnInsert" : query };
         tempPromise = new Promise(function(resolve,reject) {
           Address.findOneAndUpdate(query,update,options, function(err,address) {
-            if (err) { console.log(err); }
-            else if (address.hasOwnProperty('_id')) {
+            console.log(query);
+            if (err) { console.log(err); resolve(err); }
+            else if (address._id) {
               console.log(address);
               temp_output["ids"].push(address._id);
               temp_output["models"].push(address);
+              console.log(temp_output);
+              resolve(address);
+            } else {
+              //  this should never occur
+              resolve(address);
             }
             // resolve statement probably unnecessary
-            resolve(address);
           });
         });
       }
@@ -367,8 +382,17 @@ var createProviderPromise = function (member) {
   var zeroMemberMobilePhoneOutput         = getModelAndIdArrays('mobilePhone',member.mobilePhone,phoneEmailAddressCreatePromiseArray);
   var zeroMemberAddressOutput             = getModelAndIdArrays('addresses',member.addresses,phoneEmailAddressCreatePromiseArray);
 
+  console.log(phoneEmailAddressCreatePromiseArray);
+  console.log(zeroMemberEmailOutput);
+  console.log(zeroMemberAddressOutput);
+  console.log(zeroMemberOfficePhoneOutput);
+  console.log(zeroMemberMobilePhoneOutput);
+  console.log(zeroMemberFaxNumOutput);
+  console.log(zeroMemberPagerNumOutput);
+
   return Promise.all(phoneEmailAddressCreatePromiseArray)
   .then(function() {
+    console.log('after promise all has completed.');
     return new Promise(function(resolve,reject) {
       Provider({
         'firstName'          : { 'fieldValue' : member.firstName },
@@ -391,6 +415,7 @@ var createProviderPromise = function (member) {
         //'lookup'             : { 'fieldValue' : this['cwid']['fieldValue'] + this['NPI']['fieldValue'] }
       })
       .save(function(err, provider) {
+        console.log('im in here, saving');
         if (err) { console.log('saving new provider error'); console.log(err); resolve(err); }
         resolve(provider);
       });
@@ -535,6 +560,121 @@ exports.careTeam = function(req, res) {
   });
 };
 
+exports.providerByEmail = function(req, res) {
+  var query = getQuery(req);
+  var options = {
+    url : service_url + '/num_ext/ancr/getProviderByEmail',
+    qs  : query
+  };  
+  var orderPagerNum = null;
+
+  request(options, function (error, response, body) {
+    /* Update or keep provider the same */
+      //var careTeam_result       = [JSON.parse(body)['hybridized_provider_output']];
+    var careTeam_result = null;
+    console.log(options);
+    console.log(body);
+    if (test && !error && body && response && response.statusCode == 200) {
+      console.log('im in here');
+      careTeam_result = [JSON.parse(body)];
+    } else if (!test && !error && body && response && response.statusCode == 200) {
+      console.log('im in here x2');
+      // this is different from the other methods
+      careTeam_result = [JSON.parse(body)];
+    } else {
+      res.json(500, {error:error,msg:'error in provider'});
+    }
+
+    console.log(careTeam_result);
+    orderPagerNum = careTeam_result[0]['orderPagerNum'];
+    delete careTeam_result[0]['orderPagerNum'];
+
+    var careTeam_result_table = {};
+    // zero_result_table stores the providers who already exist in the database
+    var zero_result_table     = {};
+    var careTeam_lookups      = _.map(careTeam_result, function(member) { 
+      if (member != undefined) {
+        var temp_lookup = String(member["cwid"]) + String(member["NPI"]) + String(member["firstName"]) + String(member["middleName"]) + String(member["lastName"]) + String(member['honor']);
+        member['lookup'] = temp_lookup;
+        careTeam_result_table[temp_lookup] = member;
+        return temp_lookup;
+      }
+    });
+
+    console.log(careTeam_lookups);
+    var careTeam_output  = [];
+    var careTeam_promise = Provider.find({"lookup.fieldValue": {$in : careTeam_lookups}})
+    .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
+    .exec();
+
+    careTeam_promise.then(function(found_members) {
+      var found_lookups = _.map(found_members, function(member) { 
+        var temp_lookup = member["lookup"]["fieldValue"]; 
+        zero_result_table[temp_lookup] = member;
+        return temp_lookup;
+      });
+      console.log('in care team promise');
+      console.log(found_lookups);
+
+      var missing_lookups = _.difference(careTeam_lookups,found_lookups);
+      var createProviderPromiseArray = [];
+
+      //console.log(found_cwids);
+      //console.log('missing');
+      //console.log(missing_cwids);
+
+      var sequence = Promise.resolve();
+      //var updateSequence = Promise.resolve();
+
+      found_lookups.forEach(function(lookup) {
+        sequence = sequence.then(function() {
+          return updateProviderPromise(zero_result_table[lookup],careTeam_result_table[lookup]);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      });
+
+      missing_lookups.forEach(function(lookup) {
+        sequence = sequence.then(function() {
+          console.log('in missing lookup promise');
+          console.log(careTeam_result_table[lookup]);
+          return createProviderPromise(careTeam_result_table[lookup]);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      });
+
+      /*
+      return Promise.all(createProviderPromiseArray).then(function(objects) {
+        console.log('objects?');
+        console.log(objects);
+      });
+      */
+      // http://mongoosejs.com/docs/api.html#query_Query-lean
+      return sequence.then(function() {
+        Provider.find({'lookup.fieldValue': { $in : careTeam_lookups }})
+        .populate('pagerNum.fieldValue email.fieldValue faxNum.fieldValue mobilePhone.fieldValue officePhone.fieldValue addresses.fieldValue')
+        .lean().exec(function(err,providers) {
+          if (err) { console.log(err); }
+          console.log('im in here x3');
+
+          providers[0]['orderPagerNum'] = { fieldValue: orderPagerNum, dateLastModified: null } 
+          console.log(providers[0]['orderPagerNum']);
+          //providers[0]['role'] = 'ordering provider ' + String(orderPagerNum);
+          console.log(providers);
+          return res.json(200, providers);
+        });                                                                                                                                                                                                                                                                              
+      });
+      // next stepp, create provider(s) if they don't already exist
+      // then, simultaneously? update the current, if there are changes (ie. new phone numbers/email/address)
+
+      //console.log(careTeam_result_table["test1"]);
+      //var test1_member = createProvider(careTeam_result_table["test1"]);
+    });
+  });
+};
 
 exports.provider = function(req, res) {
   var query = getQuery(req);
