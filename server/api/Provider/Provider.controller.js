@@ -309,7 +309,7 @@ var createProviderPromise = function (member) {
           Phone.findOneAndUpdate(query,update,options, function(err,phone) {
             console.log(query);
             if (err) { console.log(err); resolve(err); }
-            else if (phone._id) {
+            else if (phone && phone._id) {
               temp_output["ids"].push(phone._id);
               temp_output["models"].push(phone);
               console.log(temp_output);
@@ -328,7 +328,7 @@ var createProviderPromise = function (member) {
           Email.findOneAndUpdate(query,update,options, function(err,email) {
             console.log(query);
             if (err) { console.log(err); resolve(err); }
-            else if (email._id){
+            else if (email && email._id){
               temp_output["ids"].push(email._id);
               temp_output["models"].push(email);
               console.log(temp_output);
@@ -355,7 +355,7 @@ var createProviderPromise = function (member) {
           Address.findOneAndUpdate(query,update,options, function(err,address) {
             console.log(query);
             if (err) { console.log(err); resolve(err); }
-            else if (address._id) {
+            else if (address && address._id) {
               console.log(address);
               temp_output["ids"].push(address._id);
               temp_output["models"].push(address);
