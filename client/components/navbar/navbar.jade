@@ -94,10 +94,23 @@ div.navbar.navbar-default.navbar-fixed-top(ng-controller='NavbarCtrl')
           .btn-group.btn-group-justified
             .btn-group
               button.btn.btn-default.btn-pager(data-toggle="modal"
-                data-target="#pager-box") Send page
-            .btn-group
-              button.btn.btn-default.btn-sms(data-toggle="modal"
-                data-target="#SMS-box") Send SMS
+                data-target="#mobile-messsager-box") Send Messages
             .btn-group
               button.btn.btn-default.btn-sms(data-toggle="modal"
                 data-target="#help-box") Help
+
+
+#mobile-messsager-box.modal.fade(role="dialog" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button" data-dismiss="modal" aria-label="Close")
+          span(aria-hidden="true") &times;
+        h4.modal-title Choose Message Type
+      .modal-body
+        button.btn.btn-default.btn-lg.btn-block(type="button" data-toggle="modal"
+          data-target="#pager-box") Send page
+        button.btn.btn-default.btn-lg.btn-block(type="button" data-toggle="modal"
+          data-target="#SMS-box") Send SMS
+        button.btn.btn-default.btn-lg.btn-block(type="button" data-toggle="modal"
+          data-target="#email-box") Send Email
