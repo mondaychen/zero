@@ -246,6 +246,9 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         self.subInfoView.show()
         _.delay(function() {
           self.subInfoView.addClass('show')
+          $('html, body').animate({
+            scrollTop: self.subInfoView.offset().top
+          }, 100);
         }, 20)
       }, delayTime, this)
     },
