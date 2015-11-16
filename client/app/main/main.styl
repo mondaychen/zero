@@ -10,6 +10,8 @@ $green = #8BC051
 $yellow = #F5BB41
 $mint = #37BC9B
 
+$xsSize = 767px
+
 .loading
   text-align: center
   padding: 50px 0
@@ -211,6 +213,12 @@ $mint = #37BC9B
   transition: all 0.6s ease
   &.show
     opacity: 1
+  button.back .glyphicon
+    display: block
+    margin-bottom: 10px
+    @media screen and (max-width: $xsSize)
+        display: inline-block
+        margin: 0 6px 0 -8px
 
 #all-addresses
   li
@@ -296,6 +304,8 @@ for key, value in $color_scheme
       border-style: solid
       border-width: 7px 7px 7px 0
       border-color: transparent #666 transparent transparent
+      @media screen and (max-width: $xsSize)
+        border: none
 
 .footer
     border-top 1px solid #E5E5E5
