@@ -40,7 +40,7 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 
 
 // TEST also seen in server/app.js
-var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://ravid.nyp.org';
+var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://127.0.0.1';
 var test           = process.env.TEST || false;//true;
 
 // test: provider_id: 5500268be47498e8dc023d54
@@ -439,7 +439,7 @@ exports.careTeam = function(req, res) {
     if (!error && response && response.statusCode == 200 && body) {
       careTeam_result   = JSON.parse(body);
     } else {
-      res.json(500, {error:error,msg:'error in careTeam'});
+      return res.json(500, {error:error,msg:'error in careTeam'});
     }
 
     var careTeam_result_table = {};
