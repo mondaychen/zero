@@ -43,6 +43,31 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://127.0.0.1';
 var test           = process.env.TEST || false;//true;
 
+function getQuery(req) {
+  var url_parts = url.parse(req.url, true);
+  return url_parts.query;
+}
+
+//router.post('/api/provider/')
+exports.providerByName = function(req,res) { 
+  //var search_string = req.params.search_string;
+  var query_string = getQuery(req).query;
+  var query = {
+    //'firstName.fieldValue': new RegExp(search_string,"i"),
+   'lastName.fieldValue': new RegExp(query_string,"i")
+  } ;
+  var returned_fields = {
+    'lastName':1,
+    'firstName':1,
+    'email':1
+  };
+
+  Provider.find(query,returned_fields)
+  .populate('email.fieldValue')
+  .exec(function(err,providers) {
+    res.json(200,providers);
+  });
+}
 // test: provider_id: 5500268be47498e8dc023d54
 //router.post('/email/:value/:hasNew/:u/:d/:provider_id', controller.email);
 exports.email = function(req, res) {
@@ -209,10 +234,7 @@ exports.phote_note = function(req, res) {
   });
 };
 
-function getQuery(req) {
-  var url_parts = url.parse(req.url, true);
-  return url_parts.query;
-}
+
 
 var updateProviderPromise = function(zero_member,ancr_member) {
   var date = Date.now();
@@ -782,6 +804,8 @@ exports.provider = function(req, res) {
     });
   });
 };
+
+
 
 function handleError(res, err) {
   return res.send(500, err);
