@@ -12,6 +12,9 @@ angular.module('zeroApp').factory('Messager',
         self.msgBox.find('[autofocus]').not('[readonly]').eq(0).focus()
       }
 
+
+
+
       // attributes for angular
       this.message = ''
       this.success = false
@@ -20,6 +23,10 @@ angular.module('zeroApp').factory('Messager',
       this.pending = false
 
       this._data = null
+
+      $http.get('/api/users/phoneByIP/').then(function (data) {
+        self.message += "\n Please call: " + data.data['phone'];
+      });
 
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {

@@ -17,6 +17,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     'pagerNum'    : 'Pager'
   }
 
+
+
   function makeStringByKeys(keys, obj, separator) {
     separator = separator || ' '
     return _.chain(obj).pick(keys).values().compact().value().join(separator)

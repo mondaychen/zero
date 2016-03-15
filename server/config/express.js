@@ -18,7 +18,7 @@ var passport = require('passport');
 
 module.exports = function(app) {
   var env = app.get('env');
-
+  app.enable('trust proxy') 
   app.set('views', config.root + '/server/views');
   app.set('view engine', 'jade');
   app.use(compression());

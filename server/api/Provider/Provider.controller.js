@@ -40,7 +40,7 @@ var ObjectId       = require('mongoose').Types.ObjectId;
 
 
 // TEST also seen in server/app.js
-var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://127.0.0.1';
+var service_url    = ( process.env.TEST ) ? /*'http://localhost:8003'*/ 'http://ravid.nyp.org': 'http://ravid.nyp.org';
 var test           = process.env.TEST || false;//true;
 
 function getQuery(req) {
@@ -735,10 +735,14 @@ exports.provider = function(req, res) {
     } else if (!test && !error && body && response && response.statusCode == 200) {
       careTeam_result = [JSON.parse(body)['hybridized_provider_output']];
     } else {
-      res.json(500, {error:error,msg:'error in provider'});
+      return res.json(500, {error:error,msg:'error in provider'});
     }
 
-    console.log(careTeam_result[0]);
+    try {
+      console.log(careTeam_result[0]);
+    } catch (err) {
+      return res.json(200,{error:err,msg:'error in provider -- careteam result'});
+    }
     orderPagerNum = careTeam_result[0]['orderPagerNum'];
     delete careTeam_result[0]['orderPagerNum'];
 

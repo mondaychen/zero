@@ -20,6 +20,24 @@ exports.index = function(req, res) {
   });
 };
 
+exports.phoneByIP = function(req,res) {
+  var ip_address_table = {
+    '192.168.1.4':'999999999',
+    '192.168.1.3':'777777777',
+    '127.0.0.1':'888888888'
+  };
+
+  try {
+    var ip = req.ip.split(':')[3]
+    var ip_2 = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log(ip);
+    console.log(ip_2);
+    res.json(200, {'phone': ip_address_table[ip_2]} || '')
+  } catch (err) {
+    res.json(500,err);
+  }
+}
+
 /**
  * Creates a new user
  */
