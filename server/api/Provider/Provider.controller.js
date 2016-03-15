@@ -52,21 +52,40 @@ function getQuery(req) {
 exports.providerByName = function(req,res) { 
   //var search_string = req.params.search_string;
   var query_string = getQuery(req).query;
-  var query = {
-    //'firstName.fieldValue': new RegExp(search_string,"i"),
-   'lastName.fieldValue': new RegExp(query_string,"i")
-  } ;
-  var returned_fields = {
-    'lastName':1,
-    'firstName':1,
-    'email':1
+  var query_regex  = new RegExp(query_string,"i")
+
+  var email_query = {
+    'email':query_regex
+  };
+  var email_returned_fields = {
+    '_id': 1
   };
 
-  Provider.find(query,returned_fields)
-  .populate('email.fieldValue')
-  .exec(function(err,providers) {
-    res.json(200,providers);
-  });
+  Email.find(email_query,email_returned_fields)
+  .limit(20)
+  .exec(function(err, emails) {
+    var query = {
+      $or:[
+        {'firstName.fieldValue': query_regex},
+        {'lastName.fieldValue': query_regex},
+        //{'email.fieldValue.email': { $in : [query_regex]}}
+        {'email.fieldValue': { $in : emails }}
+      ]
+    };
+    var returned_fields = {
+      'lastName':1,
+      'firstName':1,
+      'email':1
+    };
+
+    Provider.find(query,returned_fields)
+    .populate('email.fieldValue')
+    .limit(40)
+    .exec(function(err,providers) {
+      if (err) { res.json(500, {'message':'Error', error:err})}
+      res.json(200,providers);
+    });
+  })
 }
 // test: provider_id: 5500268be47498e8dc023d54
 //router.post('/email/:value/:hasNew/:u/:d/:provider_id', controller.email);
