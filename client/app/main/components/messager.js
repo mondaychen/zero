@@ -21,12 +21,15 @@ angular.module('zeroApp').factory('Messager',
       this.failed = false
       this.lengthLimit = options.limit || 0
       this.pending = false
+      this.type = options.type
 
       this._data = null
 
-      $http.get('/api/users/phoneByIP/').then(function (data) {
-        self.message += "\n Please call: " + data.data['phone'];
-      });
+      if (this.type != 'email') {
+        $http.get('/api/users/phoneByIP/').then(function (data) {
+          self.message += (data.data['phone'] != undefined) ? data.data['phone'] : '';
+        });
+      }
 
       // initialize bootstrap modal
       this.msgBox.on('show.bs.modal', function (event) {

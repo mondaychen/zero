@@ -52,7 +52,8 @@ function getQuery(req) {
 exports.providerByName = function(req,res) { 
   //var search_string = req.params.search_string;
   var query_string = getQuery(req).query;
-  var query_regex  = new RegExp(query_string,"i")
+  var query_regex  = new RegExp(query_string,"i");
+  var not_query_regex = new RegExp(".*test.*","i");
 
   var email_query = {
     'email':query_regex
@@ -70,6 +71,10 @@ exports.providerByName = function(req,res) {
         {'lastName.fieldValue': query_regex},
         //{'email.fieldValue.email': { $in : [query_regex]}}
         {'email.fieldValue': { $in : emails }}
+      ],
+      $and:[
+        {'firstName.fieldValue': {$not: not_query_regex}},
+        {'lastName.fieldValue': {$not: not_query_regex}}
       ]
     };
     var returned_fields = {

@@ -289,7 +289,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       container.find('input[name="number"]').val(data.number || '')
         .attr('readonly', !!data.number)
     },
-    url: '/api/Providers/message/page/:number/:message/'
+    url: '/api/Providers/message/page/:number/:message/',
+    type: 'pager'
   })
   $scope.SMS = new Messager($('#SMS-box'), {
     limit: 1600,
@@ -297,7 +298,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       container.find('input[name="toPhone"]').val(data.number || '')
         .attr('readonly', !!data.number)
     },
-    url: '/api/Providers/message/sms/:toPhone/:message/'
+    url: '/api/Providers/message/sms/:toPhone/:message/',
+    type:'SMS'
   })
   $scope.email = new Messager($('#email-box'), {
     initialize: function(container, data) {
@@ -312,7 +314,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         mailtoConatiner.hide()
       }
     },
-    url: '/api/Providers/message/email/:fromEmail/:toEmail/:message/'
+    url: '/api/Providers/message/email/:fromEmail/:toEmail/:message/',
+    type:'email'
   })
 
   // hotkeys
@@ -368,5 +371,4 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         $scope.email.show({email: email || null})
       }
     })
-
 }])

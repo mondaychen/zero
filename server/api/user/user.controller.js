@@ -31,10 +31,12 @@ exports.phoneByIP = function(req,res) {
     var ip = req.ip.split(':')[3]
     var ip_2 = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     var ip_3 = req.connection.remoteAddress.split(':')[3];
+    var ip_4 = req.headers['X-Real-IP'] || '';
     console.log('req.ip: ' + ip);
     console.log('nginx forwarding: ' + ip_2);
-    console.log('req.connection.remoteAttress: ' + ip_3);
-    res.json(200, {'phone': ip_address_table[ip]} || '')
+    console.log('req.connection.remoteAddress: ' + ip_3);
+    console.log('X-Real-IP' + ip_4);
+    res.json(200, {'phone': ip_address_table[ip_2]} || '')
   } catch (err) {
     res.json(500,err);
   }
