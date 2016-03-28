@@ -28,6 +28,25 @@ angular.module('zeroApp').factory('Messager',
       if (this.type != 'email') {
         $http.get('/api/users/phoneByIP/').then(function (data) {
           self.message += (data.data['phone'] != undefined) ? data.data['phone'] : '';
+          var elemLen = self.message.length;
+        // For IE Only
+          autofocus();
+          if (document.selection) {
+              // Set focus
+              //elem.focus();
+              // Use IE Ranges
+              var oSel = document.selection.createRange();
+              // Reset position to 0 & then set at end
+              oSel.moveStart('character', -elemLen);
+              oSel.moveStart('character', elemLen);
+              oSel.moveEnd('character', 0);
+              oSel.select();
+          } else if (elem.selectionStart || elem.selectionStart == '0') {
+              // Firefox/Chrome
+              elem.selectionStart = elemLen;
+              elem.selectionEnd = elemLen;
+              elem.focus();
+          }
         });
       }
 

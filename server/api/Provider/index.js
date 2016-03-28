@@ -10,6 +10,7 @@ router.get('/careTeam', p_controller.careTeam);
 router.get('/provider', p_controller.provider);
 router.get('/providerByEmail', p_controller.providerByEmail);
 router.get('/providerByName', p_controller.providerByName);
+router.post('/upsertWCMCUser', p_controller.upsertWCMCUser);
 
 router.post('/phone/:kind/:provider_id/:notes', p_controller.phone_notes);
 //router.post('/phone/:phone_id/:note', controller.phone_note);

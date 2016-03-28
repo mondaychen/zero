@@ -606,6 +606,29 @@ exports.careTeam = function(req, res) {
   });
 };
 
+exports.upsertWCMCUser = function(req, res) {
+  console.log(req.body);
+  var email = req.body['email'];
+  var firstName = req.body['firstName'];
+  var lastName = req.body['firstName'];
+
+  Email.find({'email':email},function(err, email) {
+    if (err) { return res.json({'hey':'jude'}); }
+    //console.log(email);
+    if (email.length > 0) {
+      console.log(email[0]._id);
+      Provider.find({
+        'email.fieldValue': email[0]._id
+        //'$in' : {'email.fieldValue':email[0]._id }
+      }, function(provider_err,provider) {
+        console.log(provider);
+      });
+    }
+
+    return res.json({'hey':'there'});
+  });
+}
+
 exports.providerByEmail = function(req, res) {
   var query = getQuery(req);
   var options = {

@@ -29,7 +29,8 @@ var ProviderSchema = new Schema({
 	photo              : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	contactPreference  : { fieldValue: String, dateLastModified : { type: Date, default: Date.now } },
 	//addresses          : { fieldValue: [AddressSchema], dateLastModified : { type: Date, default: Date.now}}
-	addresses          : { fieldValue: [{ type: Schema.Types.ObjectId, ref: "Address"}], notes: String, dateLastModified : { type: Date, default: Date.now } }
+	addresses          : { fieldValue: [{ type: Schema.Types.ObjectId, ref: "Address"}], notes: String, dateLastModified : { type: Date, default: Date.now } },
+	wcmcRadiologyUser  : { fieldValue: {type: Boolean, default: false }}
 	/*
 	addrCity     : String,
 	addrLine1    : String,
