@@ -28,9 +28,23 @@ angular.module('zeroApp').factory('Messager',
       if (this.type != 'email') {
         $http.get('/api/users/phoneByIP/').then(function (data) {
           self.message += (data.data['phone'] != undefined) ? data.data['phone'] : '';
+          var tempElement = self.msgBox.find('[autofocus]').not('[readonly]').eq(0)
           var elemLen = self.message.length;
         // For IE Only
           autofocus();
+          if (tempElement.createTextRange){
+              var FieldRange = tempElement.createTextRange();
+              FieldRange.moveStart('character',elemLen);
+              FieldRange.collapse();
+              FieldRange.select();
+          }else if (tempElement.selectionStart || tempElement.selectionStart == '0') {
+              tempElement.selectionStart = elemLen;
+              tempElement.selectionEnd = elemLen;
+              tempElement.focus();
+          }else{
+              tempElement.focus();
+          }
+          /*
           if (document.selection) {
               // Set focus
               //elem.focus();
@@ -47,6 +61,7 @@ angular.module('zeroApp').factory('Messager',
               elem.selectionEnd = elemLen;
               elem.focus();
           }
+        */
         });
       }
 
