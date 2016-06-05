@@ -12,9 +12,6 @@ angular.module('zeroApp').factory('Messager',
         self.msgBox.find('[autofocus]').not('[readonly]').eq(0).focus()
       }
 
-
-
-
       // attributes for angular
       this.message = ''
       this.success = false
@@ -31,9 +28,10 @@ angular.module('zeroApp').factory('Messager',
           var tempElement = self.msgBox.find('[autofocus]').not('[readonly]').eq(0)
           var elemLen = self.message.length;
         // For IE Only
-          autofocus();
+          //autofocus();
           if (tempElement.createTextRange){
               var FieldRange = tempElement.createTextRange();
+              console.log(FieldRange);
               FieldRange.moveStart('character',elemLen);
               FieldRange.collapse();
               FieldRange.select();
@@ -96,6 +94,16 @@ angular.module('zeroApp').factory('Messager',
           self.pending = false
           autofocus()
         }
+        
+        var url_for_stats = self.url(params);
+        if (url_for_stats.indexOf('sms') > -1) {
+          $.post('/stats', {application:"zero", action:"sms"});
+        } else if (url_for_stats.indexOf('page') > -1) {
+          $.post('/stats', {application:"zero", action:"page"});
+        } else if (url_for_stats.indexOf('email') > -1) {
+          $.post('/stats', {application:"zero", action:"email"});
+        }
+        /*
         $http.post(self.url(params)).success(function() {
           $timeout.cancel(timeoutId)
           self.success = true
@@ -109,6 +117,7 @@ angular.module('zeroApp').factory('Messager',
           self.failed = true
           _always()
         })
+        */
       }
     }
 

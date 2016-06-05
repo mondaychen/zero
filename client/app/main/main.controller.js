@@ -4,9 +4,9 @@ var app = angular.module('zeroApp')
 
 app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
   'Messager', 'hotkeys',
-  '$scope', '$http', '$location', '$resource', '$filter',
+  '$scope', '$http', '$location', '$resource', '$filter','$q',
   function (ieVersion, InfoCollection, notification, Messager, hotkeys,
-    $scope, $http, $location, $resource, $filter) {
+    $scope, $http, $location, $resource, $filter, $q) {
 
   var votableLists = ['officePhone', 'mobilePhone', 'pagerNum', 'email', 'faxNum']
   var displayNames = {
@@ -168,7 +168,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       }
     }
 
-
     var whenError = function() {
       notification.show({
         msg: 'Failed to load data. Please try again later.',
@@ -178,9 +177,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     }
 
     var urls = [
-      {
-        value: "/api/Providers/providerByEmail" + getQuery()
-      },
       {
         value: "/api/Providers/provider" + getQuery(),
         pretreat: function(data) {
@@ -193,10 +189,14 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       },
       {
         value: "/api/Providers/careTeam" + getQuery()
-      }
+      },
+      {
+        value: "/api/Providers/providerByEmail" + getQuery()
+      },
     ];
 
     var mixture = [];
+
     var resolve = _.after(urls.length, function() {
       if(mixture.length) {
         whenSuccess(mixture);
@@ -204,16 +204,37 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
         whenError();
       }
     });
+
+    var requests = _.map(urls, function(url_object) {
+      var deferred = $q.defer();
+      $http.get(url_object.value)
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(data) {
+          deferred.resolve(data);
+        });
+      return deferred.promise;
+    });
+
+    $q.all(requests)
+    .then(function(resolved_data_array){
+
+    });
+    /*
     _.each(urls, function(url) {
       url.pretreat = url.pretreat || $.noop;
       $http.get(url.value).success(function(data) {
         mixture = mixture.concat(data)
         url.pretreat(data);
         resolve();
-      }).error(function() {
+      })
+      .error(function() {
         resolve();
       });
     });
+    */
+    $.post('/stats', {application:"zero", action:"providerQuery"});
   });
 
   $scope.scheme = {

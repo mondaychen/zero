@@ -607,7 +607,6 @@ exports.careTeam = function(req, res) {
 };
 
 exports.upsertWCMCUser = function(req, res) {
-  console.log(req.body);
   var email = req.body['email'];
   var firstName = req.body['firstName'];
   var lastName = req.body['firstName'];
@@ -624,7 +623,6 @@ exports.upsertWCMCUser = function(req, res) {
         console.log(provider);
       });
     }
-
     return res.json({'hey':'there'});
   });
 }
