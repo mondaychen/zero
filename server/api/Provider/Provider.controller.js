@@ -531,7 +531,7 @@ exports.careTeam = function(req, res) {
     }
     //careTeam_cwids.push("test1");
     test_member["lookup"] = String(test_member["cwid"]) + String(test_member["NPI"]) + String(test_member["firstName"]) + String(test_member["middleName"]) + String(test_member["lastName"]) + String(test_member["honor"]);
-    careTeam_lookups.push(test_member['lookup']);
+    //careTeam_lookups.push(test_member['lookup']);
     careTeam_result_table[test_member['lookup']] = test_member;
 
     //var careTeam_promise = Provider.find({"cwid.fieldValue": {$in : careTeam_cwids}})
@@ -853,7 +853,6 @@ exports.provider = function(req, res) {
     });
   });
 };
-
 
 
 function handleError(res, err) {

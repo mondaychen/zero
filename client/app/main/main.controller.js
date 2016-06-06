@@ -17,8 +17,6 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
     'pagerNum'    : 'Pager'
   }
 
-
-
   function makeStringByKeys(keys, obj, separator) {
     separator = separator || ' '
     return _.chain(obj).pick(keys).values().compact().value().join(separator)
@@ -141,9 +139,23 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       notification.hide();
       // $scope.original_query_data = angular.copy(data);
 
+      /*
       $scope.contacts = _.sortBy(_.map(data, function(person) {
          return getOrderedOutput(person);
       }), 'role');
+      */
+      var temp_array = _.map(data,function(person) {
+        return getOrderedOutput(person);
+      });
+
+      // if there is a careteam
+      if (temp_array.length > 0) {
+        temp_array = [temp_array[0]].concat(_.sortBy(temp_array.slice(1),'role'));
+        // TODO check to see if the order provider exists in the careTeam
+      }
+
+      $scope.contacts = temp_array;
+
       var existingCWID = {}
       $scope.contacts = _.reject($scope.contacts, function(contact) {
         if(existingCWID[contact.cwid]) {
@@ -192,10 +204,8 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
       },
       {
         value: "/api/Providers/providerByEmail" + getQuery()
-      },
+      }
     ];
-
-    var mixture = [];
 
     var resolve = _.after(urls.length, function() {
       if(mixture.length) {
@@ -207,11 +217,14 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     var requests = _.map(urls, function(url_object) {
       var deferred = $q.defer();
+      url_object.pretreat = url_object.pretreat || $.noop;
       $http.get(url_object.value)
         .success(function(data) {
+          url_object.pretreat(data);
           deferred.resolve(data);
         })
         .error(function(data) {
+          url_object.pretreat(data);
           deferred.resolve(data);
         });
       return deferred.promise;
@@ -219,7 +232,31 @@ app.controller('MainCtrl', ['ieVersion', 'InfoCollection', 'notification',
 
     $q.all(requests)
     .then(function(resolved_data_array){
+      //console.log(resolved_data_array);
+      //var flattened_arrays = _.flatten(resolved_data_array);
+      var flattened_data = _.flatten(resolved_data_array);
+      //console.log(flattened_data);
+      var provider       = flattened_data[0];
+      var provider_name  = (provider.firstName.fieldValue + " " + provider.lastName.fieldValue).toLowerCase();
 
+      var temp           = null;
+      var temp_name      = null;
+      for (var i = 1; i < flattened_data.length; i++) {
+        temp = flattened_data[i];
+        temp_name = (temp.firstName.fieldValue + " " + temp.lastName.fieldValue).toLowerCase()
+        if (provider_name === temp_name) {
+          /*
+          console.log(provider_name);
+          console.log(temp_name);
+          console.log('TRUE');
+          console.log(temp);
+          */
+          provider.role.fieldValue = temp.role.fieldValue + " & " + provider.role.fieldValue;
+        }
+      }
+
+      whenSuccess(_.flatten(resolved_data_array));
+      //console.log(resolved_data_array);
     });
     /*
     _.each(urls, function(url) {
