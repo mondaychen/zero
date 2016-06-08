@@ -654,8 +654,12 @@ exports.providerByEmail = function(req, res) {
     }
 
     console.log(careTeam_result);
-    orderPagerNum = careTeam_result[0]['orderPagerNum'];
-    delete careTeam_result[0]['orderPagerNum'];
+    if (careTeam_result) {
+      orderPagerNum = careTeam_result[0]['orderPagerNum'];
+      delete careTeam_result[0]['orderPagerNum'];
+    } else {
+      res.json(500, {error:error,msg:'error in careTeam'});
+    }
 
     var careTeam_result_table = {};
     // zero_result_table stores the providers who already exist in the database
