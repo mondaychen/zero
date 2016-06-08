@@ -188,6 +188,7 @@ exports.phone = function(req, res) {
   var query   = { number: value, kind:kind };
   var update  = { hasNew: hasNew, $inc: { upVotes:upVotes, downVotes:downVotes } };
 
+
   // Todo: use promises?
   Phone.findOneAndUpdate(query,update,options,function(err,phone) {
     if (err) { console.log(err); return res.json(500,{ error: 'Something blew up!' }); }  

@@ -50,6 +50,9 @@ exports.sendEmail = function(req, res) {
     	html: ""
     }
 
+	console.log('email fired');
+	request.post('http://radiqal.nyp.org/stats/', {form:{application:'zero',action:'email'}});
+
 
     smtpTransport.sendMail(mailOptions, function(error, response){
         if (!error) {
@@ -84,6 +87,9 @@ exports.sendSMS = function(req, res) {
 		}
 	};
 
+	console.log('sms fired');
+	request.post('http://radiqal.nyp.org/stats/', {form:{application:'zero',action:'sms'}});
+
 	request.post(options, function (err, response, body) {
 		if (!err && !/error/.test(body)) {
 			res.json(200, body);
@@ -99,6 +105,9 @@ exports.sendPage = function(req, res) {
 
 	console.log(message);
 	console.log(pageNumber);
+
+	console.log('page fired');
+	request.post('http://radiqal.nyp.org/stats/', {form:{application:'zero',action:'page'}});
 
 	var options = {
 		url : 'https://143.104.96.129:444/ConnectService/SendPage?PageNumber=' + pageNumber + '&Message=' + message,
