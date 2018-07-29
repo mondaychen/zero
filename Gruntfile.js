@@ -431,7 +431,7 @@ module.exports = function (grunt) {
         'jade',
         'stylus',
         'imagemin',
-        'svgmin'
+        //'svgmin'
       ]
     },
 
