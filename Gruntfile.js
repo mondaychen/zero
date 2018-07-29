@@ -430,7 +430,7 @@ module.exports = function (grunt) {
       dist: [
         'jade',
         'stylus',
-        'imagemin',
+        //'imagemin',
         //'svgmin'
       ]
     },
